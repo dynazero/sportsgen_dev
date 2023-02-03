@@ -1,0 +1,137 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.backdrop{
+    position: absolute;
+    top:0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: #000000e1;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modalCustom{
+    width: clamp(30%, 500px, 90%);
+    height: min(494px, 700px);
+    margin:auto;
+    padding:0 2rem;
+    border-radius: 12px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #F7F7F7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .loginWidthModal,
+  .signupnWidthModal{
+    width: 500px;
+  }
+
+  .sigupHeightModal{
+    height: min(60%, 700px);
+  }
+
+  .form-signinCustom {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    min-height: 420px;
+  }
+
+  .form-signupCustom {
+    width: 100%;
+    max-width: 410px;
+    padding: 0px;
+    margin: auto;
+  }
+
+  .encloseOption{
+    position: fixed;
+    width: 24rem;
+    z-index: 4;
+  }
+
+  .encloseCountry{
+    position: fixed;
+    width: 24rem;
+    z-index: 5;
+    top:30%
+  }
+
+  .encloseCity{
+    position: fixed;
+    width: 24rem;
+    z-index: 4;
+    top:41%
+  }
+
+  .moveAddress{
+    position: fixed;
+    width: 24rem;
+    top:48%;
+  }
+
+  
+  .indicatorsCustom{
+    height: min(390px, 700px);
+    min-width: 400px;
+    padding: 15px;
+    overflow: visible;
+  }
+
+  .carousel-itemCustom{
+    min-height: 300px;
+  }
+
+  .customIndicatorButtons{
+    bottom:0%;
+  }
+
+  .customIndicatorButtons [data-bs-target]{
+    background-color:rgb(235, 71, 71);
+    width: 80px;
+  }
+
+  .inputCustomCarousel,
+  .inputCustomLogin
+  {
+    margin: 15px 0px;
+  }
+
+  .form-signin .checkbox {
+    font-weight: 400;
+  }
+  
+  .form-signin .form-floating:focus-within {
+    z-index: 2;
+  }
+  
+  .form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  
+  .form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+
+
+  

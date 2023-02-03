@@ -1,0 +1,19 @@
+.textcoloractive{
+    color:#004aad;
+}
+
+.textcolor:hover,
+.textcoloractive:hover,
+.textcoloractive:focus,
+.textcoloractive:active{
+    color:#ff1616;
+}
+
+.button{
+    margin:10px;
+}
+
+.button button{
+    width: 82px;
+}
+
