@@ -9,7 +9,6 @@
     "export": "next build && next export -o _static",
     "lint": "next lint",
     "build:digitalOcean": "yarn install --production=false && rimraf dist && yarn build && yarn install --production --frozen-lockfile"
-    
   },
   "dependencies": {
     "@adibfirman/react-datepicker": "^1.0.3",
@@ -21,6 +20,7 @@
     "firebase-functions": "^4.1.1",
     "framer-motion": "^8.0.2",
     "next": "13.0.7",
+    "next-auth": "^4.19.2",
     "popper.js": "^1.16.1",
     "react": "18.2.0",
     "react-bootstrap": "^2.7.0",
@@ -46,6 +46,4 @@
   "engines": {
     "node": "16.x"
   }
-  
-  
 }

@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Backdrop from "../Backdrop"
 import LoginForm from '../LoginDetails'
 
-const DynamicHeader = dynamic(() => import ('../SignupDetails'),{
+const DynamicHeader = dynamic(() => import ('../signupdetails'),{
     loading: () => 'Please Wait...',
 })
 
