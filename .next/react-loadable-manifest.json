@@ -1,8 +1,8 @@
 {
-  "..\\components\\Modal\\index.jsx -> ../SignupDetails": {
-    "id": "..\\components\\Modal\\index.jsx -> ../SignupDetails",
+  "..\\components\\Modal\\index.jsx -> ../signupdetails": {
+    "id": "..\\components\\Modal\\index.jsx -> ../signupdetails",
     "files": [
-      "static/chunks/components_SignupDetails_js.js"
+      "static/chunks/components_signupdetails_js.js"
     ]
   },
   "_app.js -> bootstrap/dist/js/bootstrap": {

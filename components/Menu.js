@@ -1,26 +1,29 @@
 import React from 'react'
 import Image from 'next/image'
-import { useState } from 'react'
+import { signIn, signOut, useSession } from "next-auth/client"
 import Link from 'next/link'
-import logo from '../public/bullsolo.png'
+import logo from '../public/sportsgenph_Text_vector.png'
+import googlelogo from '../public/images/google.png'
 import navbarstyle from '../styles/Menu.module.css'
 import { motion } from 'framer-motion'
+import { bottom } from '@popperjs/core'
 
 
 
 
 
-export default function Menu({modalClick, modalOpen, panelSwitch, panelSide}) {
+export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) {
 
-    
+  const [session, loading] = useSession()
 
+  
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
           <Link className="navbar-brand" href="/">
             <span>
-              <Image src={logo} alt="bull logo" width={35} height={45} />
+              <Image src={logo} alt="sportsgen logo" width={140} height={24} />
             </span>
           </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,43 +62,54 @@ export default function Menu({modalClick, modalOpen, panelSwitch, panelSide}) {
                 {/* <Link className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</Link> */}
               </li>
             </ul>
-            {/* <form className="d-flex">
-              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-              <button className="btn btn-outline-success" type="submit">Search</button>
-            </form> */}
-           
-              <ul className="navbar-nav mb-2 mb-lg-0">
-                <li className={navbarstyle.button}>
-                  <motion.button 
-                  className="btn btn-primary save-button" 
-                  whileHover={{ scale: 1.1 }} 
-                  whileTap = {{ scale: 0.9 }} 
-                  onClick={ event => {modalClick(event, !modalOpen, true)}} 
-                  href="/login"  
-                  type="button"
-                  >
-                    Login
-                    </motion.button>
-                    </li>
 
-                <li className={navbarstyle.button}>
-                  <motion.button 
-                  className="btn btn-secondary save-button" 
-                  whileHover={{ scale: 1.1 }} 
-                  whileTap = {{ scale: 0.9 }} 
-                  onClick={ event => {modalClick(event, !modalOpen, false)}}
-                  href="/signup"  
+            {!session && (
+        <>
+         <p  style={{marginBottom: 0}}> Login with your <Image src={googlelogo} alt="Google" width={24} height={24} />mail account </p>  <br />
+           <ul className="navbar-nav mb-2 mb-lg-0">
+              <li className={navbarstyle.button}>
+                <motion.button
+                  className="btn btn-primary save-button"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  // onClick={ event => {modalClick(event, !modalOpen, true)}} 
+                  onClick={() => signIn()}
+                  href="/login"
                   type="button"
-                  >
-                    Sign Up
-                    </motion.button>
-                    </li>
-                    
+                >
+                  Login
+                </motion.button>
+              </li>
               </ul>
+        </>
+      )}
+      {session && (
+        <>
+        Signed in as {session.user.name} <br />
+          <ul className="navbar-nav mb-2 mb-lg-0">
             
-          </div>
+              <li className={navbarstyle.button}>
+                <motion.button
+                  className="btn btn-primary save-button"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  // onClick={ event => {modalClick(event, !modalOpen, true)}} 
+                  onClick={() => signOut()}
+                  href="/login"
+                  type="button"
+                  style={{width: 92}}
+                >
+                  Sign out
+                </motion.button>
+              </li>
+              </ul>
+              </>
+      )}
+            </div>
         </div>
       </nav>
+      
     </>
   )
 }
+
