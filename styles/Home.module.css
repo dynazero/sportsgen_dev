@@ -1,5 +1,3 @@
-
-
 .container {
   padding: 0 2rem;
 }
@@ -90,8 +88,8 @@
 .card:hover,
 .card:focus,
 .card:active {
-  color: #ff1616 ;
-  border-color: #ff1616 ;
+  color: #ff1616;
+  border-color: #ff1616;
 }
 
 .card h2 {
@@ -110,30 +108,30 @@
   margin-left: 0.5rem;
 }
 
-.customlogo{
+.customlogo {
   height: 13rem;
 }
 
-.canvass{
- width: 100%;
- height:100%;
- padding: 0 2rem;
- background-repeat: no-repeat;
- background-size: cover;
+.canvass {
+  width: 100%;
+  height: 100%;
+  padding: 0 2rem;
+  background-repeat: no-repeat;
+  background-size: cover;
 
 }
 
-.homepagegrid{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    max-width: 800px;
+.homepagegrid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
 }
 
-.homepagegrid a{
-   min-height: 9rem;
-    min-width: 19rem;
+.homepagegrid a {
+  min-height: 9rem;
+  min-width: 19rem;
 }
 
 @media (max-width: 600px) {
@@ -142,7 +140,7 @@
     flex-direction: column;
   }
 
-  .homepagegrid{
+  .homepagegrid {
     width: 100%;
     flex-direction: column;
   }
@@ -160,7 +158,7 @@
   }
 }
 
-@media (min-height:793px) and (max-height: 1007px){
+@media (min-height:793px) and (max-height: 1007px) {
   .main {
     min-height: 83vh;
     padding: 4rem 0;
@@ -173,13 +171,16 @@
 }
 
 @media (prefers-color-scheme: dark) {
+
   .card,
   .footer {
     border-color: rgb(0, 74, 173);
   }
+
   .code {
     background: rgb(255, 255, 255);
   }
+
   .logo img {
     filter: invert(1);
   }

@@ -1,4 +1,4 @@
-import { Provider } from "next-auth/client"
+import { SessionProvider } from "next-auth/react"
 import 'bootstrap/dist/css/bootstrap.css';
 import '../styles/globals.css';
 import { useEffect, useState } from 'react'
@@ -11,7 +11,7 @@ import { AnimatePresence } from 'framer-motion'
 
 
 
-function MyApp({ session, Component, ...pageProps }){
+function MyApp({ Component, pageProps: { session, ...pageProps } }){
 
   const [modalOpen, setModalOpen] = useState(false);
   const [panelSide, setPanelSide] = useState(true);
@@ -38,7 +38,7 @@ function MyApp({ session, Component, ...pageProps }){
   return (
     <>
       
-      <Provider session={pageProps.session}>
+      <SessionProvider  session={session}>
       <Menu modalClick={modalClick} modalOpen={modalOpen} panelSide={panelSide}/>
       <Component {...pageProps} />
 
@@ -47,7 +47,7 @@ function MyApp({ session, Component, ...pageProps }){
       >
         {modalOpen && <Modal modalOpen={modalOpen} handleClose={close} panelSide={panelSide}/>}
       </AnimatePresence>
-      </Provider>
+      </SessionProvider>
 
     </>
   )

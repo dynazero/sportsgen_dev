@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { signIn, signOut, useSession } from "next-auth/client"
+import { signIn, signOut, useSession } from "next-auth/react"
 import Link from 'next/link'
 import logo from '../public/sportsgenph_Text_vector.png'
 import googlelogo from '../public/images/google.png'
@@ -14,9 +14,8 @@ import { bottom } from '@popperjs/core'
 
 export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) {
 
-  const [session, loading] = useSession()
+  const { data: session } = useSession()
 
-  
   return (
     <>
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -85,7 +84,7 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) 
       )}
       {session && (
         <>
-        Signed in as {session.user.name} <br />
+        {/* Signed in as {session.user.name} <br />  */}
           <ul className="navbar-nav mb-2 mb-lg-0">
             
               <li className={navbarstyle.button}>

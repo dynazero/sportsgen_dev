@@ -1,15 +1,27 @@
 import NextAuth from "next-auth"
-import Providers from "next-auth/providers"
+import GoogleProviders from "next-auth/providers/google"
+import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
+import clientPromise from "../../../lib/mongodb";
+
+
 
 export const authOptions = {
-  // secret: process.env.AUTH_SECRET,
+  url: process.env.NEXTAUTH_URL_DASHBOARD,
+  secret: process.env.AUTH_SECRET,
+  adapter: MongoDBAdapter(clientPromise),
   // Configure one or more authentication providers
   providers: [
-    Providers.Google({
+    GoogleProviders({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
     }),
     // ...add more providers here
   ],
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      return "http://localhost:3000/dashboard"
+    },
+    debug: process.env.NODE_ENV === "development",
+  }
 }
 export default NextAuth(authOptions)
