@@ -8,9 +8,9 @@ import { getServerSession } from "next-auth/next"
 export default function index() {
   const { data: session } = useSession()
     return (
-      
+      <div className='dashboard'>
       <Sidebar />
-      
+      </div>
     )
     
   }
@@ -21,7 +21,7 @@ export default function index() {
     if (!session) {
       return {
         redirect: {
-          destination: '/unauthenticated',
+          destination: '/',
           permanent: false,
         },
       }

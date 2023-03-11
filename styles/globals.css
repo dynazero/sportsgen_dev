@@ -4,6 +4,9 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  max-height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 a {
@@ -23,7 +26,42 @@ a {
   body {
     color: rgb(0, 74, 173);
     background: rgb(255, 255, 255);
+    max-height: 100vh;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
+}
+
+/* dashboard */
+.dashboard {
+  width: auto;
+  height: 100vh;
+}
+
+/* sidebar */
+.sidebar {
+  width: 280px;
+  height: 100vh;
+}
+
+.sideList {
+  margin-bottom: 16px;
+  display: inline-flex;
+  position: relative;
+}
+
+.sideList div {
+  display: inline-flex;
+  background-color: #ff171b;
+  position: absolute;
+  width: 8px;
+  height: -webkit-fill-available;
+  right: 0;
+}
+
+.sideList:hover {
+  background-color: #ff171b;
+  transition: .5s;
 }
 
 /* Unathenticated */
@@ -135,11 +173,11 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding:30px;
-  border:1px solid #41464b33;
-  width:95vh;
+  padding: 30px;
+  border: 1px solid #41464b33;
+  width: 95vh;
   border-radius: 32px;
-  margin:30px
+  margin: 30px
 }
 
 .wrapperForm {
@@ -150,17 +188,18 @@ a {
   height: auto;
 }
 
-.submitCreate{
-  margin:30px 0px 30px 30px;
+.submitCreate {
+  margin: 30px 0px 30px 30px;
 }
 
-.alignRight{
+.alignRight {
   text-align: right;
 }
 
-.categoryMargin{
-  margin:30px 0px
+.categoryMargin {
+  margin: 30px 0px
 }
+
 /* Sample */
 
 .item {
