@@ -75,6 +75,7 @@ export default function myprofile() {
                             draggable={false}
                             pauseOnHover={false}
                             theme="light" />
+                            
     </>
     
   )

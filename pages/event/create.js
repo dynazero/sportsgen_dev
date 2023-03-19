@@ -80,10 +80,12 @@ const Createevent = () => {
 
 
     return (
-        <div className='wrapperForm'>
-            <div className='containerForm'>
-                <div className="col-md-7 col-lg-8">
+        <div className='wrapperForm '>
+            <div className='headerForm'>
                     <h2 className="mb-3">Create Event</h2>
+            </div>
+            <div className='containerForm'>
+                <div className="col-md-7 col-lg-8 mainForm">
                     <form className="needs-validation" noValidate="" />
                     <div className="row g-3">
                         <div className="col-sm-6">

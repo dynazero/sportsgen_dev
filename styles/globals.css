@@ -32,13 +32,41 @@ a {
   }
 }
 
+/* mydashboard */
+.mydashboard {
+  width: calc(100% - 280px);
+  position: relative;
+}
+
+.mydashboard.hidden {
+  left: 0px;
+}
+
 /* dashboard */
 .dashboard {
   width: auto;
   height: 100vh;
 }
 
+.mainDashboard {
+  height: 100vh;
+  padding: 32px;
+  position: relative;
+  /* position relative to sidebar */
+  z-index: 0
+}
+
+
+
 /* sidebar */
+.sidebarWidth {
+  width: 280px;
+  height: 100vh;
+  position: absolute;
+  transition: all 0.5s ease;
+  z-index: 2;
+}
+
 .sidebar {
   width: 280px;
   height: 100vh;
@@ -51,12 +79,19 @@ a {
 }
 
 .sideList div {
-  display: inline-flex;
   background-color: #ff171b;
   position: absolute;
   width: 8px;
   height: -webkit-fill-available;
   right: 0;
+}
+
+.activeBar {
+  display: inline-flex;
+}
+
+.deactiveBar {
+  display: none;
 }
 
 .sideList:hover {
@@ -77,7 +112,23 @@ a {
 
 .picClass {
   width: 90%;
-  ;
+  height: 90vh;
+  overflow: overlay;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  background-color: white;
+  border-radius: 5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 5rem;
+}
+
+.picClass .accordion {
+  width: 99%;
 }
 
 .rmvBorder {
@@ -168,24 +219,43 @@ a {
 }
 
 /* createEvent */
+.wrapperForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+    align-items: center;
+  width: 95vw;
+  height: 88vh;
+  margin: 0 auto;
+}
+
+
+.wrapperForm>.headerForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 75%;
+}
 
 .containerForm {
   display: flex;
-  justify-content: center;
+  height: 81vh;
+  flex-direction: column;
   align-items: center;
-  padding: 30px;
+  padding: 16px;
   border: 1px solid #41464b33;
-  width: 95vh;
+  width: 70vw;
   border-radius: 32px;
-  margin: 30px
+  overflow: hidden;
 }
 
-.wrapperForm {
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: auto;
+.mainForm{
+  overflow: overlay;
+  padding: 16px;
+  height: 100%;
+  width: 100%;
+  margin-right: 16px;
 }
 
 .submitCreate {
