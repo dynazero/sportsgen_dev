@@ -6,7 +6,7 @@ import logo from '../public/bullsolo.png'
 export default function unauthenticated() {
     return (
         <>
-            <div class="center">
+            <div className="center">
             <span>
               <Image src={logo} alt="sportsgenbull" width={90} height={120} />
             </span>

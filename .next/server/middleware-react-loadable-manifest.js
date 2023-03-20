@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST={"..\\components\\Modal\\index.jsx -> ../signupdetails":{"id":"..\\components\\Modal\\index.jsx -> ../signupdetails","files":["static/chunks/components_signupdetails_js.js"]},"_app.js -> bootstrap/dist/js/bootstrap":{"id":"_app.js -> bootstrap/dist/js/bootstrap","files":["static/chunks/node_modules_bootstrap_dist_js_bootstrap_js.js"]}}
