@@ -15,4 +15,4 @@ const categorySchema = new mongoose.Schema({
 
 const Category = mongoose.models.Category || mongoose.model("Category", categorySchema, "eventcategories")
 
-export default Category
+export default Category;
