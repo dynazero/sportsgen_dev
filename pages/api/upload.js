@@ -40,19 +40,22 @@ export default async function handler(req, res) {
         }
 
         const file = files.image;
-        const originalFileName = path.basename(file._writeStream.path);
+        // const originalFileName = path.basename(file._writeStream.path);
+        const originalFileName = file.originalFilename
         const fileExtension = path.extname(originalFileName);
         const uniqueFileName = `${uuidv4()}${fileExtension}`;
-
+        
         const params = {
             Bucket: process.env.DO_SPACES_BUCKET,
-            Key: `uploads/${uniqueFileName}`,
+            // Key: `uploads/${uniqueFileName}`,
+            Key: `uploads/${originalFileName}`,
             Body: createReadStream(file._writeStream.path),
             ACL: 'public-read',
         };
 
         try {
-            console.log('Uploading file:', uniqueFileName);
+            // console.log('Uploading file:', uniqueFileName);
+            console.log(originalFileName)
             await s3Client.send(new PutObjectCommand(params));
             res.status(201).json({ message: 'File uploaded successfully' });
         } catch (error) {

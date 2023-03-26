@@ -31,7 +31,10 @@ const Createevent = () => {
     const [entryFeeErrorMessage, setEntryFeeErrorMessage] = useState('');
 
     const [categories, setCategories] = useState([]);
+    const [filteredCategories, setFilteredCategories] = useState([]);
+    const [excludedCategories, setExcludedCategories] = useState([]);
     const [defaultCategory, setDefaultCategory] = useState([]);
+
     const [defaultCategoryErrorMessage, setDefaultCategoryErrorMessage] = useState('');
     const [availableCategories, setAvailableCategories] = useState([]);
 
@@ -40,6 +43,7 @@ const Createevent = () => {
             try {
                 const { data } = await axios.get("/api/getEventCategory")
                 setCategories(data.data)
+                setFilteredCategories(data.data)
             } catch (error) {
                 console.error(error)
             }
@@ -47,6 +51,8 @@ const Createevent = () => {
 
         fetchCategories()
     }, [])
+
+
 
 
     const onDateRangeChange = (startDate, endDate) => {
@@ -141,7 +147,7 @@ const Createevent = () => {
     };
 
 
-    const handleFormChange = (event, index, value) => {
+    const handleFormChange = (event, index, value, arrIndex = null) => {
 
         switch (index) {
             case 1:
@@ -181,6 +187,17 @@ const Createevent = () => {
                 break;
             case 0:
                 setDefaultCategory(value);
+                if (!excludedCategories.includes(value)) {
+                    if (rows.length == 0) {
+                        setExcludedCategories(value)
+                        setFilteredCategories(categories.filter(category => category.key != value));
+                    } else {
+                        const newExcludedCategories = [...excludedCategories];
+                        newExcludedCategories [arrIndex] = value;
+                        setFilteredCategories(categories.filter(category => category.key != value && !excludedCategories.includes(category.key)));
+                        setExcludedCategories(newExcludedCategories);
+                    }
+                }
                 break;
             // case 0:
             //   text = "Today is Sunday";
@@ -199,6 +216,9 @@ const Createevent = () => {
         const newRows = [...rows];
         newRows[index].selectedValue = event.target.value;
         setRows(newRows);
+
+       handleFormChange(event, 0, event.target.value, index+1)
+
     };
 
     const handleDelete = (index) => {
@@ -213,7 +233,7 @@ const Createevent = () => {
         setRows([
             ...rows,
             {
-                options: categories.map((category) => ({
+                options: filteredCategories.map((category) => ({
                     value: category.key,
                     label: category.title,
                 })),
@@ -244,7 +264,7 @@ const Createevent = () => {
         // formData.append('categories', JSON.stringify(rows.map((row) => row.selectedValue)));
 
         try {
-            const { data } = await axios.post(`../api/createEvent`, formData, config);
+            const { data } = await axios.post(`../api/createEvent`, formData);
             console.log(data);
             toast.success('Event created successfully!');
         } catch (error) {
@@ -254,17 +274,21 @@ const Createevent = () => {
     };
 
 
-    console.log(eventName)
-    console.log(startDate)
-    console.log(endDate)
-    console.log(city)
-    console.log(barangay)
-    console.log(zip)
-    console.log(address)
-    console.log(image)
-    // console.log(availableCategories)
+    // console.log(eventName)
+    // console.log(startDate)
+    // console.log(endDate)
+    // console.log(city)
+    // console.log(barangay)
+    // console.log(zip)
+    // console.log(address)
+    // console.log(image)
+    console.log(defaultCategory)
+    console.log('these are the', rows)
+    console.log('these are the filtered', filteredCategories)
+    console.log('these are the Excluded', excludedCategories)
+
     // console.log(categories)
-    console.log(entryFee)
+    // console.log(entryFee)
 
     return (
 
@@ -445,7 +469,9 @@ const Createevent = () => {
 
                             </div>
                             <div className="col-11">
-                                <select className="form-select" id="category" required>
+                                <select className="form-select" id="category"
+                                    onChange={(event) => handleFormChange(event, 0, event.target.value, 0)}
+                                    required>
                                     <option defaultValue="">Choose...</option>
                                     {
                                         categories.map((category) => (

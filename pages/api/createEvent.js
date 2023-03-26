@@ -62,13 +62,14 @@ export default async (req, res) => {
       }
 
       const file = files.image;
-      const originalFileName = path.basename(file._writeStream.path);
+      const originalFileName = file.originalFilename
       const fileExtension = path.extname(originalFileName);
       const uniqueFileName = `${uuidv4()}${fileExtension}`;
+      console.log(originalFileName)
 
       const params = {
         Bucket: process.env.DO_SPACES_BUCKET,
-        Key: `uploads/${uniqueFileName}`,
+        Key: `eventLogos/${originalFileName}`,
         Body: createReadStream(file._writeStream.path),
         ACL: "public-read",
       };
@@ -86,7 +87,7 @@ export default async (req, res) => {
           zip,
           address,
           entryFee,
-          uniqueFileName: uniqueFileName,
+          originalFileName: originalFileName,
         });
 
         await newEvent.save();

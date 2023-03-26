@@ -38,14 +38,14 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  // originalFileName: {
-  //   type: String,
-  //   required: true,
-  // },
-  uniqueFileName: {
+  originalFileName: {
     type: String,
     required: true,
   },
+  // uniqueFileName: {
+  //   type: String,
+  //   required: true,
+  // },
 });
 
 const Event = mongoose.models.Event || mongoose.model("Event", eventSchema, "events");
