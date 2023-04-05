@@ -7,22 +7,18 @@ import CustomDatePicker from '../../components/CustomDatePicker';
 import CustomDateRangePicker from '../../components/CustomDateRangePicker';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Int32 } from 'mongodb';
 
 const Createevent = () => {
     const MotionLink = motion(Link)
     const [rows, setRows] = useState([]);
     const [eventName, setEventName] = useState('');
+    const [flag, setFlag] = useState(0);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
 
     const [city, setCity] = useState('');
     const [cityErrorMessage, setCityErrorMessage] = useState("");
-
-    const [barangay, setBarangay] = useState('');
-    const [barangayErrorMessage, setBarangayErrorMessage] = useState("");
-
-    const [zip, setZip] = useState('');
-    const [zipErrorMessage, setZipErrorMessage] = useState('');
 
     const [address, setAddress] = useState('');
     const [addressErrorMessage, setAddressErrorMessage] = useState('');
@@ -35,8 +31,7 @@ const Createevent = () => {
     const [excludedCategories, setExcludedCategories] = useState([]);
     const [defaultCategory, setDefaultCategory] = useState([]);
 
-    const [defaultCategoryErrorMessage, setDefaultCategoryErrorMessage] = useState('');
-    const [availableCategories, setAvailableCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -53,7 +48,33 @@ const Createevent = () => {
     }, [])
 
 
+    const checkSelectedCategories = (key, value) => {
+        console.log('im here', key, value)
 
+        
+
+        if(selectedCategories.length != 0){
+            setSelectedCategories((prevCategories) => {
+                const existingObjectIndex = prevCategories.findIndex((item) => item.key === key);
+            
+                if (existingObjectIndex !== -1) {
+                  // Update existing object
+                  return prevCategories.map((item) =>
+                    item.key === key ? { ...item, value: value } : item
+                  );
+                } else {
+                  // Add new object
+                  const newObject = { key: key, value: value };
+                  return [...prevCategories, newObject];
+                }
+              });
+        }else{
+            setSelectedCategories([{
+                key: key,
+                value: value
+            }])
+        }
+    }
 
     const onDateRangeChange = (startDate, endDate) => {
         setStartDate(startDate);
@@ -67,9 +88,9 @@ const Createevent = () => {
                 // case 1:
                 //     setEventName(value);
                 //     break;
-                // case 2:
-                //     setStartDate(value);
-                //     break;
+                case 2:
+                    setFlag(value);
+                    break;
                 // case 3:
                 //     setEndDate(value);
                 //     break;
@@ -186,14 +207,14 @@ const Createevent = () => {
                 setEntryFee(value);
                 break;
             case 0:
-                setDefaultCategory(value);
+                checkSelectedCategories(arrIndex, value)
                 if (!excludedCategories.includes(value)) {
                     if (rows.length == 0) {
                         setExcludedCategories(value)
                         setFilteredCategories(categories.filter(category => category.key != value));
                     } else {
                         const newExcludedCategories = [...excludedCategories];
-                        newExcludedCategories [arrIndex] = value;
+                        newExcludedCategories[arrIndex] = value;
                         setFilteredCategories(categories.filter(category => category.key != value && !excludedCategories.includes(category.key)));
                         setExcludedCategories(newExcludedCategories);
                     }
@@ -217,14 +238,16 @@ const Createevent = () => {
         newRows[index].selectedValue = event.target.value;
         setRows(newRows);
 
-       handleFormChange(event, 0, event.target.value, index+1)
+        handleFormChange(event, 0, event.target.value, index + 1)
 
     };
 
-    const handleDelete = (index) => {
+    const handleDelete = (event, index) => {
         const newRows = [...rows];
         newRows.splice(index, 1);
         setRows(newRows);
+
+
     };
 
 
@@ -233,7 +256,7 @@ const Createevent = () => {
         setRows([
             ...rows,
             {
-                options: filteredCategories.map((category) => ({
+                options: categories.map((category) => ({
                     value: category.key,
                     label: category.title,
                 })),
@@ -253,11 +276,10 @@ const Createevent = () => {
 
         const formData = new FormData();
         formData.append('eventName', eventName);
+        formData.append('flag', flag);
         formData.append('startDate', startDate);
         formData.append('endDate', endDate);
         formData.append('city', city);
-        formData.append('barangay', barangay);
-        formData.append('zip', zip);
         formData.append('address', address);
         formData.append('entryFee', entryFee);
         formData.append('image', image);
@@ -282,13 +304,13 @@ const Createevent = () => {
     // console.log(zip)
     // console.log(address)
     // console.log(image)
-    console.log(defaultCategory)
-    console.log('these are the', rows)
-    console.log('these are the filtered', filteredCategories)
-    console.log('these are the Excluded', excludedCategories)
+    // console.log(defaultCategory)
+    // console.log('these are the', rows)
+    // console.log('these are the filtered', filteredCategories)
+    // console.log('these are the Excluded', excludedCategories)
 
-    // console.log(categories)
-    // console.log(entryFee)
+    console.log(categories)
+    console.log(selectedCategories)
 
     return (
 
@@ -300,20 +322,47 @@ const Createevent = () => {
                 <div className="col-md-7 col-lg-8 mainForm">
                     <form onSubmit={SubmitHandler} className="needs-validation" noValidate="" >
                         <div className="row g-3">
-                            <div className="col-sm-6">
+                            <div className="container">
                                 {/* <label htmlFor="firstName" className="form-label">Name of Event/Tournament</label> */}
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="eventName"
-                                    placeholder="Name of Event/Tournament"
-                                    value={eventName}
-                                    onChange={(event) => handleFormChange(event, 1, event.target.value)}
-                                    required
-                                />
-                                <div className="invalid-feedback">
-                                    Valid Event/Tournament name is required.
+                                <div className="row">
+                                    <div className="col">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="eventName"
+                                            placeholder="Name of Event/Tournament"
+                                            value={eventName}
+                                            onChange={(event) => handleFormChange(event, 1, event.target.value)}
+                                            required
+                                        />
+                                        <div className="invalid-feedback">
+                                            Valid Event/Tournament name is required.
+                                        </div>
+                                    </div>
+                                    <div className="col">
+                                        <select
+                                            className="form-select"
+                                            id="flag"
+                                            value={flag}
+                                            // onChange={(e) => setCity(e.target.value)}
+                                            onChange={(event) => handleFormChange(event, 2, event.target.value)}
+                                            required
+                                        >
+                                            <option defaultValue="0">Philippines</option>
+                                            <option value={'1'}>Japan</option>
+                                            <option value={'2'}>Singapore</option>
+                                            <option value={'3'}>China</option>
+                                            <option value={'4'}>Taiwan</option>
+                                            <option value={'5'}>Malaysia</option>
+
+                                        </select>
+                                        {/* <div className="invalid-feedback" style={{ display: cityErrorMessage ? 'block' : 'none' }}>
+                                            {cityErrorMessage}
+
+                                        </div> */}
+                                    </div>
                                 </div>
+
                             </div>
                             <div className="col-sm-6">
 
@@ -353,45 +402,8 @@ const Createevent = () => {
                                 </div>
                             </div>
 
-                            <div className="col-md-4">
-                                <label htmlFor="state" className="form-label">State/Barangay</label>
-                                <select
-                                    className="form-select"
-                                    id="barangay"
-                                    value={barangay}
-                                    // onChange={(e) => setBarangay(e.target.value)}
-                                    onChange={(event) => handleFormChange(event, 5, event.target.value)}
-
-                                    required
-                                >
-                                    <option defaultValue="">Choose...</option>
-                                    <option>1016</option>
-                                    <option>630</option>
-                                    <option>1550</option>
-                                </select>
-                                <div className="invalid-feedback" style={{ display: barangayErrorMessage ? 'block' : 'none' }}>
-                                    {barangayErrorMessage}
-                                </div>
-                            </div>
-
-                            <div className="col-md-3">
-                                <label htmlFor="zip" className="form-label">Zip</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="zip"
-                                    placeholder=""
-                                    value={zip}
-                                    onChange={(event) => handleFormChange(event, 6, event.target.value)}
-                                    required
-                                />
-                                <div className="invalid-feedback">
-                                    Zip code required.
-                                </div>
-                            </div>
-
-                            <div className="col-12">
-                                <label htmlFor="username" className="form-label">Exact Address</label>
+                            <div className="col-md-7">
+                            <label htmlFor="username" className="form-label">Exact Address</label>
                                 <div className="input-group has-validation">
                                     <input
                                         type="text"
@@ -407,8 +419,6 @@ const Createevent = () => {
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
 

@@ -6,6 +6,10 @@ const eventSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  flag:{
+    type: Number,
+    required: true,
+  },
   startDate: {
     type: Date,
     required: true,
@@ -15,14 +19,6 @@ const eventSchema = new mongoose.Schema({
     required: true,
   },
   city: {
-    type: String,
-    required: true,
-  },
-  barangay: {
-    type: String,
-    required: true,
-  },
-  zip: {
     type: String,
     required: true,
   },

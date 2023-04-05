@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import AthletesProfile from './AthletesProfile';
 
 export default function MyAthletes({ onPageChange }) {
 
@@ -8,6 +9,8 @@ export default function MyAthletes({ onPageChange }) {
 
 
   return (
-    <div>MyAthletes</div>
+    <div>
+      <AthletesProfile />
+    </div>
   )
 }

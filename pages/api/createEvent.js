@@ -41,11 +41,10 @@ export default async (req, res) => {
 
       const {
         eventName,
+        flag,
         startDate,
         endDate,
         city,
-        barangay,
-        zip,
         address,
         entryFee,
       } = fields;
@@ -80,11 +79,10 @@ export default async (req, res) => {
 
         const newEvent = new Event({
           eventName,
+          flag,
           startDate: convertToPST(new Date(startDate)),
           endDate: convertToPST(new Date(endDate)),
           city,
-          barangay,
-          zip,
           address,
           entryFee,
           originalFileName: originalFileName,

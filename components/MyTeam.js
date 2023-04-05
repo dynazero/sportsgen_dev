@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react'
+import TeamProfile from './TeamProfile';
+
 
 export default function MyTeam({ onPageChange }) {
 
@@ -7,6 +9,9 @@ export default function MyTeam({ onPageChange }) {
   }, [onPageChange]);
 
   return (
-    <div>MyTeam</div>
+    <div>
+<TeamProfile />
+
+    </div>
   )
 }
