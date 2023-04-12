@@ -49,6 +49,8 @@ export default async (req, res) => {
         entryFee,
       } = fields;
 
+      const categoryKeys = JSON.parse(fields.categories);
+
       const eventVerify = await Event.findOne({ eventName: eventName });
       if (eventVerify) {
         res.status(422).json({ message: "Event already exists" });
@@ -85,6 +87,7 @@ export default async (req, res) => {
           city,
           address,
           entryFee,
+          categories: categoryKeys, 
           originalFileName: originalFileName,
         });
 

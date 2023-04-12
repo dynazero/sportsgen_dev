@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { InputGroup } from 'react-bootstrap';
 import styles from './CustomDatePicker.module.css';
@@ -8,6 +8,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 const CustomDateRangePicker = (props) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  useEffect(() => {
+    if (props.reset) {
+      setStartDate(null);
+      setEndDate(null);
+    }
+  }, [props.reset]);
 
   const handleStartDateChange = (date) => {
     setStartDate(date);

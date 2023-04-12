@@ -38,6 +38,10 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // categories: {
+  //   type: [Number],
+  //   required: true,
+  // }
   // uniqueFileName: {
   //   type: String,
   //   required: true,

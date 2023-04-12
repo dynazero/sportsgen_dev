@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState }from 'react';
 
-const InputDropdownRow = ({ options, selectedValue, handleChange, handleDelete }) => {
+const InputDropdownRow = ({ options, selectedValue, handleChange, handleDelete, reset  }) => {
+  const [value, setValue] = useState(selectedValue);
+
+  useEffect(() => {
+      if (reset) {
+          setValue('');
+          handleChange({ target: { value: '' } });
+      }
+  }, [reset]);
+
     return (
         <div className="row categoryMargin">
       <div className="col-1">
@@ -8,8 +17,13 @@ const InputDropdownRow = ({ options, selectedValue, handleChange, handleDelete }
         <div className="col-10 form-group">
           <select
             className="form-control"
-            value={selectedValue}
-            onChange={handleChange}
+            value={value}
+            onChange={(e) => {
+              setValue(e.target.value);
+              handleChange(e);
+          }
+
+            }
           >
             <option defaultValue="">Choose...</option>
             {options.map((option) => (

@@ -1,27 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { MotionConfig, motion } from 'framer-motion';
 import InputDropdownRow from '../../components/inputDropdownRow';
 import CustomDatePicker from '../../components/CustomDatePicker';
 import CustomDateRangePicker from '../../components/CustomDateRangePicker';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { Int32 } from 'mongodb';
 
 const Createevent = () => {
+    const router = useRouter();
     const MotionLink = motion(Link)
     const [rows, setRows] = useState([]);
     const [eventName, setEventName] = useState('');
     const [flag, setFlag] = useState(0);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [resetDatePicker, setResetDatePicker] = useState(false);
 
     const [city, setCity] = useState('');
     const [cityErrorMessage, setCityErrorMessage] = useState("");
 
     const [address, setAddress] = useState('');
     const [addressErrorMessage, setAddressErrorMessage] = useState('');
+    const fileInputRef = useRef();
     const [image, setImage] = useState(null);
     const [entryFee, setEntryFee] = useState('');
     const [entryFeeErrorMessage, setEntryFeeErrorMessage] = useState('');
@@ -30,8 +33,12 @@ const Createevent = () => {
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [excludedCategories, setExcludedCategories] = useState([]);
     const [defaultCategory, setDefaultCategory] = useState([]);
+    const [resetDefaultCategory, setResetDefaultCategory] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [resetDropdown, setResetDropdown] = useState(false);
+    const [duplicates, setDuplicates] = useState(false)
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -47,31 +54,46 @@ const Createevent = () => {
         fetchCategories()
     }, [])
 
+    useEffect(() => {
+        if (resetDefaultCategory) {
+          setSelectedCategory('');
+          setResetDefaultCategory(false);
+        }
+      }, [resetDefaultCategory]);
+
 
     const checkSelectedCategories = (key, value) => {
-        console.log('im here', key, value)
+        const categoryValue = parseInt(value)
+        // console.log(key, categoryValue)
 
-        
-
-        if(selectedCategories.length != 0){
+        if (selectedCategories.length != 0) {
             setSelectedCategories((prevCategories) => {
                 const existingObjectIndex = prevCategories.findIndex((item) => item.key === key);
-            
-                if (existingObjectIndex !== -1) {
-                  // Update existing object
-                  return prevCategories.map((item) =>
-                    item.key === key ? { ...item, value: value } : item
-                  );
+                const existingValueIndex = prevCategories.findIndex((item) => item.value === categoryValue);
+
+                if (existingValueIndex !== -1) {
+                    toast.warning('Event already selected');  //todo
+                    setDuplicates(true)
                 } else {
-                  // Add new object
-                  const newObject = { key: key, value: value };
-                  return [...prevCategories, newObject];
+                    // toast.success('Event Added!');
+                    setDuplicates(false)
                 }
-              });
-        }else{
+
+                if (existingObjectIndex !== -1) {
+                    // Update existing object
+                    return prevCategories.map((item) =>
+                        item.key === key ? { ...item, value: categoryValue } : item
+                    );
+                } else {
+                    // Add new object
+                    const newObject = { key: key, value: categoryValue };
+                    return [...prevCategories, newObject];
+                }
+            });
+        } else {
             setSelectedCategories([{
                 key: key,
-                value: value
+                value: categoryValue
             }])
         }
     }
@@ -231,6 +253,14 @@ const Createevent = () => {
 
 
 
+    const removeFromList = (keyValue) => {
+        const indexToDelete = selectedCategories.findIndex(selected => selected.key === keyValue);
+        const newSelectedCategories = [...selectedCategories]
+
+        newSelectedCategories.splice(indexToDelete, 1)
+
+        setSelectedCategories(newSelectedCategories)
+    }
 
 
     const handleChange = (event, index) => {
@@ -242,11 +272,15 @@ const Createevent = () => {
 
     };
 
-    const handleDelete = (event, index) => {
+    const handleDelete = (event, row, index) => {
+        const keyValue = row + 1;
+
         const newRows = [...rows];
-        newRows.splice(index, 1);
+        const newSelectedCategories = [...selectedCategories]
+        newRows.splice(row, 1);
         setRows(newRows);
 
+        removeFromList(keyValue)
 
     };
 
@@ -274,43 +308,73 @@ const Createevent = () => {
         //     },
         // };
 
-        const formData = new FormData();
-        formData.append('eventName', eventName);
-        formData.append('flag', flag);
-        formData.append('startDate', startDate);
-        formData.append('endDate', endDate);
-        formData.append('city', city);
-        formData.append('address', address);
-        formData.append('entryFee', entryFee);
-        formData.append('image', image);
-        // formData.append('categories', JSON.stringify(rows.map((row) => row.selectedValue)));
+        if (!duplicates) {
+            const formData = new FormData();
+            formData.append('eventName', eventName);
+            formData.append('flag', flag);
+            formData.append('startDate', startDate);
+            formData.append('endDate', endDate);
+            formData.append('city', city);
+            formData.append('address', address);
+            formData.append('entryFee', entryFee);
+            formData.append('image', image);
+            const categoryKeys = selectedCategories.map((category) => category.value);
+            formData.append('categories', JSON.stringify(categoryKeys));
+            
 
-        try {
-            const { data } = await axios.post(`../api/createEvent`, formData);
-            console.log(data);
-            toast.success('Event created successfully!');
-        } catch (error) {
-            console.error('Error during axios request', error);
-            toast.error('Error creating event');
+
+            // formData.append('categories', JSON.stringify(rows.map((row) => row.selectedValue)));
+
+            // try {
+            //     const { data } = await axios.post(`../api/createEvent`, formData);
+            //     console.log(data);
+            //     toast.success('Event created successfully!');
+            // } catch (error) {
+            //     console.error('Error during axios request', error);
+            //     toast.error('Error creating event');
+            // }
+            const functionThatReturnPromise = axios.post(`../api/createEvent`, formData);
+            toast.promise(
+                functionThatReturnPromise,
+                {
+                    pending: 'Creating Event',
+                    success: 'Event created successfully! 👌',
+                    error: 'Error creating event 🤯'
+                }
+            ).then(
+                (response) => {
+                    if (response.status === 201) { // Check if the event was created successfully
+                      // Clear the form
+                      setEventName('');
+                      setFlag('');
+                      setStartDate('');
+                      setEndDate('');
+                      setResetDatePicker(!resetDatePicker);
+                      setCity('');
+                      setAddress('');
+                      setEntryFee('');
+                      setImage('');
+                      fileInputRef.current.value = '';
+                      setSelectedCategories([])
+                      setRows([])
+                      setResetDropdown(!resetDropdown);
+                      setResetDefaultCategory(true);
+                
+                      // Navigate to another page (e.g., the home page)
+                      router.push('/event');
+                    }
+                  }
+            ).catch((error) => {
+                console.error('Error submitting form:', error);
+              });
+
+        } else {
+            toast.warning('Duplicate Categories, Please check your choosen events');
         }
+
     };
 
-
-    // console.log(eventName)
-    // console.log(startDate)
-    // console.log(endDate)
-    // console.log(city)
-    // console.log(barangay)
-    // console.log(zip)
-    // console.log(address)
-    // console.log(image)
-    // console.log(defaultCategory)
-    // console.log('these are the', rows)
-    // console.log('these are the filtered', filteredCategories)
-    // console.log('these are the Excluded', excludedCategories)
-
-    console.log(categories)
-    console.log(selectedCategories)
+    // console.log(selectedCategories)
 
     return (
 
@@ -367,7 +431,7 @@ const Createevent = () => {
                             <div className="col-sm-6">
 
                             </div>
-                            <CustomDateRangePicker onDateRangeChange={onDateRangeChange} />
+                            <CustomDateRangePicker onDateRangeChange={onDateRangeChange}  reset={resetDatePicker}  />
 
                             <div className="col-sm-6" style={{ zIndex: '4' }}>
 
@@ -403,7 +467,7 @@ const Createevent = () => {
                             </div>
 
                             <div className="col-md-7">
-                            <label htmlFor="username" className="form-label">Exact Address</label>
+                                <label htmlFor="username" className="form-label">Exact Address</label>
                                 <div className="input-group has-validation">
                                     <input
                                         type="text"
@@ -435,6 +499,7 @@ const Createevent = () => {
                                         className="form-control"
                                         id="uploadlogo"
                                         placeholder=""
+                                        ref={fileInputRef}
                                         // onChange={(e) => setImage(e.target.files[0])}
                                         onChange={(event) => handleFormChange(event, 8, event.target.files[0])}
                                         required
@@ -480,7 +545,11 @@ const Createevent = () => {
                             </div>
                             <div className="col-11">
                                 <select className="form-select" id="category"
-                                    onChange={(event) => handleFormChange(event, 0, event.target.value, 0)}
+                                value={selectedCategory}
+                                    onChange={(event) => { 
+                                            setSelectedCategory(event.target.value);
+                                        handleFormChange(event, 0, event.target.value, 0)
+                                    }}
                                     required>
                                     <option defaultValue="">Choose...</option>
                                     {
@@ -502,7 +571,8 @@ const Createevent = () => {
                                     options={row.options}
                                     selectedValue={row.selectedValue}
                                     handleChange={(event) => handleChange(event, index)}
-                                    handleDelete={() => handleDelete(index)}
+                                    handleDelete={() => handleDelete(row, index)}
+                                    reset={resetDropdown}
                                 />
                             ))}
 
