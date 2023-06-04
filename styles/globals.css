@@ -32,6 +32,18 @@ a {
   }
 }
 
+/* panels */
+.panelsBG{
+  background-color: whitesmoke;
+}
+
+.panelDark{
+  background-color:#eeeeee ;
+}
+
+.minW480{
+  min-width: 480px;
+}
 
 /* category */
 

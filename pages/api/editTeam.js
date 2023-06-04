@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB";
-import Event from "../../model/eventSchema";
+import Team from "../../model/teamSchema";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import formidable from "formidable";
 import { createReadStream } from "fs";
@@ -24,13 +24,8 @@ export const config = {
   },
 };
 
-function convertToPST(date) {
-  const offset = 8 * 60 * 60 * 1000; // Offset in milliseconds for UTC+8
-  return new Date(date.getTime() + offset);
-}
-
 export default async (req, res) => {
-  if (req.method === "POST") {
+  if (req.method === "PUT") {
     const form = new formidable.IncomingForm();
     form.parse(req, async (err, fields, files) => {
       if (err) {
@@ -40,23 +35,20 @@ export default async (req, res) => {
       }
 
       const {
-        eventName,
-        eventType,
         registeredEmail,
-        flag,
-        startDate,
-        endDate,
-        city,
-        address,
-        eventStatus,
-        entryFee,
+        clubName,
+        country,
       } = fields;
 
-      const categoryKeys = JSON.parse(fields.categories);
+      const emailVerify = await Team.findOne({ registeredEmail: registeredEmail });
+      if (emailVerify) {
+        res.status(409).json({ message: "You already registered a Team" });
+        return;
+      }
 
-      const eventVerify = await Event.findOne({ eventName: eventName });
-      if (eventVerify) {
-        res.status(422).json({ message: "Event already exists" });
+      const teamVerify = await Team.findOne({ clubName: clubName });
+      if (teamVerify) {
+        res.status(409).json({ message: "Team already exists" });
         return;
       }
 
@@ -73,7 +65,7 @@ export default async (req, res) => {
 
       const params = {
         Bucket: process.env.DO_SPACES_BUCKET,
-        Key: `eventLogos/${originalFileName}`,
+        Key: `teamLogos/${originalFileName}`,
         Body: createReadStream(file._writeStream.path),
         ACL: "public-read",
       };
@@ -82,23 +74,15 @@ export default async (req, res) => {
         console.log("Uploading file:", uniqueFileName);
         await s3Client.send(new PutObjectCommand(params));
 
-        const newEvent = new Event({
-          eventName,
-          eventType,
+        const newTeam = new Team({
           registeredEmail,
-          flag,
-          startDate: convertToPST(new Date(startDate)),
-          endDate: convertToPST(new Date(endDate)),
-          city,
-          address,
-          entryFee,
-          categories: categoryKeys, 
-          eventStatus,
+          clubName,
+          country,
           originalFileName: originalFileName,
         });
 
-        await newEvent.save();
-        res.status(201).json({ message: "Event created successfully" });
+        await newTeam.save();
+        res.status(201).json({ message: "Team created successfully" });
       } catch (error) {
         console.error("Error uploading file:", error);
         res.status(500).json({ message: "Error uploading file", error: error.message });

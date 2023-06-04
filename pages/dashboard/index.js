@@ -23,7 +23,7 @@ export default function dashboard() {
 
   // default return
   return (
-    <div className='dashboard'>
+    <div className='dashboard panelsBG'>
       <div className='sidebarWidth'>
         <Sidebar setPassSBS={setPassSBS} setPassPage={setPassPage} passPage={passPage} curPage={curPage}/>
       </div>

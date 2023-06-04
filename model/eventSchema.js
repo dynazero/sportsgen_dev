@@ -6,9 +6,20 @@ const eventSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  flag:{
-    type: Number,
+  eventType: {
+    type: String,
     required: true,
+    trim: true,
+  },
+  registeredEmail: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  flag: {
+    type: String,
+    required: true,
+    trim: true,
   },
   startDate: {
     type: Date,
@@ -34,14 +45,19 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  eventStatus: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   originalFileName: {
     type: String,
     required: true,
   },
-  // categories: {
-  //   type: [Number],
-  //   required: true,
-  // }
+  categories: {
+    type: [Number],
+    required: true,
+  }
   // uniqueFileName: {
   //   type: String,
   //   required: true,
@@ -50,5 +66,5 @@ const eventSchema = new mongoose.Schema({
 
 const Event = mongoose.models.Event || mongoose.model("Event", eventSchema, "events");
 
-export default Event; 
+export default Event;
 
