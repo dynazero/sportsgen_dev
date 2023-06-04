@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const profileSchema = mongoose.Schema({
+const profileSchema =  new mongoose.Schema({
 
     fname: {
         type: String,
@@ -12,10 +12,18 @@ const profileSchema = mongoose.Schema({
         type: String,
         required: true,
         unique:true
-    }
+    },
+    originalFileName: {
+        type: String,
+        required: true, 
+    },
+    profileStatus: {
+        type: String,
+        required: true,
+        trim: true,
+    },  
 })
 
-const Profile = mongoose.model("Profile", profileSchema)
+const Profile = mongoose.models.Profile || mongoose.model("Profile", profileSchema, "profiles")
 
-// mongoose.models = {}
-export default mongoose.models.Profile || mongoose.model("Profile", profileSchema)
+export default Profile;

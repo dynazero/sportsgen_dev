@@ -9,15 +9,15 @@ import { MotionConfig, motion } from 'framer-motion';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const CreateTeam = () => {
+const CreateProfile = () => {
     const { data: session } = useSession()
 
     const router = useRouter();
     const MotionLink = motion(Link)
-    const [registeredEmail, setRegisteredEmail] = useState(session.user.email);
-    const [clubName, setClubName] = useState('');
-    const [description, setDescription] = useState('');
-    const [country, setCountry] = useState('PH');
+    const [email, setEmail] = useState(session.user.email);
+    const [fname, setFName] = useState("");
+    const [lname, setLName] = useState("");
+    const [profileStatus, setProfileStatus] = useState('verified');
 
     const fileInputRef = useRef();
     const [image, setImage] = useState(null);
@@ -26,16 +26,16 @@ const CreateTeam = () => {
 
         switch (index) {
             case 1:
-                setClubName(value);
+                setFName(value);
                 break;
             case 2:
-                setCountry(value);
+                setLName(value);
                 break;
             case 3:
                 setImage(value);
                 break;
             case 4:
-                setDescription(value);
+                setProfileStatus(value);
                 break;
             // case 0:
             //   text = "Today is Sunday";
@@ -51,28 +51,27 @@ const CreateTeam = () => {
         e.preventDefault();
         // if (!duplicates) {
         const formData = new FormData();
-        formData.append('registeredEmail', registeredEmail);
-        formData.append('clubName', clubName);
-        formData.append('country', country);
+        formData.append('email', email);
+        formData.append('fname', fname);
+        formData.append('lname', lname);
+        formData.append('profileStatus', profileStatus);
         formData.append('image', image);
-        formData.append('description', description);
 
 
-        const functionThatReturnPromise = axios.post(`../api/createTeam`, formData);
+        const functionThatReturnPromise = axios.post(`../api/createProfile`, formData);
         toast.promise(
             functionThatReturnPromise,
             {
-                pending: 'Creating Team',
-                success: 'Team created successfully! 👌',
-                error: 'Error creating team 🤯'
+                pending: 'Creating Profile',
+                success: 'Profile saved successfully! 👌',
+                error: 'Error creating profile 🤯'
             }
         ).then(
             (response) => {
-                if (response.status === 201) { // Check if the event was created successfully
+                if (response.status === 201) { // Check if the profile was created successfully
                     // Clear the form
-                    setClubName('');
-                    setCountry('');
-                    setDescription('');
+                    setFName('');
+                    setLName('');
                     fileInputRef.current.value = '';
 
                     // Navigate to another page (e.g., the home page)
@@ -84,15 +83,7 @@ const CreateTeam = () => {
         ).catch((error) => {
             if (error.response) {
                 // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
                 console.error('Error submitting form:', error.response.data.message);
-                if (error.response.data.message = 'You already registered a Team') {
-                    toast.warning('You cannot register another team, please edit your exiting one');
-                }
-                if (error.response.data.message = 'Team already exists') {
-                    toast.warning('Please try another Club Name');
-                }
-                console.error('HTTP status code:', error.response.status);
             } else if (error.request) {
                 // The request was made but no response was received
                 console.error('No response received:', error.request);
@@ -119,7 +110,7 @@ const CreateTeam = () => {
             }}
         >
             <div className='headerForm'>
-                <h2 className="mb-3">Create Club</h2>
+                <h2 className="mb-3">Fill in your profile</h2>
             </div>
             <div className='containerForm'
                 style={{
@@ -133,44 +124,34 @@ const CreateTeam = () => {
                                 {/* <label htmlFor="firstName" className="form-label">Name of Event/Tournament</label> */}
                                 <div className="row">
                                     <div className="col">
-                                        <label htmlFor="clubName" className="form-label">Team Name</label>
-
+                                        <label htmlFor="fname" className="form-label">First name</label>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            id="clubName"
-                                            placeholder="Name of your Team"
-                                            value={clubName}
+                                            id="fname"
+                                            placeholder="First Name"
+                                            value={fname}
                                             onChange={(event) => handleFormChange(event, 1, event.target.value)}
                                             required
                                         />
                                         <div className="invalid-feedback">
-                                            Valid Team name is required.
+                                            Valid First name is required.
                                         </div>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="country" className="form-label">Country</label>
-
-                                        <select
-                                            className="form-select"
-                                            id="country"
-                                            value={country}
-                                            // onChange={(e) => setCity(e.target.value)}
+                                        <label htmlFor="lName" className="form-label">Last name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="lName"
+                                            placeholder="Last Name"
+                                            value={lname}
                                             onChange={(event) => handleFormChange(event, 2, event.target.value)}
                                             required
-                                        >
-                                            <option value='PH'>Philippines</option>
-                                            <option value={'JP'}>Japan</option>
-                                            <option value={'SG'}>Singapore</option>
-                                            <option value={'CN'}>China</option>
-                                            <option value={'TW'}>Taiwan</option>
-                                            <option value={'MY'}>Malaysia</option>
-
-                                        </select>
-                                        {/* <div className="invalid-feedback" style={{ display: cityErrorMessage ? 'block' : 'none' }}>
-                                            {cityErrorMessage}
-
-                                        </div> */}
+                                        />
+                                        <div className="invalid-feedback">
+                                            Valid Last name is required.
+                                        </div>
                                     </div>
                                 </div>
 
@@ -190,7 +171,7 @@ const CreateTeam = () => {
 
                             <div className='row'>
                                 <div className="col-sm-6">
-                                    <label htmlFor="uploadLogo" className="form-label">Add logo of your Team</label>
+                                    <label htmlFor="uploadLogo" className="form-label">Upload Government Issued ID for verification</label>
                                     <input
                                         type="file"
                                         className="form-control"
@@ -205,24 +186,6 @@ const CreateTeam = () => {
                                         Please upload only valid format
                                     </div>
                                 </div>
-
-                                <div className="col-sm-6">
-                                    <label htmlFor="description" className="form-label">Add a short description or quote</label>
-
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="description"
-                                        placeholder="description"
-                                        value={description}
-                                        onChange={(event) => handleFormChange(event, 4, event.target.value)}
-                                        required
-                                    />
-                                    <div className="invalid-feedback">
-                                        Valid Description is required.
-                                    </div>
-                                </div>
-
 
 
                             </div>
@@ -247,25 +210,53 @@ const CreateTeam = () => {
     )
 }
 
-export default CreateTeam;
+export default CreateProfile;
 
 
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions)
     const nextAuthSession = await getSession(context);
-    let team = null;
+    let profile = null;
 
     if (nextAuthSession) {
-        const res = await axios.get(`http://localhost:3000/api/getUserTeam?registeredEmail=${nextAuthSession.user.email}`);
-        team = res.data.data
-      }
+        try {
+            const res = await axios.get(`http://localhost:3000/api/getProfile?email=${nextAuthSession.user.email}`);
+            profile = res.data.data
+        } catch (error) {
+            console.error('API request failed:', error);
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+        }
+    }
 
-console.log(team)
+    console.log(profile)
 
-    if (!session || team.length != 0) {
+    if (!session) {
         return {
             redirect: {
-                destination: '/team/error',
+                destination: '/profile/error',
+                permanent: false,
+            },
+        }
+    }
+
+    if (profile.length != 0) {
+        return {
+            redirect: {
+                destination: '/profile/edit',
                 permanent: false,
             },
         }

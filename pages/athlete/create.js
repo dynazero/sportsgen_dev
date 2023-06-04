@@ -9,7 +9,7 @@ import { MotionConfig, motion } from 'framer-motion';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const CreateTeam = () => {
+const Createevent = () => {
     const { data: session } = useSession()
 
     const router = useRouter();
@@ -247,7 +247,7 @@ const CreateTeam = () => {
     )
 }
 
-export default CreateTeam;
+export default Createevent;
 
 
 export async function getServerSideProps(context) {

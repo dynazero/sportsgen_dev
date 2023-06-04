@@ -12,7 +12,7 @@ import CustomDateRangePicker from '../../components/CustomDateRangePicker';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const Createevent = () => {
+const CreateEvent = () => {
     const { data: session } = useSession()
     
     const router = useRouter();
@@ -631,7 +631,7 @@ const Createevent = () => {
     )
 }
 
-export default Createevent;
+export default CreateEvent;
 
 
 export async function getServerSideProps(context) {

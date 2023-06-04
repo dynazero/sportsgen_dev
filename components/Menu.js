@@ -117,7 +117,7 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) 
                   </li>
 
                   <li className={navbarstyle.button}>
-                    <Link href="/myprofile">
+                    <Link href="/profile/create">
                       <motion.button
                         className="btn btn-dark save-button"
                         whileHover={{ scale: 1.1 }}

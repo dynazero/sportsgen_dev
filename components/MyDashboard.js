@@ -4,7 +4,7 @@ import MyAthletes from './MyAthletes';
 import MyCoaches from './MyCoaches';
 import MyOfficials from './MyOfficials';
 
-export default function MyDashboard({passPage, setCurPage}) {
+export default function MyDashboard({passPage, setCurPage, teamItem}) {
   const [currentPage, setCurrentPage] = useState(0)
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function MyDashboard({passPage, setCurPage}) {
   }
 
   return (
-    <MyTeam onPageChange={setCurrentPage} />
+    <MyTeam onPageChange={setCurrentPage} teamItem={teamItem} />
   )
 
 }

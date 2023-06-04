@@ -12,12 +12,18 @@ const teamSchema = new mongoose.Schema({
         trim: true,
     },
     country: {
-        type: Number,
+        type: String,
         required: true,
+        trim: true,
     },
     createdDate: {
         type: Date,
         default: Date.now,
+    },
+    description: {
+        type: String,
+        required: true,
+        trim: true,
     },
     originalFileName: {
         type: String,
