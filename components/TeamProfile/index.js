@@ -5,10 +5,11 @@ import { useSession } from "next-auth/react"
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import ReactCountryFlag from 'react-country-flag';
+import Create from './create'
 
 
 
-export default function TeamProfile({ teamItem }) {
+export default function TeamProfile({ teamItem, verify }) {
     const { data: session } = useSession()
 
     const [categories, setCategories] = useState([])
@@ -27,24 +28,26 @@ export default function TeamProfile({ teamItem }) {
         fetchCategories()
     }, [])
 
-    // console.log(teamItem)
 
     return (
         <div className='container'>
             {(!teamItem || teamItem.length === 0) &&
-                <Link href="/team/create">
-                    <motion.button
-                        className="btn btn-primary save-button"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        // onClick={ event => {modalClick(event, !modalOpen, true)}} 
-                        href="/"
-                        type="button"
-                        style={{ width: 120, backgroundColor: '#014bac', borderColor: '#014bac' }}
-                    >
-                        Create Team
-                    </motion.button>
-                </Link>
+                // <Link href="/team/create">
+                //     <motion.button
+                //         className="btn btn-primary save-button"
+                //         whileHover={{ scale: 1.1 }}
+                //         whileTap={{ scale: 0.9 }}
+                //         // onClick={ event => {modalClick(event, !modalOpen, true)}} 
+                //         href="/"
+                //         type="button"
+                //         style={{ width: 120, backgroundColor: '#014bac', borderColor: '#014bac' }}
+                //     >
+                //         Create Team
+                //     </motion.button>
+                // </Link>
+
+            <Create verify={verify}/>
+
             }
 
             {teamItem && teamItem.length > 0 &&

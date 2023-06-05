@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import axios from 'axios'
 // import { useRouter } from 'next/router';
 import { signIn, signOut, useSession, getSession } from "next-auth/react"
@@ -6,25 +6,41 @@ import Sidebar from '../../components/Sidebar'
 import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
 import MyDashboard from '../../components/MyDashboard'
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
 export default function dashboard({ teamItem, verify, athletelist }) {
   // const router = useRouter()
-  // const { params = [] } = router.query
   const [passSBS, setPassSBS] = useState(true)
   const [passPage, setPassPage] = useState('')
   const [curPage, setCurPage] = useState('')
+  const [arrowV, setArrowV] = useState(false)
 
+
+  useEffect(() => {
+    if(!verify){
+      toast.success('Thank you for signing up, please proceed to your My Profile to complete your verification');
+      
+      setTimeout(() => {
+          setArrowV(true)
+        }, 3000);
+    }
+
+  }, [])
+  // const { params = [] } = router.query
+ 
   const mDB = passSBS ? "280px" : "0px"
   const mWidth = passSBS ? "calc(100% - 280px)" : "100%"
 
-  // console.log(curPage)
+  // console.log(verify)
   // console.log(passPage)
 
   // default return
   return (
     <div className='dashboard panelsBG'>
+      
       <div className='sidebarWidth'>
         <Sidebar setPassSBS={setPassSBS} setPassPage={setPassPage} passPage={passPage} curPage={curPage} />
       </div>
@@ -34,8 +50,21 @@ export default function dashboard({ teamItem, verify, athletelist }) {
           transition: ".4s",
           width: mWidth
         }}>
-        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} />
+        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} verify={verify} />
       </div>
+
+      <div className="arrow"
+      style={{
+        display: (arrowV ? 'block' : 'none')
+      }}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+    <ToastContainer />
+
     </div>
   )
 }
@@ -51,47 +80,49 @@ export async function getServerSideProps(context) {
   if (nextAuthSession) {
     const account = await axios.get(`http://localhost:3000/api/getProfile?email=${nextAuthSession.user.email}`);
     const team = await axios.get(`http://localhost:3000/api/getUserTeam?registeredEmail=${nextAuthSession.user.email}`);
-    
+
     teamItem = team.data.data.map(team => {
       const region = 'sgp1';
       const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/teamLogos/${team.originalFileName}`;
-      
+
       return {
         ...team,
         logoURL
       }
     });
 
-    const athletes = await axios.get(`http://localhost:3000/api/getUserAthletes?team=${teamItem[0]._id}`);
-
-    if (athletes.data) {
-      
-      athletelist = athletes.data.data.map((athlete, index) => {
-
-        const sequence = index + 1;
-        const region = 'sgp1';
-        const profilePicture = athlete.profilePicture;
-        const imageURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/uploads/athletes/profile/${profilePicture}`;
+    if (teamItem && teamItem.length > 0) {
+      const athletes = await axios.get(`http://localhost:3000/api/getUserAthletes?team=${teamItem[0]._id}`);
 
 
-        return {
-          ...athlete,
-          imageURL,
-          sequence
-        }
-      })
+      if (athletes.data) {
+
+        athletelist = athletes.data.data.map((athlete, index) => {
+
+          const sequence = index + 1;
+          const region = 'sgp1';
+          const profilePicture = athlete.profilePicture;
+          const imageURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/uploads/athletes/profile/${profilePicture}`;
+
+
+          return {
+            ...athlete,
+            imageURL,
+            sequence
+          }
+        })
+      }
     }
-
     if (account.length == undefined) {
       verify = false;
-    } 
+    }
 
-    if (account.length != undefined) {
-      verify = (account.data.data[0].profileStatus == verified ? true : false)
-    } 
+    if (account.data.data.length != 0) {
+      verify = (account.data.data[0].profileStatus == 'verified' ? true : false)
+    }
 
-    
-    // console.log(athletelist, 'list')
+
+    // console.log(account.data, 'list')  
 
     // verifyUser = accountVerified.data.data.map(profile => {
     //   const verified = (profile.profileStatus == 'verified' ? true : false)
@@ -100,8 +131,10 @@ export async function getServerSideProps(context) {
     //     verified
     //   }
     // });
+    // console.log(account, 'test account')
   }
-
+  // console.log(account, 'test verify')
+  
   if (!session) {
     return {
       redirect: {

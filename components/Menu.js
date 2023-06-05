@@ -136,6 +136,7 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) 
                     </Link>
 
                   </li>
+                 
 
                   <li className={navbarstyle.button}>
                     <motion.button

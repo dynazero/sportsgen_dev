@@ -20,7 +20,7 @@ export default function AthletesProfile({ teamItem, athletelist }) {
   const [email, setEmail] = useState('');
   const [profileStatus, setProfileStatus] = useState('verified');
   const [overallRank, setOverallRank] = useState('');
-  const [team, setTeam] = useState(teamItem[0]._id);
+  const [team, setTeam] = useState('');
   const [titles, setTitles] = useState('');
   const [events, setEvents] = useState([]);
 
@@ -28,6 +28,14 @@ export default function AthletesProfile({ teamItem, athletelist }) {
   const fileInputRef1 = useRef();
   const [image, setImage] = useState(null);
   const [image1, setImage1] = useState(null);
+
+  const [alist, setAlist] = useState(false)
+
+  useEffect(() => {
+    teamItem.length === 0 ? setTeam() : setTeam(teamItem[0]._id);
+    athletes !== null ? setAlist(true) : setAlist(false);
+  }, [teamItem, athletes]);
+  
 
   const handleFormChange = (event, index, value, arrIndex = null) => {
 
@@ -111,7 +119,7 @@ export default function AthletesProfile({ teamItem, athletelist }) {
     });
   };
 
-  console.log(athletes)
+  // console.log(athletes)
 
   return (
     <div className='container'>
@@ -289,23 +297,35 @@ export default function AthletesProfile({ teamItem, athletelist }) {
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">First</th>
                   <th scope="col">Last</th>
+                  <th scope="col">First</th>
                   <th scope="col">Profile</th>
                 </tr>
               </thead>
               <tbody>
-                {athletes.map((item, i) => (
-                  <tr key={item._id}>
-                    <th scope="row">{item.sequence}</th>
-                    <td>{item.fname}</td>
-                    <td>{item.lname}</td>
-                    <td>
-                      <Image src={item.imageURL} alt='athlete picture' width={72} height={72} priority />
 
+                {!alist &&
+                (
+                  <tr>
+                    <td></td>
+                    <td>No Athlete Registred</td>
+                    <td></td>
+                  </tr>
+                )
+                }
+
+                {alist && athletes.map((item, i) => (
+                  <tr key={item._id}>
+                    <th scope="row" className='paddingList'>{item.sequence}</th>
+                    <td className='paddingList'>{item.lname}</td>
+                    <td className='paddingList'>{item.fname}</td>
+                    <td>
+                      <Image src={item.imageURL} alt='athlete picture' width={50} height={50} priority />
                     </td>
                   </tr>
                 ))}
+
+
               </tbody>
             </table>
 

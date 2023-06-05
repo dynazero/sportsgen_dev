@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
-import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
 import { useSession, getSession } from "next-auth/react"
 import { useRouter } from 'next/router';
@@ -9,15 +8,15 @@ import { MotionConfig, motion } from 'framer-motion';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const CreateProfile = () => {
+const Create = ({verify}) => {
     const { data: session } = useSession()
 
     const router = useRouter();
     const MotionLink = motion(Link)
-    const [email, setEmail] = useState(session.user.email);
-    const [fname, setFName] = useState("");
-    const [lname, setLName] = useState("");
-    const [profileStatus, setProfileStatus] = useState('verified');
+    const [registeredEmail, setRegisteredEmail] = useState(session.user.email);
+    const [clubName, setClubName] = useState('');
+    const [description, setDescription] = useState('');
+    const [country, setCountry] = useState('PH');
 
     const fileInputRef = useRef();
     const [image, setImage] = useState(null);
@@ -26,16 +25,16 @@ const CreateProfile = () => {
 
         switch (index) {
             case 1:
-                setFName(value);
+                setClubName(value);
                 break;
             case 2:
-                setLName(value);
+                setCountry(value);
                 break;
             case 3:
                 setImage(value);
                 break;
             case 4:
-                setProfileStatus(value);
+                setDescription(value);
                 break;
             // case 0:
             //   text = "Today is Sunday";
@@ -49,29 +48,32 @@ const CreateProfile = () => {
 
     const SubmitHandler = async (e) => {
         e.preventDefault();
-        // if (!duplicates) {
+
+        
+        if (verify) {
         const formData = new FormData();
-        formData.append('email', email);
-        formData.append('fname', fname);
-        formData.append('lname', lname);
-        formData.append('profileStatus', profileStatus);
+        formData.append('registeredEmail', registeredEmail);
+        formData.append('clubName', clubName);
+        formData.append('country', country);
         formData.append('image', image);
+        formData.append('description', description);
 
 
-        const functionThatReturnPromise = axios.post(`../api/createProfile`, formData);
+        const functionThatReturnPromise = axios.post(`../api/createTeam`, formData);
         toast.promise(
             functionThatReturnPromise,
             {
-                pending: 'Creating Profile',
-                success: 'Profile saved successfully! 👌',
-                error: 'Error creating profile 🤯'
+                pending: 'Creating Team',
+                success: 'Team created successfully! 👌',
+                error: 'Error creating team 🤯'
             }
         ).then(
             (response) => {
-                if (response.status === 201) { // Check if the profile was created successfully
+                if (response.status === 201) { // Check if the event was created successfully
                     // Clear the form
-                    setFName('');
-                    setLName('');
+                    setClubName('');
+                    setCountry('');
+                    setDescription('');
                     fileInputRef.current.value = '';
 
                     // Navigate to another page (e.g., the home page)
@@ -83,7 +85,15 @@ const CreateProfile = () => {
         ).catch((error) => {
             if (error.response) {
                 // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
                 console.error('Error submitting form:', error.response.data.message);
+                if (error.response.data.message = 'You already registered a Team') {
+                    toast.warning('You cannot register another team, please edit your exiting one');
+                }
+                if (error.response.data.message = 'Team already exists') {
+                    toast.warning('Please try another Club Name');
+                }
+                console.error('HTTP status code:', error.response.status);
             } else if (error.request) {
                 // The request was made but no response was received
                 console.error('No response received:', error.request);
@@ -93,24 +103,20 @@ const CreateProfile = () => {
             }
         });
 
-        // } else {
-        //     toast.warning('Please pick another Team Name, Team Name Taken');
-        // }
+         } else {
+            toast.warning('Please proceed to My Profile to verify your account to continue');
+         }
 
     };
 
     // console.log(registeredEmail, clubName, country, image, description)
 
     return (
+        <>
 
-        <div className='wrapperForm'
-            style={{
-                justifyContent: 'flex-start',
-                paddingTop: '20px'
-            }}
-        >
+
             <div className='headerForm'>
-                <h2 className="mb-3">Fill in your profile</h2>
+                <h2 className="mb-3">Create Club</h2>
             </div>
             <div className='containerForm'
                 style={{
@@ -124,34 +130,44 @@ const CreateProfile = () => {
                                 {/* <label htmlFor="firstName" className="form-label">Name of Event/Tournament</label> */}
                                 <div className="row">
                                     <div className="col">
-                                        <label htmlFor="fname" className="form-label">First name</label>
+                                        <label htmlFor="clubName" className="form-label">Team Name</label>
+
                                         <input
                                             type="text"
                                             className="form-control"
-                                            id="fname"
-                                            placeholder="First Name"
-                                            value={fname}
+                                            id="clubName"
+                                            placeholder="Name of your Team"
+                                            value={clubName}
                                             onChange={(event) => handleFormChange(event, 1, event.target.value)}
                                             required
                                         />
                                         <div className="invalid-feedback">
-                                            Valid First name is required.
+                                            Valid Team name is required.
                                         </div>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="lName" className="form-label">Last name</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="lName"
-                                            placeholder="Last Name"
-                                            value={lname}
+                                        <label htmlFor="country" className="form-label">Country</label>
+
+                                        <select
+                                            className="form-select"
+                                            id="country"
+                                            value={country}
+                                            // onChange={(e) => setCity(e.target.value)}
                                             onChange={(event) => handleFormChange(event, 2, event.target.value)}
                                             required
-                                        />
-                                        <div className="invalid-feedback">
-                                            Valid Last name is required.
-                                        </div>
+                                        >
+                                            <option value='PH'>Philippines</option>
+                                            <option value={'JP'}>Japan</option>
+                                            <option value={'SG'}>Singapore</option>
+                                            <option value={'CN'}>China</option>
+                                            <option value={'TW'}>Taiwan</option>
+                                            <option value={'MY'}>Malaysia</option>
+
+                                        </select>
+                                        {/* <div className="invalid-feedback" style={{ display: cityErrorMessage ? 'block' : 'none' }}>
+                                            {cityErrorMessage}
+
+                                        </div> */}
                                     </div>
                                 </div>
 
@@ -171,7 +187,7 @@ const CreateProfile = () => {
 
                             <div className='row'>
                                 <div className="col-sm-6">
-                                    <label htmlFor="uploadLogo" className="form-label">Upload Government Issued ID for verification</label>
+                                    <label htmlFor="uploadLogo" className="form-label">Add logo of your Team</label>
                                     <input
                                         type="file"
                                         className="form-control"
@@ -186,6 +202,24 @@ const CreateProfile = () => {
                                         Please upload only valid format
                                     </div>
                                 </div>
+
+                                <div className="col-sm-6">
+                                    <label htmlFor="description" className="form-label">Add a short description or quote</label>
+
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="description"
+                                        placeholder="description"
+                                        value={description}
+                                        onChange={(event) => handleFormChange(event, 4, event.target.value)}
+                                        required
+                                    />
+                                    <div className="invalid-feedback">
+                                        Valid Description is required.
+                                    </div>
+                                </div>
+
 
 
                             </div>
@@ -206,65 +240,9 @@ const CreateProfile = () => {
                 </div>
                 <ToastContainer />
             </div>
-        </div>
+        </>
+
     )
 }
 
-export default CreateProfile;
-
-
-export async function getServerSideProps(context) {
-    const session = await getServerSession(context.req, context.res, authOptions)
-    const nextAuthSession = await getSession(context);
-    let profile = null;
-
-    if (nextAuthSession) {
-        try {
-            const res = await axios.get(`http://localhost:3000/api/getProfile?email=${nextAuthSession.user.email}`);
-            profile = res.data.data
-        } catch (error) {
-            console.error('API request failed:', error);
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }
-        }
-    }
-
-    // console.log(profile)
-
-    if (!session) {
-        return {
-            redirect: {
-                destination: '/profile/error',
-                permanent: false,
-            },
-        }
-    }
-
-    if (profile.length != 0) {
-        return {
-            redirect: {
-                destination: '/profile/edit',
-                permanent: false,
-            },
-        }
-    }
-
-    return {
-        props: {
-            session,
-        },
-    }
-}
+export default Create;

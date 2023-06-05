@@ -4,8 +4,11 @@ import MyAthletes from './MyAthletes';
 import MyCoaches from './MyCoaches';
 import MyOfficials from './MyOfficials';
 
-export default function MyDashboard({passPage, setCurPage, teamItem, athletelist}) {
+
+export default function MyDashboard({passPage, setCurPage, verify, teamItem, athletelist}) {
   const [currentPage, setCurrentPage] = useState(0)
+
+  
 
   useEffect(() => {
     switch (passPage) {
@@ -37,7 +40,7 @@ export default function MyDashboard({passPage, setCurPage, teamItem, athletelist
   if (passPage === "myathletes") {
 
     return (
-      <MyAthletes onPageChange={setCurrentPage} teamItem={teamItem} athletelist={athletelist} />
+      <MyAthletes onPageChange={setCurrentPage} teamItem={teamItem} athletelist={athletelist} verify={verify}/>
     )
   }
   if (passPage === "mycoaches") {
@@ -58,7 +61,7 @@ export default function MyDashboard({passPage, setCurPage, teamItem, athletelist
   }
 
   return (
-    <MyTeam onPageChange={setCurrentPage} teamItem={teamItem} />
+    <MyTeam onPageChange={setCurrentPage} teamItem={teamItem} verify={verify}/>
   )
 
 }

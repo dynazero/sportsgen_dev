@@ -260,7 +260,7 @@ export async function getServerSideProps(context) {
         team = res.data.data
       }
 
-console.log(team)
+// console.log(team)
 
     if (!session || team.length != 0) {
         return {
