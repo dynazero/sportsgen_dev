@@ -9,33 +9,48 @@ import { MotionConfig, motion } from 'framer-motion';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const Createevent = () => {
+const CreateAthlete = ({ teamItem }) => {
     const { data: session } = useSession()
 
     const router = useRouter();
     const MotionLink = motion(Link)
-    const [registeredEmail, setRegisteredEmail] = useState(session.user.email);
-    const [clubName, setClubName] = useState('');
-    const [description, setDescription] = useState('');
-    const [country, setCountry] = useState('PH');
+    const [fname, setFName] = useState('');
+    const [lname, setLName] = useState('');
+    const [email, setEmail] = useState('');
+    const [profileStatus, setProfileStatus] = useState('verified');
+    const [team, setTeam] = useState(teamItem[0]._id);
+    const [overallRank, setOverallRank] = useState('');
+    const [titles, setTitles] = useState('');
+    const [events, setEvents] = useState([]);
 
     const fileInputRef = useRef();
+    const fileInputRef1 = useRef();
     const [image, setImage] = useState(null);
+    const [image1, setImage1] = useState(null);
 
     const handleFormChange = (event, index, value, arrIndex = null) => {
 
         switch (index) {
             case 1:
-                setClubName(value);
+                setFName(value);
                 break;
             case 2:
-                setCountry(value);
+                setLName(value);
                 break;
             case 3:
-                setImage(value);
+                setEmail(value);
                 break;
             case 4:
-                setDescription(value);
+                setImage(value);
+                break;
+            case 5:
+                setImage1(value);
+                break;
+            case 6:
+                setProfileStatus(value);
+                break;
+            case 7:
+                setTitles(value);
                 break;
             // case 0:
             //   text = "Today is Sunday";
@@ -51,29 +66,34 @@ const Createevent = () => {
         e.preventDefault();
         // if (!duplicates) {
         const formData = new FormData();
-        formData.append('registeredEmail', registeredEmail);
-        formData.append('clubName', clubName);
-        formData.append('country', country);
+        formData.append('email', email);
+        formData.append('fname', fname);
+        formData.append('lname', lname);
+        formData.append('team', team);
+        formData.append('profileStatus', profileStatus);
         formData.append('image', image);
-        formData.append('description', description);
+        formData.append('image1', image1);
+        // formData.append('overallRank', overallRank);
+        formData.append('titles', titles);
+        // formData.append('events', events);
 
 
-        const functionThatReturnPromise = axios.post(`../api/createTeam`, formData);
+        const functionThatReturnPromise = axios.post(`../api/createAthlete`, formData);
         toast.promise(
             functionThatReturnPromise,
             {
-                pending: 'Creating Team',
-                success: 'Team created successfully! 👌',
-                error: 'Error creating team 🤯'
+                pending: 'Creating Athlete',
+                success: 'Athlete saved successfully! 👌',
+                error: 'Error creating Athlete 🤯'
             }
         ).then(
             (response) => {
-                if (response.status === 201) { // Check if the event was created successfully
+                if (response.status === 201) { // Check if the profile was created successfully
                     // Clear the form
-                    setClubName('');
-                    setCountry('');
-                    setDescription('');
+                    setFName('');
+                    setLName('');
                     fileInputRef.current.value = '';
+                    fileInputRef1.current.value = '';
 
                     // Navigate to another page (e.g., the home page)
                     setTimeout(() => {
@@ -84,15 +104,7 @@ const Createevent = () => {
         ).catch((error) => {
             if (error.response) {
                 // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
                 console.error('Error submitting form:', error.response.data.message);
-                if (error.response.data.message = 'You already registered a Team') {
-                    toast.warning('You cannot register another team, please edit your exiting one');
-                }
-                if (error.response.data.message = 'Team already exists') {
-                    toast.warning('Please try another Club Name');
-                }
-                console.error('HTTP status code:', error.response.status);
             } else if (error.request) {
                 // The request was made but no response was received
                 console.error('No response received:', error.request);
@@ -108,7 +120,7 @@ const Createevent = () => {
 
     };
 
-    // console.log(registeredEmail, clubName, country, image, description)
+    // console.log(fname, lname, email, profileStatus, image, image1, titles  )
 
     return (
 
@@ -119,11 +131,11 @@ const Createevent = () => {
             }}
         >
             <div className='headerForm'>
-                <h2 className="mb-3">Create Club</h2>
+                <h2 className="mb-3">Fill in your Athlete profile</h2>
             </div>
             <div className='containerForm'
                 style={{
-                    height: '31vh',
+                    height: '43vh',
                 }}
             >
                 <div className="col-md-7 col-lg-8 mainForm">
@@ -133,44 +145,34 @@ const Createevent = () => {
                                 {/* <label htmlFor="firstName" className="form-label">Name of Event/Tournament</label> */}
                                 <div className="row">
                                     <div className="col">
-                                        <label htmlFor="clubName" className="form-label">Team Name</label>
-
+                                        <label htmlFor="fname" className="form-label">First name</label>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            id="clubName"
-                                            placeholder="Name of your Team"
-                                            value={clubName}
+                                            id="fname"
+                                            placeholder="First Name"
+                                            value={fname}
                                             onChange={(event) => handleFormChange(event, 1, event.target.value)}
                                             required
                                         />
                                         <div className="invalid-feedback">
-                                            Valid Team name is required.
+                                            Valid First name is required.
                                         </div>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="country" className="form-label">Country</label>
-
-                                        <select
-                                            className="form-select"
-                                            id="country"
-                                            value={country}
-                                            // onChange={(e) => setCity(e.target.value)}
+                                        <label htmlFor="lName" className="form-label">Last name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="lName"
+                                            placeholder="Last Name"
+                                            value={lname}
                                             onChange={(event) => handleFormChange(event, 2, event.target.value)}
                                             required
-                                        >
-                                            <option value='PH'>Philippines</option>
-                                            <option value={'JP'}>Japan</option>
-                                            <option value={'SG'}>Singapore</option>
-                                            <option value={'CN'}>China</option>
-                                            <option value={'TW'}>Taiwan</option>
-                                            <option value={'MY'}>Malaysia</option>
-
-                                        </select>
-                                        {/* <div className="invalid-feedback" style={{ display: cityErrorMessage ? 'block' : 'none' }}>
-                                            {cityErrorMessage}
-
-                                        </div> */}
+                                        />
+                                        <div className="invalid-feedback">
+                                            Valid Last name is required.
+                                        </div>
                                     </div>
                                 </div>
 
@@ -190,7 +192,7 @@ const Createevent = () => {
 
                             <div className='row'>
                                 <div className="col-sm-6">
-                                    <label htmlFor="uploadLogo" className="form-label">Add logo of your Team</label>
+                                    <label htmlFor="uploadLogo" className="form-label">Upload profile picture</label>
                                     <input
                                         type="file"
                                         className="form-control"
@@ -198,7 +200,7 @@ const Createevent = () => {
                                         placeholder=""
                                         ref={fileInputRef}
                                         // onChange={(e) => setImage(e.target.files[0])}
-                                        onChange={(event) => handleFormChange(event, 3, event.target.files[0])}
+                                        onChange={(event) => handleFormChange(event, 4, event.target.files[0])}
                                         required
                                     />
                                     <div className="invalid-feedback">
@@ -207,28 +209,68 @@ const Createevent = () => {
                                 </div>
 
                                 <div className="col-sm-6">
-                                    <label htmlFor="description" className="form-label">Add a short description or quote</label>
-
+                                    <label htmlFor="uploadLogo" className="form-label">Upload Government Issued ID for verification or BirthCertificate</label>
                                     <input
-                                        type="text"
+                                        type="file"
                                         className="form-control"
-                                        id="description"
-                                        placeholder="description"
-                                        value={description}
-                                        onChange={(event) => handleFormChange(event, 4, event.target.value)}
+                                        id="uploadlogo"
+                                        placeholder=""
+                                        ref={fileInputRef1}
+                                        // onChange={(e) => setImage(e.target.files[0])}
+                                        onChange={(event) => handleFormChange(event, 5, event.target.files[0])}
                                         required
                                     />
                                     <div className="invalid-feedback">
-                                        Valid Description is required.
+                                        Please upload only valid format
                                     </div>
                                 </div>
 
+
+                            </div>
+
+                        </div>
+
+                        <div className="my-3">
+                            <div className='row'>
+                                <div className="col-sm-6">
+                                    <label htmlFor="email" className="form-label">Email</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="email"
+                                        placeholder="Email (optional)"
+                                        value={email}
+                                        onChange={(event) => handleFormChange(event, 3, event.target.value)}
+                                        required
+                                    />
+                                    <div className="invalid-feedback">
+                                        Please upload only valid format
+                                    </div>
+                                </div>
+
+                                <div className="col-sm-6">
+                                    <label htmlFor="uploadLogo" className="form-label">Personal Belt</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="titles"
+                                        placeholder="Ex. Taekwondo Black Belt"
+                                        value={titles}
+                                        onChange={(event) => handleFormChange(event, 7, event.target.value)}
+                                        required
+                                    />
+                                    <div className="invalid-feedback">
+                                        Please upload only valid format
+                                    </div>
+                                </div>
 
 
                             </div>
                         </div>
 
+
                         <div className="row">
+
                             <div className="col-md-4"></div>
                             <div className="col-6 col-md-4 alignRight">
 
@@ -247,25 +289,24 @@ const Createevent = () => {
     )
 }
 
-export default Createevent;
+export default CreateAthlete;
 
 
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions)
     const nextAuthSession = await getSession(context);
-    let team = null;
+    let teamItem = null;
+
 
     if (nextAuthSession) {
-        const res = await axios.get(`http://localhost:3000/api/getUserTeam?registeredEmail=${nextAuthSession.user.email}`);
-        team = res.data.data
-      }
+        const team = await axios.get(`http://localhost:3000/api/getUserTeam?registeredEmail=${nextAuthSession.user.email}`);
+        teamItem = team.data.data;
+    }
 
-console.log(team)
-
-    if (!session || team.length != 0) {
+    if (!session) {
         return {
             redirect: {
-                destination: '/team/error',
+                destination: '/athlete/error',
                 permanent: false,
             },
         }
@@ -274,6 +315,7 @@ console.log(team)
     return {
         props: {
             session,
+            teamItem
         },
     }
 }

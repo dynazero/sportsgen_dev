@@ -9,7 +9,7 @@ import MyDashboard from '../../components/MyDashboard'
 
 
 
-export default function dashboard({ teamItem }) {
+export default function dashboard({ teamItem, verify, athletelist }) {
   // const router = useRouter()
   // const { params = [] } = router.query
   const [passSBS, setPassSBS] = useState(true)
@@ -34,7 +34,7 @@ export default function dashboard({ teamItem }) {
           transition: ".4s",
           width: mWidth
         }}>
-        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} />
+        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} />
       </div>
     </div>
   )
@@ -46,6 +46,7 @@ export async function getServerSideProps(context) {
   const nextAuthSession = await getSession(context);
   let teamItem = null;
   let verify = false;
+  let athletelist = null;
 
   if (nextAuthSession) {
     const account = await axios.get(`http://localhost:3000/api/getProfile?email=${nextAuthSession.user.email}`);
@@ -54,12 +55,32 @@ export async function getServerSideProps(context) {
     teamItem = team.data.data.map(team => {
       const region = 'sgp1';
       const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/teamLogos/${team.originalFileName}`;
-
+      
       return {
         ...team,
         logoURL
       }
     });
+
+    const athletes = await axios.get(`http://localhost:3000/api/getUserAthletes?team=${teamItem[0]._id}`);
+
+    if (athletes.data) {
+      
+      athletelist = athletes.data.data.map((athlete, index) => {
+
+        const sequence = index + 1;
+        const region = 'sgp1';
+        const profilePicture = athlete.profilePicture;
+        const imageURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/uploads/athletes/profile/${profilePicture}`;
+
+
+        return {
+          ...athlete,
+          imageURL,
+          sequence
+        }
+      })
+    }
 
     if (account.length == undefined) {
       verify = false;
@@ -70,7 +91,8 @@ export async function getServerSideProps(context) {
     } 
 
     
-    // console.log(account, 'test')
+    // console.log(athletelist, 'list')
+
     // verifyUser = accountVerified.data.data.map(profile => {
     //   const verified = (profile.profileStatus == 'verified' ? true : false)
 
@@ -93,7 +115,8 @@ export async function getServerSideProps(context) {
     props: {
       session,
       teamItem,
-      verify
+      verify,
+      athletelist
     },
   }
 }

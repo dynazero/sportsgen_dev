@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import AthletesProfile from './AthletesProfile';
 
-export default function MyAthletes({ onPageChange }) {
+export default function MyAthletes({ onPageChange, teamItem, athletelist}) {
 
   useEffect(() => {
     onPageChange(1);
@@ -10,7 +10,7 @@ export default function MyAthletes({ onPageChange }) {
 
   return (
     <div>
-      <AthletesProfile />
+      <AthletesProfile  teamItem={teamItem} athletelist={athletelist} />
     </div>
   )
 }

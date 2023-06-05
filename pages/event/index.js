@@ -25,7 +25,7 @@ export default function events({ eventItem }) {
 
 
   // console.log(a);
-  console.log(eventItem);
+  // console.log(eventItem);
   return (
     <>
       <div className='picClass mx-auto minWidth'>
