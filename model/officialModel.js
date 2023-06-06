@@ -38,6 +38,6 @@ const officialSchema =  new mongoose.Schema({
     // },  
 })
 
-const Official = mongoose.models.Official || mongoose.model("Official", officialSchema, "official")
+const Official = mongoose.models.Official || mongoose.model("Official", officialSchema, "officials")
 
 export default Official;

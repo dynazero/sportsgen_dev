@@ -62,7 +62,7 @@ export default async (req, res) => {
 
             const params = {
                 Bucket: process.env.DO_SPACES_BUCKET,
-                Key: `uploads/coaches/${originalFileName}`,
+                Key: `uploads/profiles/${originalFileName}`,
                 Body: createReadStream(file._writeStream.path),
                 ACL: "public-read",
             };

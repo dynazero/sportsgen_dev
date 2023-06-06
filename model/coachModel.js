@@ -38,6 +38,6 @@ const coachSchema =  new mongoose.Schema({
     // },  
 })
 
-const Coach = mongoose.models.Coach || mongoose.model("Coach", coachSchema, "coach")
+const Coach = mongoose.models.Coach || mongoose.model("Coach", coachSchema, "coaches")
 
 export default Coach;

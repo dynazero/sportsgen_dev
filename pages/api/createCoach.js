@@ -51,7 +51,13 @@ export default async (req, res) => {
             //     return;
             // }
 
-            if (!files.image || !files.image1) {
+            // if (!files.image || !files.image1) {
+            //     res.status(400).json({ message: "File(s) not uploaded" });
+            //     return;
+            // }
+
+            //change to this ^ when profile picture is implemented
+            if (!files.image1) {
                 res.status(400).json({ message: "File(s) not uploaded" });
                 return;
             }
@@ -95,7 +101,7 @@ export default async (req, res) => {
 
             const params1 = {
                 Bucket: process.env.DO_SPACES_BUCKET,
-                Key: `uploads/coach/docs/${uniqueFileName1}`,
+                Key: `uploads/coaches/docs/${uniqueFileName1}`,
                 Body: createReadStream(file1._writeStream.path),
                 ACL: "public-read",
             };

@@ -51,11 +51,16 @@ export default async (req, res) => {
             //     return;
             // }
 
-            if (!files.image || !files.image1) {
+            // if (!files.image || !files.image1) {
+            //     res.status(400).json({ message: "File(s) not uploaded" });
+            //     return;
+            // }
+
+            //change to this ^ when profile picture is implemented
+            if (!files.image1) {
                 res.status(400).json({ message: "File(s) not uploaded" });
                 return;
             }
-
             //profile picture commented out for future implementation - uncomment all *
             // const file = files.image;
             const file1 = files.image1;
@@ -95,7 +100,7 @@ export default async (req, res) => {
 
             const params1 = {
                 Bucket: process.env.DO_SPACES_BUCKET,
-                Key: `uploads/official/docs/${uniqueFileName1}`,
+                Key: `uploads/officials/docs/${uniqueFileName1}`,
                 Body: createReadStream(file1._writeStream.path),
                 ACL: "public-read",
             };
@@ -119,7 +124,7 @@ export default async (req, res) => {
                     throw new Error('Failed to upload file to S3');
                 }
                 // If file uploaded successfully, save profile to DB
-                const newOffiial = new Athlete({
+                const newOfficial = new Official({
                     fname: fname,
                     lname: lname,
                     // email: email,
@@ -130,7 +135,7 @@ export default async (req, res) => {
                     // events: events,
                 });
 
-                await newOffiial.save();
+                await newOfficial.save();
 
                 res.status(201).json({ message: "Official saved successfully" });
 
