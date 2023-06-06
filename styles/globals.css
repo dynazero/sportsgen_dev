@@ -44,6 +44,7 @@ a {
   transform: translate(-50%, -50%);
   transform: rotate(180deg);
   cursor: pointer;
+  caret-color: transparent;
 }
 
 .arrow span {

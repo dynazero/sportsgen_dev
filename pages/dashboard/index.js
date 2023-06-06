@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 // import { useRouter } from 'next/router';
 import { signIn, signOut, useSession, getSession } from "next-auth/react"
@@ -20,17 +20,17 @@ export default function dashboard({ teamItem, verify, athletelist }) {
 
 
   useEffect(() => {
-    if(!verify){
+    if (!verify) {
       toast.success('Thank you for signing up, please proceed to your My Profile to complete your verification');
-      
+
       setTimeout(() => {
-          setArrowV(true)
-        }, 3000);
+        setArrowV(true)
+      }, 3000);
     }
 
   }, [])
   // const { params = [] } = router.query
- 
+
   const mDB = passSBS ? "280px" : "0px"
   const mWidth = passSBS ? "calc(100% - 280px)" : "100%"
 
@@ -40,7 +40,7 @@ export default function dashboard({ teamItem, verify, athletelist }) {
   // default return
   return (
     <div className='dashboard panelsBG'>
-      
+
       <div className='sidebarWidth'>
         <Sidebar setPassSBS={setPassSBS} setPassPage={setPassPage} passPage={passPage} curPage={curPage} />
       </div>
@@ -53,17 +53,15 @@ export default function dashboard({ teamItem, verify, athletelist }) {
         <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} verify={verify} />
       </div>
 
-      <div className="arrow"
-      style={{
-        display: (arrowV ? 'block' : 'none')
-      }}
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+      {arrowV && (
+        <div className="arrow">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      )}
 
-    <ToastContainer />
+      <ToastContainer />
 
     </div>
   )
@@ -134,7 +132,7 @@ export async function getServerSideProps(context) {
     // console.log(account, 'test account')
   }
   // console.log(account, 'test verify')
-  
+
   if (!session) {
     return {
       redirect: {
