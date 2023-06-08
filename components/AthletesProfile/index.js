@@ -35,7 +35,8 @@ export default function AthletesProfile({ teamItem, athletelist }) {
     teamItem.length === 0 ? setTeam() : setTeam(teamItem[0]._id);
     athletes !== null ? setAlist(true) : setAlist(false);
   }, [teamItem, athletes]);
-  
+
+
 
   const handleFormChange = (event, index, value, arrIndex = null) => {
 
@@ -68,55 +69,60 @@ export default function AthletesProfile({ teamItem, athletelist }) {
 
   const SubmitHandler = async (e) => {
     e.preventDefault();
-    // if (!duplicates) {
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('fname', fname);
-    formData.append('lname', lname);
-    formData.append('team', team);
-    formData.append('profileStatus', profileStatus);
-    formData.append('image', image);
-    formData.append('image1', image1);
-    // formData.append('overallRank', overallRank);
-    formData.append('titles', titles);
-    // formData.append('events', events);
+
+    if (teamItem.length != 0) {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('fname', fname);
+      formData.append('lname', lname);
+      formData.append('team', team);
+      formData.append('profileStatus', profileStatus);
+      formData.append('image', image);
+      formData.append('image1', image1);
+      // formData.append('overallRank', overallRank);
+      formData.append('titles', titles);
+      // formData.append('events', events);
 
 
-    const functionThatReturnPromise = axios.post(`../api/createAthlete`, formData);
-    toast.promise(
-      functionThatReturnPromise,
-      {
-        pending: 'Creating Athlete',
-        success: 'Athlete saved successfully! 👌',
-        error: 'Error creating Athlete 🤯'
-      }
-    ).then(
-      (response) => {
-        if (response.status === 201) { // Check if the profile was created successfully
-          // Clear the form
-          setFName('');
-          setLName('');
-          fileInputRef.current.value = '';
-          fileInputRef1.current.value = '';
-
-          // Navigate to another page (e.g., the home page)
-          // setTimeout(() => {
-          //   router.push('/');
-          // }, 3000);
+      const functionThatReturnPromise = axios.post(`../api/createAthlete`, formData);
+      toast.promise(
+        functionThatReturnPromise,
+        {
+          pending: 'Creating Athlete',
+          success: 'Athlete saved successfully! 👌',
+          error: 'Error creating Athlete 🤯'
         }
-      }
-    ).catch((error) => {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error('Error submitting form:', error.response.data.message);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received:', error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error', error.message);
-      }
-    });
+      ).then(
+        (response) => {
+          if (response.status === 201) { // Check if the profile was created successfully
+            // Clear the form
+            setFName('');
+            setLName('');
+            fileInputRef.current.value = '';
+            fileInputRef1.current.value = '';
+
+            // Navigate to another page (e.g., the home page)
+            // setTimeout(() => {
+            //   router.push('/');
+            // }, 3000);
+          }
+        }
+      ).catch((error) => {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          console.error('Error submitting form:', error.response.data.message);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error('No response received:', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Error', error.message);
+        }
+      });
+    }else{
+      toast.warning('Please create a team first before signing up an athlete');
+    }
+
   };
 
   // console.log(athletes)
@@ -291,7 +297,7 @@ export default function AthletesProfile({ teamItem, athletelist }) {
           </div>
         </div>
         {/* Athlete List */}
-        <div className="col-5 p-3 mb-4 bg-light rounded-3 minW480">
+        <div className="col-5 p-3 mb-4 bg-light rounded-3 minW480 caret">
           <div className='p-2 panelDark rounded-3'>
             <table className="table table-striped">
               <thead>
@@ -305,13 +311,13 @@ export default function AthletesProfile({ teamItem, athletelist }) {
               <tbody>
 
                 {!alist &&
-                (
-                  <tr>
-                    <td></td>
-                    <td>No Athlete Registred</td>
-                    <td></td>
-                  </tr>
-                )
+                  (
+                    <tr>
+                      <td></td>
+                      <td>No Athlete Registred</td>
+                      <td></td>
+                    </tr>
+                  )
                 }
 
                 {alist && athletes.map((item, i) => (

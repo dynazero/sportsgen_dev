@@ -36,6 +36,11 @@ a {
   padding: 15px !important;
 }
 
+
+.caret{ 
+caret-color: transparent;
+}
+
 /* arrow */
 .arrow {
   position: absolute;
