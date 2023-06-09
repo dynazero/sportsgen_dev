@@ -251,12 +251,14 @@ export default CreateTeam;
 
 
 export async function getServerSideProps(context) {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const getTeamEndPoint = "/api/getUserTeam?registeredEmail="
     const session = await getServerSession(context.req, context.res, authOptions)
     const nextAuthSession = await getSession(context);
     let team = null;
 
     if (nextAuthSession) {
-        const res = await axios.get(`http://localhost:3000/api/getUserTeam?registeredEmail=${nextAuthSession.user.email}`);
+        const res = await axios.get(`${apiUrl}${getTeamEndPoint}${nextAuthSession.user.email}`);
         team = res.data.data
       }
 

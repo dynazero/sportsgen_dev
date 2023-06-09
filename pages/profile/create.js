@@ -214,13 +214,15 @@ export default CreateProfile;
 
 
 export async function getServerSideProps(context) {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const getProfileEndPoint = "/api/getProfile?email="
     const session = await getServerSession(context.req, context.res, authOptions)
     const nextAuthSession = await getSession(context);
     let profile = null;
 
     if (nextAuthSession) {
         try {
-            const res = await axios.get(`http://localhost:3000/api/getProfile?email=${nextAuthSession.user.email}`);
+            const res = await axios.get(`${apiUrl}${getProfileEndPoint}${nextAuthSession.user.email}`);
             profile = res.data.data
         } catch (error) {
             console.error('API request failed:', error);

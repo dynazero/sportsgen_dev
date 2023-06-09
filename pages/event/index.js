@@ -18,10 +18,10 @@ export default function events({ eventItem }) {
   const MotionLink = motion(Link)
 
   useEffect(() => {
-    if(eventItem.length !== 0){
-        setEvents(true);
+    if (eventItem.length !== 0) {
+      setEvents(true);
     }
-}, [eventItem]);
+  }, [eventItem]);
 
   return (
     <>
@@ -39,7 +39,7 @@ export default function events({ eventItem }) {
           </div>
         </div>
 
-        
+
 
         <div className="accordion" id="accordionEvents">
           {!events && (
@@ -167,7 +167,7 @@ export default function events({ eventItem }) {
 
                           {session && (
                             <>
-                            <RegistrationBody />
+                              <RegistrationBody />
                             </>
                           )}
 
@@ -203,8 +203,11 @@ const calculateCountdown = (startDate) => {
 
 export async function getServerSideProps(context) {
   // Fetch data from APIs
-  const res = await axios.get('http://localhost:3000/api/getEvents');
-  const resCategories = await axios.get('http://localhost:3000/api/getEventCategory'); // Using your provided API endpoint for categories
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const getEventsEndPoint = "/api/getEvents"
+  const getEventCategoryEndPoint = "/api/getEventCategory"
+  const res = await axios.get(`${apiUrl}${getEventsEndPoint}`);
+  const resCategories = await axios.get(`${apiUrl}${getEventCategoryEndPoint}`); // Using your provided API endpoint for categories
 
   const categories = resCategories.data.data;
   const eventItem = res.data.data.map(event => {

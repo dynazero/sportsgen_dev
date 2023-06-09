@@ -19,7 +19,7 @@ export const authOptions = {
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
-      return "http://localhost:3000/dashboard"
+      return process.env.NEXTAUTH_URL_DASHBOARD
     },
     debug: process.env.NODE_ENV === "development",
   }

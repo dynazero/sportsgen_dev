@@ -154,7 +154,9 @@ const calculateCountdown = (startDate) => {
 
 export async function getServerSideProps(context) {
   // Fetch data from an API
-  const res = await axios.get('http://localhost:3000/api/getEvents');
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const getEventsEndPoint = "/api/getEvents"
+  const res = await axios.get(`${apiUrl}${getEventsEndPoint}`);
 
   const eventItem = res.data.data.map(event => {
     const eventStartDate = new Date(event.startDate);

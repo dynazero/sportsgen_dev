@@ -73,6 +73,12 @@ const constructImageUrl = (bucket, region, path, fileName) =>
   `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
 
 export async function getServerSideProps(context) {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const getProfileEndPoint = "/api/getProfile"
+  const getTeamEndPoint = "/api/getUserTeam"
+  const getAthleteEndPoint = "/api/getUserAthletes"
+  const getCoachEndPoint = "/api/getUserCoaches"
+  const getOfficialEndPoint = "/api/getUserOfficials"
   const session = await getServerSession(context.req, context.res, authOptions);
 
   if (!session) {
@@ -93,8 +99,8 @@ export async function getServerSideProps(context) {
   }
 
   const email = nextAuthSession.user.email;
-  const account = await fetchData("http://localhost:3000/api/getProfile", { email });
-  const team = await fetchData("http://localhost:3000/api/getUserTeam", { registeredEmail: email });
+  const account = await fetchData(`${apiUrl}${getProfileEndPoint}`, { email });
+  const team = await fetchData(`${apiUrl}${getTeamEndPoint}`, { registeredEmail: email });
 
   let teamItem = null;
   let verify = account.length > 0 && account[0].profileStatus === 'verified';
@@ -117,7 +123,7 @@ export async function getServerSideProps(context) {
 
     const region = 'sgp1';
 
-    athletelist = await fetchData("http://localhost:3000/api/getUserAthletes", { team: teamId });
+    athletelist = await fetchData(`${apiUrl}${getAthleteEndPoint}`, { team: teamId });
     athletelist = athletelist.map((athlete, index) => ({
       ...athlete,
       type: 'athlete',
@@ -131,7 +137,7 @@ export async function getServerSideProps(context) {
       identifier: 'Athlete',
     }));
 
-    coachlist = await fetchData("http://localhost:3000/api/getUserCoaches", { team: teamId });
+    coachlist = await fetchData(`${apiUrl}${getCoachEndPoint}`, { team: teamId });
     coachlist = coachlist.map((coach, index) => ({
       ...coach,
       type: 'coach',
@@ -145,7 +151,7 @@ export async function getServerSideProps(context) {
       identifier: 'Coach',
     }));
 
-    officiallist = await fetchData("http://localhost:3000/api/getUserOfficials", { team: teamId });
+    officiallist = await fetchData(`${apiUrl}${getOfficialEndPoint}`, { team: teamId });
     officiallist = officiallist.map((official, index) => ({
       ...official,
       type: 'official',

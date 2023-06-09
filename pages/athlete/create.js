@@ -293,13 +293,15 @@ export default CreateAthlete;
 
 
 export async function getServerSideProps(context) {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const getTeamEndPoint = "/api/getUserTeam?registeredEmail="
     const session = await getServerSession(context.req, context.res, authOptions)
     const nextAuthSession = await getSession(context);
     let teamItem = null;
 
 
     if (nextAuthSession) {
-        const team = await axios.get(`http://localhost:3000/api/getUserTeam?registeredEmail=${nextAuthSession.user.email}`);
+        const team = await axios.get(`${apiUrl}${getTeamEndPoint}${nextAuthSession.user.email}`);
         teamItem = team.data.data;
     }
 
