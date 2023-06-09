@@ -88,9 +88,9 @@ const Create = ({ teamId }) => {
                         fileInputRef1.current.value = '';
 
                         // Navigate to another page (e.g., the home page)
-                        // setTimeout(() => {
-                        //   router.push('/');
-                        // }, 3000);
+                        setTimeout(() => {
+                            router.replace(router.asPath);
+                        }, 3000);
                     }
                 }
             ).catch((error) => {

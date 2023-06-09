@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-export default function dashboard({ teamItem, verify, athletelist, coachlist, officiallist }) {
+export default function dashboard({ teamItem, verify, athletelist, coachlist, officiallist, members }) {
   // const router = useRouter()
   const [passSBS, setPassSBS] = useState(true)
   const [passPage, setPassPage] = useState('')
@@ -50,7 +50,7 @@ export default function dashboard({ teamItem, verify, athletelist, coachlist, of
           transition: ".4s",
           width: mWidth
         }}>
-        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} coachlist={coachlist} officiallist={officiallist} verify={verify} />
+        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} coachlist={coachlist} officiallist={officiallist} verify={verify} members={members} />
       </div>
 
       {arrowV && (
@@ -67,7 +67,7 @@ export default function dashboard({ teamItem, verify, athletelist, coachlist, of
   )
 }
 const fetchData = async (url, params) =>
-  axios.get(url, { params }).then((response) => response.data);
+  axios.get(url, { params }).then((response) => response.data.data || []);
 
 const constructImageUrl = (bucket, region, path, fileName) =>
   `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
@@ -97,14 +97,15 @@ export async function getServerSideProps(context) {
   const team = await fetchData("http://localhost:3000/api/getUserTeam", { registeredEmail: email });
 
   let teamItem = null;
-  let verify = account.data && account.data.length > 0 && account.data[0].profileStatus === 'verified';
-  let athletelist = null;
-  let coachlist = null;
-  let officiallist = null;
+  let verify = account.length > 0 && account[0].profileStatus === 'verified';
+  let athletelist = [];
+  let coachlist = [];
+  let officiallist = [];
+  let members = [];
 
-  if (team.data && team.data.length > 0) {
-    const teamId = team.data[0]._id;
-    teamItem = team.data.map((team) => ({
+  if (team.length > 0) {
+    const teamId = team[0]._id;
+    teamItem = team.map((team) => ({
       ...team,
       logoURL: constructImageUrl(
         process.env.DO_SPACES_BUCKET,
@@ -114,50 +115,52 @@ export async function getServerSideProps(context) {
       ),
     }));
 
-    const athletes = await fetchData("http://localhost:3000/api/getUserAthletes", { team: teamId });
-    const coaches = await fetchData("http://localhost:3000/api/getUserCoaches", { team: teamId });
-    const officials = await fetchData("http://localhost:3000/api/getUserOfficials", { team: teamId });
-
     const region = 'sgp1';
 
-    if (officials.data) {
-      officiallist = officials.data.map((official, index) => ({
-        ...official,
-        imageDoc: constructImageUrl(
-          process.env.DO_SPACES_BUCKET,
-          region,
-          'uploads/official/profile',
-          official.documentId
-        ),
-        sequence: index + 1,
-      }));
-    }
+    athletelist = await fetchData("http://localhost:3000/api/getUserAthletes", { team: teamId });
+    athletelist = athletelist.map((athlete, index) => ({
+      ...athlete,
+      type: 'athlete',
+      imageURL: constructImageUrl(
+        process.env.DO_SPACES_BUCKET,
+        region,
+        'uploads/athletes/profile',
+        athlete.profilePicture
+      ),
+      sequence: index + 1,
+      identifier: 'Athlete',
+    }));
 
-    if (coaches.data) {
-      coachlist = coaches.data.map((coach, index) => ({
-        ...coach,
-        imageDoc: constructImageUrl(
-          process.env.DO_SPACES_BUCKET,
-          region,
-          'uploads/coaches/profile',
-          coach.documentId
-        ),
-        sequence: index + 1,
-      }));
-    }
+    coachlist = await fetchData("http://localhost:3000/api/getUserCoaches", { team: teamId });
+    coachlist = coachlist.map((coach, index) => ({
+      ...coach,
+      type: 'coach',
+      imageDoc: constructImageUrl(
+        process.env.DO_SPACES_BUCKET,
+        region,
+        'uploads/coaches/profile',
+        coach.documentId
+      ),
+      sequence: index + 1,
+      identifier: 'Coach',
+    }));
 
-    if (athletes.data) {
-      athletelist = athletes.data.map((athlete, index) => ({
-        ...athlete,
-        imageURL: constructImageUrl(
-          process.env.DO_SPACES_BUCKET,
-          region,
-          'uploads/athletes/profile',
-          athlete.profilePicture
-        ),
-        sequence: index + 1,
-      }));
-    }
+    officiallist = await fetchData("http://localhost:3000/api/getUserOfficials", { team: teamId });
+    officiallist = officiallist.map((official, index) => ({
+      ...official,
+      type: 'official',
+      imageDoc: constructImageUrl(
+        process.env.DO_SPACES_BUCKET,
+        region,
+        'uploads/official/profile',
+        official.documentId
+      ),
+      sequence: index + 1,
+      identifier: 'Official',
+    }));
+
+    // Combine the lists into the members array
+    members = [...athletelist, ...coachlist, ...officiallist];
   }
 
   return {
@@ -168,6 +171,7 @@ export async function getServerSideProps(context) {
       athletelist,
       coachlist,
       officiallist,
+      members,
     },
   };
 }

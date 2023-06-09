@@ -14,18 +14,15 @@ export default function events({ eventItem }) {
 
   const { data: session } = useSession()
 
-  // const [date, setDate] = useState(new Date());
-  // const [selectedDate, setSelectedDate] = useState(Date("2023-02-03"));
-
-
-  // let a = eventItem[0].startDate;
-  // let dateDay = new Date(a);
-  // let b = dateDay.getMonth();
+  const [events, setEvents] = useState(false);
   const MotionLink = motion(Link)
 
+  useEffect(() => {
+    if(eventItem.length !== 0){
+        setEvents(true);
+    }
+}, [eventItem]);
 
-  // console.log(a);
-  // console.log(eventItem);
   return (
     <>
       <div className='picClass mx-auto minWidth'>
@@ -42,8 +39,17 @@ export default function events({ eventItem }) {
           </div>
         </div>
 
+        
+
         <div className="accordion" id="accordionEvents">
-          {eventItem.map((item, i) => (
+          {!events && (
+            <div className='picClassItem eventsDialogBox '>
+              No Events
+            </div>
+
+          )}
+
+          {events && eventItem.map((item, i) => (
             <motion.div
               key={item._id}
               className='picClassItem eventsDialogBox shadow-sm bg-body rounded'

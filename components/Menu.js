@@ -24,7 +24,7 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) 
         <div className="container-fluid">
           <Link className="navbar-brand" href="/">
             <span>
-              <Image src={logo} alt="sportsgen logo" width={140} height={24} />
+              <Image src={logo} alt="sportsgen logo" width={140} height={24} priority />
             </span>
           </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
