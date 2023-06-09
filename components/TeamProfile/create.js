@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
-import { getServerSession } from "next-auth/next"
-import { useSession, getSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router';
-import { MotionConfig, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const Create = ({verify}) => {
+const Create = ({ verify }) => {
     const { data: session } = useSession()
 
     const router = useRouter();

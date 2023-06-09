@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-export default function dashboard({ teamItem, verify, athletelist }) {
+export default function dashboard({ teamItem, verify, athletelist, coachlist, officiallist }) {
   // const router = useRouter()
   const [passSBS, setPassSBS] = useState(true)
   const [passPage, setPassPage] = useState('')
@@ -50,7 +50,7 @@ export default function dashboard({ teamItem, verify, athletelist }) {
           transition: ".4s",
           width: mWidth
         }}>
-        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} verify={verify} />
+        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} coachlist={coachlist} officiallist={officiallist} verify={verify} />
       </div>
 
       {arrowV && (
@@ -66,72 +66,14 @@ export default function dashboard({ teamItem, verify, athletelist }) {
     </div>
   )
 }
+const fetchData = async (url, params) =>
+  axios.get(url, { params }).then((response) => response.data);
 
+const constructImageUrl = (bucket, region, path, fileName) =>
+  `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
 
 export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions)
-  const nextAuthSession = await getSession(context);
-  let teamItem = null;
-  let verify = false;
-  let athletelist = null;
-
-  if (nextAuthSession) {
-    const account = await axios.get(`http://localhost:3000/api/getProfile?email=${nextAuthSession.user.email}`);
-    const team = await axios.get(`http://localhost:3000/api/getUserTeam?registeredEmail=${nextAuthSession.user.email}`);
-
-    teamItem = team.data.data.map(team => {
-      const region = 'sgp1';
-      const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/teamLogos/${team.originalFileName}`;
-
-      return {
-        ...team,
-        logoURL
-      }
-    });
-
-    if (teamItem && teamItem.length > 0) {
-      const athletes = await axios.get(`http://localhost:3000/api/getUserAthletes?team=${teamItem[0]._id}`);
-
-
-      if (athletes.data) {
-
-        athletelist = athletes.data.data.map((athlete, index) => {
-
-          const sequence = index + 1;
-          const region = 'sgp1';
-          const profilePicture = athlete.profilePicture;
-          const imageURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/uploads/athletes/profile/${profilePicture}`;
-
-
-          return {
-            ...athlete,
-            imageURL,
-            sequence
-          }
-        })
-      }
-    }
-    if (account.length == undefined) {
-      verify = false;
-    }
-
-    if (account.data.data.length != 0) {
-      verify = (account.data.data[0].profileStatus == 'verified' ? true : false)
-    }
-
-
-    // console.log(account.data, 'list')  
-
-    // verifyUser = accountVerified.data.data.map(profile => {
-    //   const verified = (profile.profileStatus == 'verified' ? true : false)
-
-    //   return {
-    //     verified
-    //   }
-    // });
-    // console.log(account, 'test account')
-  }
-  // console.log(account, 'test verify')
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (!session) {
     return {
@@ -139,6 +81,82 @@ export async function getServerSideProps(context) {
         destination: '/',
         permanent: false,
       },
+    };
+  }
+
+  const nextAuthSession = await getSession(context);
+
+  if (!nextAuthSession) {
+    return {
+      props: { session },
+    };
+  }
+
+  const email = nextAuthSession.user.email;
+  const account = await fetchData("http://localhost:3000/api/getProfile", { email });
+  const team = await fetchData("http://localhost:3000/api/getUserTeam", { registeredEmail: email });
+
+  let teamItem = null;
+  let verify = account.data && account.data.length > 0 && account.data[0].profileStatus === 'verified';
+  let athletelist = null;
+  let coachlist = null;
+  let officiallist = null;
+
+  if (team.data && team.data.length > 0) {
+    const teamId = team.data[0]._id;
+    teamItem = team.data.map((team) => ({
+      ...team,
+      logoURL: constructImageUrl(
+        process.env.DO_SPACES_BUCKET,
+        'sgp1',
+        'teamLogos',
+        team.originalFileName
+      ),
+    }));
+
+    const athletes = await fetchData("http://localhost:3000/api/getUserAthletes", { team: teamId });
+    const coaches = await fetchData("http://localhost:3000/api/getUserCoaches", { team: teamId });
+    const officials = await fetchData("http://localhost:3000/api/getUserOfficials", { team: teamId });
+
+    const region = 'sgp1';
+
+    if (officials.data) {
+      officiallist = officials.data.map((official, index) => ({
+        ...official,
+        imageDoc: constructImageUrl(
+          process.env.DO_SPACES_BUCKET,
+          region,
+          'uploads/official/profile',
+          official.documentId
+        ),
+        sequence: index + 1,
+      }));
+    }
+
+    if (coaches.data) {
+      coachlist = coaches.data.map((coach, index) => ({
+        ...coach,
+        imageDoc: constructImageUrl(
+          process.env.DO_SPACES_BUCKET,
+          region,
+          'uploads/coaches/profile',
+          coach.documentId
+        ),
+        sequence: index + 1,
+      }));
+    }
+
+    if (athletes.data) {
+      athletelist = athletes.data.map((athlete, index) => ({
+        ...athlete,
+        imageURL: constructImageUrl(
+          process.env.DO_SPACES_BUCKET,
+          region,
+          'uploads/athletes/profile',
+          athlete.profilePicture
+        ),
+        sequence: index + 1,
+      }));
     }
   }
 
@@ -147,7 +165,10 @@ export async function getServerSideProps(context) {
       session,
       teamItem,
       verify,
-      athletelist
+      athletelist,
+      coachlist,
+      officiallist,
     },
-  }
+  };
 }
+

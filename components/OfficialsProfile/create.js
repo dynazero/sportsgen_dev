@@ -1,15 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
-import { authOptions } from '../api/auth/[...nextauth]'
-import { getServerSession } from "next-auth/next"
-import { useSession, getSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router';
-import { MotionConfig, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const CreateCoach = ({ teamItem }) => {
+const Create = ({ teamId }) => {
     const { data: session } = useSession()
 
     const router = useRouter();
@@ -18,7 +16,6 @@ const CreateCoach = ({ teamItem }) => {
     const [lname, setLName] = useState('');
     // const [email, setEmail] = useState('');
     const [profileStatus, setProfileStatus] = useState('verified');
-    const [team, setTeam] = useState(teamItem[0]._id);
     // const [events, setEvents] = useState([]);
 
     // const fileInputRef = useRef();
@@ -54,80 +51,64 @@ const CreateCoach = ({ teamItem }) => {
 
     const SubmitHandler = async (e) => {
         e.preventDefault();
-        // if (!duplicates) {
-        const formData = new FormData();
+        if (teamId) {
+            const formData = new FormData();
         formData.append('fname', fname);
         formData.append('lname', lname);
         // formData.append('email', email);
-        formData.append('team', team);
+        formData.append('team', teamId);
         formData.append('profileStatus', profileStatus);
         // formData.append('image', image);
         formData.append('image1', image1);
         // formData.append('events', events);
-
-
-        const functionThatReturnPromise = axios.post(`../api/createCoach`, formData);
-        toast.promise(
-            functionThatReturnPromise,
-            {
-                pending: 'Creating Coach',
-                success: 'Coach saved successfully! 👌',
-                error: 'Error creating Coach 🤯'
-            }
-        ).then(
-            (response) => {
-                if (response.status === 201) { // Check if the profile was created successfully
-                    // Clear the form
-                    setFName('');
-                    setLName('');
-                    // fileInputRef.current.value = '';
-                    fileInputRef1.current.value = '';
-
-                    // Navigate to another page (e.g., the home page)
-                    setTimeout(() => {
-                        router.push('/dashboard');
-                    }, 3000);
+    
+    
+            const functionThatReturnPromise = axios.post(`../api/createOfficial`, formData);
+            toast.promise(
+                functionThatReturnPromise,
+                {
+                    pending: 'Creating Official',
+                    success: 'Official saved successfully! 👌',
+                    error: 'Error creating Official 🤯'
                 }
-            }
-        ).catch((error) => {
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                console.error('Error submitting form:', error.response.data.message);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.error('No response received:', error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error('Error', error.message);
-            }
-        });
-
-        // } else {
-        //     toast.warning('Please pick another Team Name, Team Name Taken');
-        // }
+            ).then(
+                (response) => {
+                    if (response.status === 201) { // Check if the profile was created successfully
+                        // Clear the form
+                        setFName('');
+                        setLName('');
+                        // fileInputRef.current.value = '';
+                        fileInputRef1.current.value = '';
+    
+                        // Navigate to another page (e.g., the home page)
+                        setTimeout(() => {
+                            router.replace(router.asPath);
+                        }, 3000);
+                    }
+                }
+            ).catch((error) => {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    console.error('Error submitting form:', error.response.data.message);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    console.error('No response received:', error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.error('Error', error.message);
+                }
+            });
+        } else {
+            toast.warning('Please create a team first before signing up an official');
+        }
 
     };
 
-    // console.log(fname, lname, email, profileStatus, image, image1, titles  )
 
     return (
-
-        <div className='wrapperForm'
-            style={{
-                justifyContent: 'flex-start',
-                paddingTop: '20px'
-            }}
-        >
-            <div className='headerForm'>
-                <h2 className="mb-3">Fill in your Coach profile</h2>
-            </div>
-            <div className='containerForm'
-                style={{
-                    height: '43vh',
-                }}
-            >
-                <div className="col-md-7 col-lg-8 mainForm">
-                    <form onSubmit={SubmitHandler} className="needs-validation" noValidate="" >
+        <>
+        <div className="col-md-7 col-lg-8 mainForm">
+        <form onSubmit={SubmitHandler} className="needs-validation" noValidate="" >
                         <div className="row g-3">
                             <div className="container">
                                 {/* <label htmlFor="firstName" className="form-label">Name of Event/Tournament</label> */}
@@ -165,9 +146,7 @@ const CreateCoach = ({ teamItem }) => {
                                 </div>
 
                             </div>
-                            <div className="col-sm-6">
-
-                            </div>
+                           
 
                             {/* <hr className="my-4" /> */}
 
@@ -196,7 +175,7 @@ const CreateCoach = ({ teamItem }) => {
                                     </div>
                                 </div> */}
 
-                                <div className="col-sm-6">
+                                <div className="col-sm-12">
                                     <label htmlFor="uploadLogo" className="form-label">Official ID</label>
                                     <input
                                         type="file"
@@ -256,40 +235,13 @@ const CreateCoach = ({ teamItem }) => {
                             </div>
                         </div>
                     </form>
-                </div>
-                <ToastContainer />
             </div>
-        </div>
+            <ToastContainer />
+        </>
+
     )
 }
 
-export default CreateCoach;
+export default Create;
 
 
-export async function getServerSideProps(context) {
-    const session = await getServerSession(context.req, context.res, authOptions)
-    const nextAuthSession = await getSession(context);
-    let teamItem = null;
-
-
-    if (nextAuthSession) {
-        const team = await axios.get(`http://localhost:3000/api/getUserTeam?registeredEmail=${nextAuthSession.user.email}`);
-        teamItem = team.data.data;
-    }
-
-    if (!session) {
-        return {
-            redirect: {
-                destination: '/coach/error',
-                permanent: false,
-            },
-        }
-    }
-
-    return {
-        props: {
-            session,
-            teamItem
-        },
-    }
-}

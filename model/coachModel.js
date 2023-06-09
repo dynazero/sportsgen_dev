@@ -16,7 +16,6 @@ const coachSchema =  new mongoose.Schema({
     team: {
         type: String,
         required: true,
-        unique:true
     },
     // profilePicture: {
     //     type: String,

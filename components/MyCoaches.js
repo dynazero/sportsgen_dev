@@ -1,10 +1,10 @@
 import React from 'react'
 import CoachesProfile from './CoachesProfile'
 
-export default function MyCoaches() {
+export default function MyCoaches({teamItem, coachlist }) {
   return (
     <div>
-      <CoachesProfile />
+      <CoachesProfile teamItem={teamItem} coachlist={coachlist}/>
     </div>
   )
 }

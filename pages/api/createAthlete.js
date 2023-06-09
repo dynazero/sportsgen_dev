@@ -49,7 +49,7 @@ export default async (req, res) => {
 
             const emailVerify = await Athlete.findOne({ email: email });
             if (emailVerify) {
-                res.status(422).json({ message: "Athlete already exists" });
+                res.status(422).json({ message: "Athlete email already exists" });
                 return;
             }
 
