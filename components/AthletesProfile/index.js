@@ -29,9 +29,7 @@ export default function AthletesProfile({ teamItem, athletelist }) {
     <div className='container'>
       <div className="row ">
         {/* Athlete Registration */}
-        <div className="col-6 p-3 mb-4 bg-light rounded-3 minW480" style={{
-          marginRight: '30px'
-        }}>
+        <div className="col-6 p-3 mb-4 bg-light rounded-3 minW480 marginRight" >
           <div className='p-2 panelDark rounded-3'>
             <div
               style={{

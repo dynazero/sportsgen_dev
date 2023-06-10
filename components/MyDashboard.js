@@ -34,7 +34,6 @@ export default function MyDashboard({passPage, setCurPage, verify, teamItem, ath
     }
   }, [passPage]);
 
-  console.log(members)
 
 
   if (passPage === "myathletes") {
@@ -61,7 +60,7 @@ export default function MyDashboard({passPage, setCurPage, verify, teamItem, ath
   }
 
   return (
-    <MyTeam onPageChange={setCurrentPage} teamItem={teamItem} verify={verify}/>
+    <MyTeam onPageChange={setCurrentPage} teamItem={teamItem} verify={verify} members={members} />
   )
 
 }

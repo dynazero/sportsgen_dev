@@ -32,6 +32,14 @@ a {
   }
 }
 
+.membersWidth{
+max-width: 119dvh;
+}
+
+.marginRight{
+  margin-right: 30px;
+}
+
 .paddingList{
   padding: 15px !important;
 }
