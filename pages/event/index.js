@@ -3,6 +3,7 @@ import axios from 'axios';
 import { signIn, useSession } from "next-auth/react"
 import { MotionConfig, motion } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react'
+import navbarstyle from '../../styles/Menu.module.css'
 import RegistrationBody from '../../components/RegistrationBody/'
 import ReactDOM from "react-dom";
 import Image from 'next/image'
@@ -152,17 +153,12 @@ export default function events({ eventItem }) {
                             </div>
                           </div>
                           {!session && (
-                            <motion.button
-                              className="btn btn-primary save-button"
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              // onClick={ event => {modalClick(event, !modalOpen, true)}} 
-                              onClick={() => signIn()}
-                              href="/login"
-                              type="button"
-                            >
-                              Login to Register &gt;&gt;
-                            </motion.button>
+                            <Link href="/dashboard" className="nav-link active" aria-current="page"
+                              onClick={() => signIn()}>
+                              <span className={navbarstyle.textcoloractive}>
+                                Please to login to Register »
+                              </span>
+                            </Link>
                           )}
 
                           {session && (
