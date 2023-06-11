@@ -3,9 +3,7 @@ import Link from 'next/link'
 import axios from 'axios';
 import { useSession, getSession } from "next-auth/react"
 import { motion } from 'framer-motion';
-import { toast, ToastContainer } from "react-toastify";
 import Image from 'next/image'
-import 'react-toastify/dist/ReactToastify.css';
 import Create from './create';
 
 export default function CoachesProfile({ teamItem, coachlist }) {
@@ -20,9 +18,11 @@ export default function CoachesProfile({ teamItem, coachlist }) {
   const [clist, setClist] = useState(false)
 
   useEffect(() => {
-    teamItem.length === 0 ? setTeam() : setTeam(teamItem[0]._id);
-    coaches.length === 0 ? setClist(false) : setClist(true);
+    teamItem?.length === 0 ? setTeam() : setTeam(teamItem?.[0]?._id);
+    coaches?.length === 0 ? setClist(false) : setClist(true);
   }, [teamItem, coaches]);
+  
+  
 
   return (
     <div className='container'>

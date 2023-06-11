@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import { useSession } from "next-auth/react"
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 
 
 export default function myprofile() {
@@ -64,16 +63,6 @@ export default function myprofile() {
           <button className="w-100 btn btn-primary btn-lg" type="submit">Submit Profile</button>
         </div>
       </form>
-      <ToastContainer position="top-right"
-        autoClose={2000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover={false}
-        theme="light" />
 
     </>
 

@@ -6,8 +6,7 @@ import { getServerSession } from "next-auth/next"
 import { useSession, getSession } from "next-auth/react"
 import { useRouter } from 'next/router';
 import { MotionConfig, motion } from 'framer-motion';
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 
 const CreateTeam = () => {
     const { data: session } = useSession()
@@ -241,7 +240,6 @@ const CreateTeam = () => {
                         </div>
                     </form>
                 </div>
-                <ToastContainer />
             </div>
         </div>
     )

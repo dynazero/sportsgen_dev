@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useSession } from "next-auth/react"
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 
 export default function eventcategories() {
 
@@ -63,18 +62,6 @@ export default function eventcategories() {
                                     Valid Keyword is required.
                                 </div>
                             </div>
-
-                            <ToastContainer position="top-right"
-                                autoClose={2000}
-                                hideProgressBar
-                                newestOnTop={false}
-                                closeOnClick
-                                rtl={false}
-                                pauseOnFocusLoss={false}
-                                draggable={false}
-                                pauseOnHover={false}
-                                theme="light" />
-
                         </div>
 
                         <hr className="my-4" />

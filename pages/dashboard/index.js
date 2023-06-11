@@ -6,8 +6,7 @@ import Sidebar from '../../components/Sidebar'
 import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
 import MyDashboard from '../../components/MyDashboard'
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 
 
 
@@ -61,7 +60,6 @@ export default function dashboard({ teamItem, verify, athletelist, coachlist, of
         </div>
       )}
 
-      <ToastContainer />
 
     </div>
   )

@@ -9,8 +9,7 @@ import { MotionConfig, motion } from 'framer-motion';
 import InputDropdownRow from '../../components/inputDropdownRow';
 import CustomDatePicker from '../../components/CustomDatePicker';
 import CustomDateRangePicker from '../../components/CustomDateRangePicker';
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 
 const CreateEvent = () => {
     const { data: session } = useSession()
@@ -625,7 +624,6 @@ const CreateEvent = () => {
                         </div>
                     </form>
                 </div>
-                <ToastContainer />
             </div>
         </div>
     )

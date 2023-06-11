@@ -4,8 +4,7 @@ import axios from 'axios';
 import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 
 const Create = ({ teamId }) => {
     const { data: session } = useSession()
@@ -259,7 +258,6 @@ const Create = ({ teamId }) => {
                 </div>
             </form>
             </div>
-            <ToastContainer />
         </>
 
     )

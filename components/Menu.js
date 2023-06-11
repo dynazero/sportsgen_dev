@@ -8,24 +8,24 @@ import navbarstyle from '../styles/Menu.module.css'
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion'
 import { bottom } from '@popperjs/core'
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-
-
-
-
+import { toast } from "react-toastify";
 
 export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide, verified }) {
 
   const { data: session } = useSession()
   const router = useRouter();
-  
+  let timeout;
+
   const handleCreateEventClick = () => {
-    if (verified) {
-      router.push('/event/create');
-    } else {
-      toast.warning('Please create a team first before creating an Event');
-    }
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      if (verified) {
+        router.push('/event/create');
+      } else {
+        toast.warning('Please create a team first before creating an Event');
+      }
+    }, 300); // waits 300ms before executing
   };
 
 
@@ -106,9 +106,8 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide, ve
                 <ul className="navbar-nav mb-2 mb-lg-0">
 
                   <li className={navbarstyle.button}>
-                    <Link href="#" passHref>
-                      <motion.button
-                        onClick={handleCreateEventClick}
+                    <Link href="#" passHref onClick={(e) => e.preventDefault()}>
+                      <motion.button onClick={handleCreateEventClick}
                         className="btn btn-dark save-button"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}

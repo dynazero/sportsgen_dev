@@ -6,19 +6,23 @@ import Menu from '../components/Menu'
 import '../styles/Modal.css'
 import Modal from '../components/Modal/index.jsx'
 import { AnimatePresence } from 'framer-motion'
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
 
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }){
+
+
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [panelSide, setPanelSide] = useState(true);
   const [verified, setVerified] = useState(false);
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
-  
+
 
 
   useEffect(() => {
@@ -30,29 +34,39 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }){
 
   }, [pageProps.teamItem]);
 
-  
 
-  const modalClick = (event, modal, panel ) => {
+
+  const modalClick = (event, modal, panel) => {
     // console.log(bool);
     setModalOpen(modal);
-    
+
     setPanelSide(panel)
     // console.log('_app panel'+ panel);
   };
-  
+
 
   return (
     <>
-      
-      <SessionProvider  session={session}>
-      <Menu modalClick={modalClick} modalOpen={modalOpen} panelSide={panelSide} verified={verified}/>
-      <Component {...pageProps} />
 
-      <AnimatePresence
-        initial={false}
-      >
-        {modalOpen && <Modal modalOpen={modalOpen} handleClose={close} panelSide={panelSide}/>}
-      </AnimatePresence>
+      <SessionProvider session={session}>
+        <Menu modalClick={modalClick} modalOpen={modalOpen} panelSide={panelSide} verified={verified} />
+        <Component {...pageProps} />
+
+        <AnimatePresence
+          initial={false}
+        >
+          {modalOpen && <Modal modalOpen={modalOpen} handleClose={close} panelSide={panelSide} />}
+        </AnimatePresence>
+        <ToastContainer position="top-right"
+          autoClose={2000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover={false}
+          theme="light" />
       </SessionProvider>
 
     </>

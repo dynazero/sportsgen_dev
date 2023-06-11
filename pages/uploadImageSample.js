@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 import axios from 'axios';
 
 export default function UploadImageSample() {
@@ -45,7 +44,6 @@ export default function UploadImageSample() {
         </div>
       </div>
     </form>
-    <ToastContainer />
     </>
   );
 }
