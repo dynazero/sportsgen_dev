@@ -21,8 +21,8 @@ const Members = ({ members }) => {
             </thead>
             <tbody>
                 {membersList && members.map((item, i) => (
-                    <tr key={item.id}>
-                        <th scope="row" className='paddingList'>{item.sequence}</th>
+                    <tr key={item.combinedSequence}>
+                        <th scope="row" className='paddingList'>{item.combinedSequence}</th>
                         <td className='paddingList'>{item.lname}</td>
                         <td className='paddingList'>{item.fname}</td>
 

@@ -104,7 +104,7 @@ export default function TeamProfile({ teamItem, verify, members }) {
                             </div>
 
                         </div>
-                        <div className="col-3 p-3 mb-4 bg-light rounded-3 minW480 caret ">
+                        <div className="col-3 p-3 mb-4 bg-light rounded-3 caret ">
                             <div className='p-5 panelDark rounded-3'>
                             Ongoing Events
                             </div>

@@ -5,17 +5,28 @@ import Link from 'next/link'
 import logo from '../public/sportsgenph_Text_vector.png'
 import googlelogo from '../public/images/google.png'
 import navbarstyle from '../styles/Menu.module.css'
+import { useRouter } from 'next/router';
 import { motion } from 'framer-motion'
 import { bottom } from '@popperjs/core'
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
 
 
-export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) {
+export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide, verified }) {
 
   const { data: session } = useSession()
-
+  const router = useRouter();
+  
+  const handleCreateEventClick = () => {
+    if (verified) {
+      router.push('/event/create');
+    } else {
+      toast.warning('Please create a team first before creating an Event');
+    }
+  };
 
 
   return (
@@ -95,8 +106,9 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) 
                 <ul className="navbar-nav mb-2 mb-lg-0">
 
                   <li className={navbarstyle.button}>
-                    <Link href="/event/create">
+                    <Link href="#" passHref>
                       <motion.button
+                        onClick={handleCreateEventClick}
                         className="btn btn-dark save-button"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
@@ -136,7 +148,7 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) 
                     </Link>
 
                   </li>
-                 
+
 
                   <li className={navbarstyle.button}>
                     <motion.button

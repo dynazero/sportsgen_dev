@@ -15,13 +15,20 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }){
 
   const [modalOpen, setModalOpen] = useState(false);
   const [panelSide, setPanelSide] = useState(true);
+  const [verified, setVerified] = useState(false);
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
+  
 
 
   useEffect(() => {
     import("bootstrap/dist/js/bootstrap");
-  }, []);
+
+    if (pageProps.teamItem?.[0]?._id) {
+      setVerified(true);
+    }
+
+  }, [pageProps.teamItem]);
 
   
 
@@ -32,14 +39,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }){
     setPanelSide(panel)
     // console.log('_app panel'+ panel);
   };
-
   
 
   return (
     <>
       
       <SessionProvider  session={session}>
-      <Menu modalClick={modalClick} modalOpen={modalOpen} panelSide={panelSide}/>
+      <Menu modalClick={modalClick} modalOpen={modalOpen} panelSide={panelSide} verified={verified}/>
       <Component {...pageProps} />
 
       <AnimatePresence

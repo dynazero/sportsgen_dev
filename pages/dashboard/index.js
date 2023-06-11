@@ -80,6 +80,7 @@ export async function getServerSideProps(context) {
   const getCoachEndPoint = "/api/getUserCoaches"
   const getOfficialEndPoint = "/api/getUserOfficials"
   const session = await getServerSession(context.req, context.res, authOptions);
+  let combinedSequenceCounter = 1;
 
   if (!session) {
     return {
@@ -134,6 +135,7 @@ export async function getServerSideProps(context) {
         athlete.profilePicture
       ),
       sequence: index + 1,
+      combinedSequence: combinedSequenceCounter++,
       identifier: 'Athlete',
     }));
 
@@ -148,6 +150,7 @@ export async function getServerSideProps(context) {
         coach.documentId
       ),
       sequence: index + 1,
+      combinedSequence: combinedSequenceCounter++,
       identifier: 'Coach',
     }));
 
@@ -162,6 +165,7 @@ export async function getServerSideProps(context) {
         official.documentId
       ),
       sequence: index + 1,
+      combinedSequence: combinedSequenceCounter++,
       identifier: 'Official',
     }));
 
