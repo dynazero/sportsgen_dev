@@ -18,11 +18,60 @@ export default function events({ eventItem }) {
   const [events, setEvents] = useState(false);
   const MotionLink = motion(Link)
 
+  const [getTeamId, setGetTeamId] = useState(undefined);
+  const [athletelist, setAthleteList] = useState([]);
+
+  useEffect(() => {
+    const storedTeamId = localStorage.getItem('teamId');
+    if (storedTeamId !== null) {
+      const teamIdWithoutQuotes = storedTeamId.replace(/"/g, '');
+      setGetTeamId(teamIdWithoutQuotes);
+    }
+}, [])
+
+
   useEffect(() => {
     if (eventItem.length !== 0) {
       setEvents(true);
     }
+
   }, [eventItem]);
+
+  const fetchData = async (url, params) =>
+    axios.get(url, { params }).then(response => response.data.data || []);
+
+  // const constructImageUrl = (bucket, region, path, fileName) =>
+  //   `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
+
+
+
+  useEffect(() => {
+    if (session) {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const getAthleteEndPoint = "/api/getUserAthletes?team=";
+      const teamId = getTeamId
+      // const region = 'sgp1';
+      const fetchAthletes = async () => {
+        let athletes = await fetchData(`${apiUrl}${getAthleteEndPoint}`, { team: teamId });
+        athletes = athletes.map((athlete, index) => ({
+          ...athlete,
+          type: 'athlete',
+          // imageURL: constructImageUrl(
+          //   process.env.DO_SPACES_BUCKET,
+          //   region,
+          //   'uploads/athletes/profile',
+          //   athlete.profilePicture
+          // ),
+          sequence: index + 1,
+          identifier: 'Athlete',
+        }));
+        setAthleteList(athletes);
+      };
+
+      fetchAthletes();
+    }
+  }, [session, getTeamId]);
+
 
   return (
     <>
@@ -163,7 +212,7 @@ export default function events({ eventItem }) {
 
                           {session && (
                             <>
-                              <RegistrationBody />
+                              <RegistrationBody athletelist={athletelist} events={item.categoryTitles} />
                             </>
                           )}
 
@@ -185,6 +234,12 @@ export default function events({ eventItem }) {
     </>
   )
 }
+
+const fetchData = async (url, params) =>
+  axios.get(url, { params }).then((response) => response.data.data || []);
+
+const constructImageUrl = (bucket, region, path, fileName) =>
+  `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
 
 const calculateCountdown = (startDate) => {
   const now = new Date();
@@ -243,9 +298,14 @@ export async function getServerSideProps(context) {
     };
   });
 
+
   eventItem.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
   // Pass the data to the page via props
-  return { props: { eventItem } };
+  return {
+    props: {
+      eventItem,
+    }
+  };
 }
 
 

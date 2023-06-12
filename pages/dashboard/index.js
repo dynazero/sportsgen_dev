@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 
 
-export default function dashboard({ teamItem, verify, athletelist, coachlist, officiallist, members }) {
+export default function dashboard({ teamItem, verify, athletelist, coachlist, officiallist, members, teamId }) {
   // const router = useRouter()
   const [passSBS, setPassSBS] = useState(true)
   const [passPage, setPassPage] = useState('')
@@ -27,13 +27,15 @@ export default function dashboard({ teamItem, verify, athletelist, coachlist, of
       }, 3000);
     }
 
+    localStorage.setItem('teamId', JSON.stringify(teamId))
+
   }, [])
   // const { params = [] } = router.query
 
   const mDB = passSBS ? "280px" : "0px"
   const mWidth = passSBS ? "calc(100% - 280px)" : "100%"
 
-  // console.log(verify)
+  // console.log(teamId)
   // console.log(passPage)
 
   // default return
@@ -102,6 +104,7 @@ export async function getServerSideProps(context) {
   const team = await fetchData(`${apiUrl}${getTeamEndPoint}`, { registeredEmail: email });
 
   let teamItem = null;
+  let teamId = null;
   let verify = account.length > 0 && account[0].profileStatus === 'verified';
   let athletelist = [];
   let coachlist = [];
@@ -109,7 +112,9 @@ export async function getServerSideProps(context) {
   let members = [];
 
   if (team.length > 0) {
-    const teamId = team[0]._id;
+     teamId = team[0]._id;
+
+
     teamItem = team.map((team) => ({
       ...team,
       logoURL: constructImageUrl(
@@ -180,6 +185,7 @@ export async function getServerSideProps(context) {
       coachlist,
       officiallist,
       members,
+      teamId
     },
   };
 }

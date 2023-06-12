@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Image from 'next/image'
 import { signIn, signOut, useSession } from "next-auth/react"
 import Link from 'next/link'
@@ -16,6 +16,12 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide, ve
   const router = useRouter();
   let timeout;
 
+  useEffect(() => { 
+    if(session){
+      localStorage.setItem('email', session.user?.email)
+    }
+    
+  }, [])
   const handleCreateEventClick = () => {
     clearTimeout(timeout);
 
@@ -23,11 +29,18 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide, ve
       if (verified) {
         router.push('/event/create');
       } else {
-        toast.warning('Please create a team first before creating an Event');
+        toast.warning('Please proceed to my profile before creating an Event');
       }
     }, 300); // waits 300ms before executing
   };
 
+  const handleSignOut = () => {
+
+    
+    localStorage.clear();
+
+    signOut();
+  }
 
   return (
     <>
@@ -155,7 +168,7 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide, ve
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       // onClick={ event => {modalClick(event, !modalOpen, true)}} 
-                      onClick={() => signOut()}
+                      onClick={handleSignOut}
                       href="/"
                       type="button"
                       style={{ width: 92 }}

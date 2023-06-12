@@ -1,6 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-export default function RegistrationBody() {
+export default function RegistrationBody({ athletelist, events }) {
+
+    const [athleteFill, setAthleteFill] = useState(false)
+    const [athletes, setAthletes] = useState([])
+
+    useEffect(() => {
+        if (athletelist.length !== 0) {
+            setAthleteFill(true)
+            setAthletes(athletelist)
+        }
+
+
+    }, [athletelist])
+
+    const SubmitHandler = async (e) => {
+        e.preventDefault();
+
+        if (athleteFill) {
+
+
+
+        } else {
+            toast.warning('Please sign up an athlete before registration');
+        }
+
+
+    }
+
+    console.log(events.length)
+
+
     return (
         <>
             <div className="row g-5">
@@ -62,7 +92,7 @@ export default function RegistrationBody() {
                 </div>
                 <div className="col-md-7 col-lg-8">
                     <h4 className="mb-3">Fill up form</h4>
-                    <form className="needs-validation" noValidate="" />
+                    <form onSubmit={SubmitHandler} className="needs-validation" noValidate="" />
                     <div className="row g-3">
                         <div className="col-sm-6">
                             <label htmlFor="firstName" className="form-label">Athlete Name</label>
@@ -78,43 +108,58 @@ export default function RegistrationBody() {
                                       <li><a class="dropdown-item" href="#">Chris</a></li>
                                     </ul> */}
                                 <select className="form-select mb-3 form-control fontWeight400" id="NameSelection" aria-label=".form-select-lg example">
-                                    <option>Choose Name..</option>
-                                    <option>Kyle</option>
-                                    <option>James</option>
-                                    <option>Chris</option>
+                                    {!athleteFill && (
+                                        <option>Please Register an Athlete </option>
+                                    )
+                                    }
+                                    {athleteFill && (
+                                        <>
+                                            <option>Choose Name..</option>
+                                            {athletes.map((athlete, index) => (
+                                                <option key={index} value={athlete.sequence}>
+                                                    {athlete.lname}, {athlete.fname}
+                                                </option>
+                                            ))}
+                                        </>
+                                    )}
                                 </select>
 
                             </div>
                             <div className="invalid-feedback">
-                                Valid first name is required.
+                                Valid athlete name is required.
                             </div>
                         </div>
 
                         <div className="col-sm-6" style={{ zIndex: '4' }}>
-                            <label htmlFor="lastName" className="form-label">Date Of Birth</label>
-                            {/* <input type="date" className="form-control" id="DateofBirth" placeholder="Select Date" defaultValue="" required="" ></input> */}
-                            <div className="form-control" style={{ height: '38px' }}>
-                            </div>
-                            <div className="invalid-feedback">
-                                Valid last name is required.
-                            </div>
-                        </div>
-
-                        <div className="col-12">
-                            <label htmlFor="username" className="form-label">Username</label>
+                            <label htmlFor="category" className="form-label">Category</label>
                             <div className="input-group has-validation">
                                 {/* <span className="input-group-text">@</span>
                                     <input type="text" className="form-control" id="username" placeholder="Username" required="" /> */}
                                 <select className="form-select mb-3 form-control fontWeight400" id="username" aria-label=".form-select-lg example">
-                                    <option>Choose Category..</option>
+                                    {events && (
+                                        <>
+                                        <option>Choose Category..</option>
+                                        {
+                                            events.map((event, index) => (
+                                                <option key={index} value={index}>{event}</option>
+                                            ))
+                                        }
+                                        </>
+                                    )
+                                    }
+                                    {/* <option>Choose Category..</option>
                                     <option>Cadet Kata Male</option>
                                     <option>Cadet Kumite Female</option>
-                                    <option>Cadet Kumite Male</option>
+                                    <option>Cadet Kumite Male</option> */}
                                 </select>
                                 <div className="invalid-feedback">
-                                    Your username is required.
+                                    Your category is required.
                                 </div>
                             </div>
+                        </div>
+
+                        <div className="col-12">
+                            
                         </div>
 
 

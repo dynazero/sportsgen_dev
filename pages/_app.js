@@ -8,6 +8,7 @@ import Modal from '../components/Modal/index.jsx'
 import { AnimatePresence } from 'framer-motion'
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+// import 'bootstrap/dist/js/bootstrap';
 
 
 
@@ -23,10 +24,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const close = () => setModalOpen(false);
   const open = () => setModalOpen(true);
 
+  useEffect(() => {
+    import('bootstrap/dist/js/bootstrap')
+    .catch(error => console.log('Loading Bootstrap failed', error));
+  }, [])
 
 
   useEffect(() => {
-    import("bootstrap/dist/js/bootstrap");
 
     if (pageProps.teamItem?.[0]?._id) {
       setVerified(true);
