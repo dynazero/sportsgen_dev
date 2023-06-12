@@ -93,6 +93,11 @@ caret-color: transparent;
   }
 }
 
+
+.paddingTop{
+  padding-top: 30px;
+}
+
 /* panels */
 .panelsBG{
   background-color: whitesmoke;

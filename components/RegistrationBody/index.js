@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react'
+import Cart from './cart'
+import { toast } from 'react-toastify'
 
-export default function RegistrationBody({ athletelist, events }) {
+
+export default function RegistrationBody({ athletelist, events, eventId }) {
 
     const [athleteFill, setAthleteFill] = useState(false)
     const [athletes, setAthletes] = useState([])
+
+    const [athleteName, setAthleteName] = useState()
+    const [eventName, setEventName] = useState()
+
+    const [cartEvents, setCartEvents] = useState([])
 
     useEffect(() => {
         if (athletelist.length !== 0) {
@@ -13,6 +21,28 @@ export default function RegistrationBody({ athletelist, events }) {
 
 
     }, [athletelist])
+
+    const handleAdd = () => {
+        setCartEvents((prevCartEvents) => {
+            const existingIndex = prevCartEvents.findIndex((item) =>
+                item.participant === athleteName && item.tournamentId === eventId
+            );
+    
+            if (existingIndex !== -1) {
+                toast.warning('This participant is already registered for this event');
+                return prevCartEvents; // Return the previous state without any changes
+            } else {
+                const newObject = {
+                    key: prevCartEvents.length + 1,
+                    tournamentId: eventId,
+                    participant: athleteName,
+                    event: eventName
+                };
+                return [...prevCartEvents, newObject]; // Add the new object to the array
+            }
+        });
+    };
+    
 
     const SubmitHandler = async (e) => {
         e.preventDefault();
@@ -28,58 +58,17 @@ export default function RegistrationBody({ athletelist, events }) {
 
     }
 
-    console.log(events.length)
-
+    // console.log(eventId)
+    // console.log(athleteName)
+    // console.log(eventName)
+    // console.log(cartEvents)
 
     return (
         <>
             <div className="row g-5">
                 <div className="col-md-5 col-lg-4 order-md-last">
-                    <h4 className="d-flex justify-content-between align-items-center mb-3">
-                        <span className="text-primary">Your Events</span>
-                        <span className="badge bg-primary rounded-pill">3</span>
-                    </h4>
-                    <ul className="list-group mb-3">
-                        <li className="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                                {/* <h6 className="my-0">{item.shortTitle[0]}</h6> */}
-                                <h6 className="my-0">Short Item Title</h6>
-                                {/* <small className="text-muted">{item.shortDescription[0]}</small> */}
-                                <small className="text-muted">Short Description</small>
-                            </div>
-                            {/* <span className="text-muted">{item.price[0]}</span> */}
-                            <span className="text-muted">Item Price</span>
-
-                        </li>
-                        <li className="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
-                                {/* <h6 className="my-0">{item.shortTitle[1]}</h6> */}
-                                <h6 className="my-0">Short Title</h6>
-                                {/* <small className="text-muted">{item.shortDescription[1]}</small> */}
-                                <small className="text-muted">Short Description</small>
-                            </div>
-                            {/* <span className="text-muted">{item.price[1]}</span> */}
-                            <span className="text-muted">Item Price</span>
-                        </li>
-                        {/* <li className="list-group-item d-flex justify-content-between lh-sm">
-                                  <div>
-                                    <h6 className="my-0">{item.shortTitle[2]}</h6>
-                                    <small className="text-muted">{item.shortDescription[2]}</small>
-                                  </div>
-                                  <span className="text-muted">{item.price[2]}</span>
-                                </li> */}
-                        {/*<li className="list-group-item d-flex justify-content-between bg-light">
-                                   <div className="text-success">
-                                    <h6 className="my-0">Promo code</h6>
-                                    <small>EXAMPLECODE</small>
-                                  </div>
-                                  <span className="text-success">−$5</span> 
-                                </li>*/}
-                        <li className="list-group-item d-flex justify-content-between">
-                            <span>Total (PHP)</span>
-                            <strong>₱230</strong>
-                        </li>
-                    </ul>
+                    
+                    <Cart cartEvents={cartEvents} />
                     <hr className="my-4" />
 
                     {/* <form className="card p-2">
@@ -94,7 +83,7 @@ export default function RegistrationBody({ athletelist, events }) {
                     <h4 className="mb-3">Fill up form</h4>
                     <form onSubmit={SubmitHandler} className="needs-validation" noValidate="" />
                     <div className="row g-3">
-                        <div className="col-sm-6">
+                        <div className="col-sm-5">
                             <label htmlFor="firstName" className="form-label">Athlete Name</label>
                             {/* <input type="text" className="form-control" id="firstName" placeholder="" defaultValue="" required="" /> */}
                             <div>
@@ -107,7 +96,11 @@ export default function RegistrationBody({ athletelist, events }) {
                                       <li><a class="dropdown-item" href="#">Kyle</a></li>
                                       <li><a class="dropdown-item" href="#">Chris</a></li>
                                     </ul> */}
-                                <select className="form-select mb-3 form-control fontWeight400" id="NameSelection" aria-label=".form-select-lg example">
+                                <select className="form-select mb-3 form-control fontWeight400" id="NameSelection" aria-label=".form-select-lg example"
+                                  onChange={(event) => {
+                                      setAthleteName(event.target.value)
+                                  }}  
+                                >
                                     {!athleteFill && (
                                         <option>Please Register an Athlete </option>
                                     )
@@ -116,7 +109,7 @@ export default function RegistrationBody({ athletelist, events }) {
                                         <>
                                             <option>Choose Name..</option>
                                             {athletes.map((athlete, index) => (
-                                                <option key={index} value={athlete.sequence}>
+                                                <option key={index} value={athlete._id}>
                                                     {athlete.lname}, {athlete.fname}
                                                 </option>
                                             ))}
@@ -130,20 +123,23 @@ export default function RegistrationBody({ athletelist, events }) {
                             </div>
                         </div>
 
-                        <div className="col-sm-6" style={{ zIndex: '4' }}>
+                        <div className="col-sm-5" style={{ zIndex: '4' }}>
                             <label htmlFor="category" className="form-label">Category</label>
                             <div className="input-group has-validation">
                                 {/* <span className="input-group-text">@</span>
                                     <input type="text" className="form-control" id="username" placeholder="Username" required="" /> */}
-                                <select className="form-select mb-3 form-control fontWeight400" id="username" aria-label=".form-select-lg example">
+                                <select className="form-select mb-3 form-control fontWeight400" id="username" aria-label=".form-select-lg example"
+                                 onChange={(event) => {
+                                    setEventName(event.target.value)
+                                }}  >
                                     {events && (
                                         <>
-                                        <option>Choose Category..</option>
-                                        {
-                                            events.map((event, index) => (
-                                                <option key={index} value={index}>{event}</option>
-                                            ))
-                                        }
+                                            <option>Choose Category..</option>
+                                            {
+                                                events.map((event, index) => (
+                                                    <option key={index} value={index}>{event}</option>
+                                                ))
+                                            }
                                         </>
                                     )
                                     }
@@ -158,8 +154,16 @@ export default function RegistrationBody({ athletelist, events }) {
                             </div>
                         </div>
 
-                        <div className="col-12">
-                            
+                        <div className="col-2 paddingTop">
+
+                            <button className="btn btn-primary"
+                            onClick={handleAdd}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard2-plus-fill" viewBox="0 0 16 16">
+                                    <path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z" />
+                                    <path d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585c.055.156.085.325.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5c0-.175.03-.344.085-.5ZM8.5 6.5V8H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V9H6a.5.5 0 0 1 0-1h1.5V6.5a.5.5 0 0 1 1 0Z" />
+                                </svg>
+                            </button>
                         </div>
 
 
