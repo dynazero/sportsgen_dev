@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 
   useEffect(() => {
     import('bootstrap/dist/js/bootstrap')
-    .catch(error => console.log('Loading Bootstrap failed', error));
+      .catch(error => console.log('Loading Bootstrap failed', error));
   }, [])
 
 
@@ -78,3 +78,5 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 }
 
 export default MyApp
+
+
