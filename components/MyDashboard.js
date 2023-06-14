@@ -5,7 +5,7 @@ import MyCoaches from './MyCoaches';
 import MyOfficials from './MyOfficials';
 
 
-export default function MyDashboard({passPage, setCurPage, verify, teamItem, athletelist, coachlist, officiallist, members}) {
+export default function MyDashboard({passPage, setCurPage, verifiedFromServer, teamItem, athletelist, coachlist, officiallist, members}) {
   const [currentPage, setCurrentPage] = useState(0)
 
   
@@ -39,7 +39,7 @@ export default function MyDashboard({passPage, setCurPage, verify, teamItem, ath
   if (passPage === "myathletes") {
 
     return (
-      <MyAthletes onPageChange={setCurrentPage} teamItem={teamItem} athletelist={athletelist} verify={verify}/>
+      <MyAthletes onPageChange={setCurrentPage} teamItem={teamItem} athletelist={athletelist} verifiedFromServer={verifiedFromServer}/>
     )
   }
   if (passPage === "mycoaches") {
@@ -60,7 +60,7 @@ export default function MyDashboard({passPage, setCurPage, verify, teamItem, ath
   }
 
   return (
-    <MyTeam onPageChange={setCurrentPage} teamItem={teamItem} verify={verify} members={members} />
+    <MyTeam onPageChange={setCurrentPage} teamItem={teamItem} verifiedFromServer={verifiedFromServer} members={members} />
   )
 
 }

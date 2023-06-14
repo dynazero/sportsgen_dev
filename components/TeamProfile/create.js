@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { toast } from "react-toastify";
 
-const Create = ({ verify }) => {
+const Create = ({ verifiedFromServer }) => {
     const { data: session } = useSession()
 
     const router = useRouter();
@@ -48,7 +48,7 @@ const Create = ({ verify }) => {
         e.preventDefault();
 
         
-        if (verify) {
+        if (verifiedFromServer) {
         const formData = new FormData();
         formData.append('registeredEmail', registeredEmail);
         formData.append('clubName', clubName);

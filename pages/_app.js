@@ -1,4 +1,5 @@
 import { SessionProvider } from "next-auth/react"
+import { VerifiedProvider } from './verifiedContext';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../styles/globals.css';
 import { useEffect, useState } from 'react'
@@ -51,28 +52,28 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 
   return (
     <>
+      <VerifiedProvider>
+        <SessionProvider session={session}>
+          <Menu modalClick={modalClick} modalOpen={modalOpen} panelSide={panelSide} verified={verified} />
+          <Component {...pageProps} />
 
-      <SessionProvider session={session}>
-        <Menu modalClick={modalClick} modalOpen={modalOpen} panelSide={panelSide} verified={verified} />
-        <Component {...pageProps} />
-
-        <AnimatePresence
-          initial={false}
-        >
-          {modalOpen && <Modal modalOpen={modalOpen} handleClose={close} panelSide={panelSide} />}
-        </AnimatePresence>
-        <ToastContainer position="top-right"
-          autoClose={2000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss={false}
-          draggable={false}
-          pauseOnHover={false}
-          theme="light" />
-      </SessionProvider>
-
+          <AnimatePresence
+            initial={false}
+          >
+            {modalOpen && <Modal modalOpen={modalOpen} handleClose={close} panelSide={panelSide} />}
+          </AnimatePresence>
+          <ToastContainer position="top-right"
+            autoClose={2000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover={false}
+            theme="light" />
+        </SessionProvider>
+      </VerifiedProvider>
     </>
   )
 }

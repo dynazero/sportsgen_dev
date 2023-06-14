@@ -3,9 +3,6 @@ import axios from 'axios'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { getSession } from "next-auth/react"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from './api/auth/[...nextauth]'
 import bg from '../public/bg1.webp'
 import logo from '../public/sportsgenph_Text_vector.png'
 import logo2 from '../public/footer_Text_vector.png'
@@ -121,30 +118,3 @@ export default function Home() {
 }
 
 
-const fetchData = async (url, params) =>
-  axios.get(url, { params }).then((response) => response.data.data || []);
-
-
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  const nextAuthSession = await getSession(context);
-
-  
-  if (!nextAuthSession) {
-    return {
-      props: { session },
-    };
-  }
-
-  if(session){
-    const email = nextAuthSession.user.email;
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    const getProfileEndPoint = "/api/getProfile"
-    const account = await fetchData(`${apiUrl}${getProfileEndPoint}`, { email });
-  }
-
-  console.log(session,'session')
-
-  return {props: {session},};
-
-}

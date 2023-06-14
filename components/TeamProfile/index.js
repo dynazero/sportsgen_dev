@@ -10,7 +10,7 @@ import Members from './members'
 
 
 
-export default function TeamProfile({ teamItem, verify, members }) {
+export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
     const { data: session } = useSession()
 
     const [categories, setCategories] = useState([])
@@ -47,7 +47,7 @@ export default function TeamProfile({ teamItem, verify, members }) {
                 //     </motion.button>
                 // </Link>
 
-                <Create verify={verify} />
+                <Create verifiedFromServer={verifiedFromServer} />
 
             }
 

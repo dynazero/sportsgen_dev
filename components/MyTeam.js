@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import TeamProfile from './TeamProfile';
 
 
-export default function MyTeam({ onPageChange, teamItem, verify, members }) {
+export default function MyTeam({ onPageChange, teamItem, verifiedFromServer, members }) {
 
   useEffect(() => {
     onPageChange(0);
@@ -10,7 +10,7 @@ export default function MyTeam({ onPageChange, teamItem, verify, members }) {
 
   return (
     <div>
-      <TeamProfile teamItem={teamItem} verify={verify} members={members} />
+      <TeamProfile teamItem={teamItem} verifiedFromServer={verifiedFromServer} members={members} />
 
     </div>
   )

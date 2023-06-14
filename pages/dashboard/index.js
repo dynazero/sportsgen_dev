@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useVerified } from '../verifiedContext';
 import axios from 'axios'
 // import { useRouter } from 'next/router';
 import { signIn, signOut, useSession, getSession } from "next-auth/react"
@@ -10,8 +11,9 @@ import { toast } from "react-toastify";
 
 
 
-export default function dashboard({ teamItem, verify, athletelist, coachlist, officiallist, members, teamId }) {
+export default function dashboard({ verifiedFromServer, teamItem, athletelist, coachlist, officiallist, members, teamId }) {
   // const router = useRouter()
+  const { setIsVerified } = useVerified();
   const [passSBS, setPassSBS] = useState(true)
   const [passPage, setPassPage] = useState('')
   const [curPage, setCurPage] = useState('')
@@ -19,7 +21,7 @@ export default function dashboard({ teamItem, verify, athletelist, coachlist, of
 
 
   useEffect(() => {
-    if (!verify) {
+    if (!verifiedFromServer) {
       toast.success('Thank you for signing up, please proceed to your My Profile to complete your verification');
 
       setTimeout(() => {
@@ -51,7 +53,7 @@ export default function dashboard({ teamItem, verify, athletelist, coachlist, of
           transition: ".4s",
           width: mWidth
         }}>
-        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} coachlist={coachlist} officiallist={officiallist} verify={verify} members={members} />
+        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} coachlist={coachlist} officiallist={officiallist} verifiedFromServer={verifiedFromServer} members={members} />
       </div>
 
       {arrowV && (
@@ -105,7 +107,7 @@ export async function getServerSideProps(context) {
 
   let teamItem = null;
   let teamId = null;
-  let verify = account.length > 0 && account[0].profileStatus === 'verified';
+  let verifiedFromServer = account.length > 0 && account[0].profileStatus === 'verified' ? true : false;
   let athletelist = [];
   let coachlist = [];
   let officiallist = [];
@@ -180,7 +182,7 @@ export async function getServerSideProps(context) {
     props: {
       session,
       teamItem,
-      verify,
+      verifiedFromServer,
       athletelist,
       coachlist,
       officiallist,
