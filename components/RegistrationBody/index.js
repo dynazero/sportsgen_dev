@@ -3,13 +3,13 @@ import Cart from './cart'
 import { toast } from 'react-toastify'
 
 
-export default function RegistrationBody({ athletelist, events, eventId }) {
+export default function RegistrationBody({ athletelist, events, eventId, entryFee }) {
 
     const [athleteFill, setAthleteFill] = useState(false)
     const [athletes, setAthletes] = useState([])
 
-    const [athleteName, setAthleteName] = useState()
-    const [eventName, setEventName] = useState()
+    const [athlete, setAthlete] = useState([])
+    const [event, setEvent] = useState([])
 
     const [cartEvents, setCartEvents] = useState([])
 
@@ -24,25 +24,58 @@ export default function RegistrationBody({ athletelist, events, eventId }) {
 
     const handleAdd = () => {
         setCartEvents((prevCartEvents) => {
-            const existingIndex = prevCartEvents.findIndex((item) =>
-                item.participant === athleteName && item.tournamentId === eventId
-            );
-    
-            if (existingIndex !== -1) {
-                toast.warning('This participant is already registered for this event');
-                return prevCartEvents; // Return the previous state without any changes
-            } else {
-                const newObject = {
-                    key: prevCartEvents.length + 1,
-                    tournamentId: eventId,
-                    participant: athleteName,
-                    event: eventName
-                };
-                return [...prevCartEvents, newObject]; // Add the new object to the array
+            try {
+                const participantId = athlete.athleteId;
+                const participantName = athlete.athleteName;
+                const categoryName = event.eventName;
+                const categoryId = event.index;
+
+                // console.log(eventId);
+                // console.log(participantId);
+                // console.log(participantName);
+                // console.log(categoryName);
+                // console.log(categoryId);
+
+                if (participantId == 'empty' || participantId == undefined) {
+                    toast.warning('Please choose a participant');
+                    return prevCartEvents; // Return the previous state without any changes
+                }
+
+                if (categoryId === 'empty' || categoryId === undefined) {
+                    toast.warning('Please choose a category');
+                    return prevCartEvents; // Return the previous state without any changes
+                }
+
+                // Check if the participant is already registered for the event
+                const existingIndex = prevCartEvents.findIndex((item) =>
+                    item.participantId === participantId && item.categoryId === categoryId && eventId === eventId
+                );
+
+                if (existingIndex !== -1) {
+                    toast.warning('This participant is already registered for this event');
+                    return prevCartEvents; // Return the previous state without any changes
+                } else {
+                    // Create a new object with the properties you extracted
+                    const newObject = {
+                        key: prevCartEvents.length + 1,
+                        tournamentId: eventId,
+                        categoryId: categoryId,
+                        categoryName: categoryName,
+                        participantName: participantName,
+                        participantId: participantId,
+                        entryFee: entryFee
+                    };
+                    return [...prevCartEvents, newObject]; // Add the new object to the array
+                }
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+                return prevCartEvents;
             }
         });
     };
-    
+
+
+
 
     const SubmitHandler = async (e) => {
         e.preventDefault();
@@ -67,8 +100,10 @@ export default function RegistrationBody({ athletelist, events, eventId }) {
         <>
             <div className="row g-5">
                 <div className="col-md-5 col-lg-4 order-md-last">
-                    
-                    <Cart cartEvents={cartEvents} />
+
+                    <Cart
+                        cartEvents={cartEvents}
+                    />
                     <hr className="my-4" />
 
                     {/* <form className="card p-2">
@@ -96,20 +131,35 @@ export default function RegistrationBody({ athletelist, events, eventId }) {
                                       <li><a class="dropdown-item" href="#">Kyle</a></li>
                                       <li><a class="dropdown-item" href="#">Chris</a></li>
                                     </ul> */}
-                                <select className="form-select mb-3 form-control fontWeight400" id="NameSelection" aria-label=".form-select-lg example"
-                                  onChange={(event) => {
-                                      setAthleteName(event.target.value)
-                                  }}  
+                                <select
+                                    className="form-select mb-3 form-control fontWeight400"
+                                    id="NameSelection"
+                                    aria-label=".form-select-lg example"
+                                    onChange={(event) => {
+                                        // console.log('Value before parsing:', event.target.value); // Log the value before parsing
+                                        try {
+                                            setAthlete(JSON.parse(event.target.value));
+                                        } catch (error) {
+                                            console.error('Error parsing JSON:', error);
+                                        }
+                                    }}
                                 >
-                                    {!athleteFill && (
-                                        <option>Please Register an Athlete </option>
-                                    )
-                                    }
+                                    {!athleteFill && <option>Please Register an Athlete</option>}
                                     {athleteFill && (
                                         <>
-                                            <option>Choose Name..</option>
+                                            <option value={JSON.stringify({
+                                                index: 'empty',
+                                                eventName: 'empty',
+                                            })}>
+                                                Choose Name..</option>
                                             {athletes.map((athlete, index) => (
-                                                <option key={index} value={athlete._id}>
+                                                <option
+                                                    key={index}
+                                                    value={JSON.stringify({
+                                                        athleteId: athlete._id,
+                                                        athleteName: `${athlete.lname}, ${athlete.fname}`,
+                                                    })}
+                                                >
                                                     {athlete.lname}, {athlete.fname}
                                                 </option>
                                             ))}
@@ -128,25 +178,39 @@ export default function RegistrationBody({ athletelist, events, eventId }) {
                             <div className="input-group has-validation">
                                 {/* <span className="input-group-text">@</span>
                                     <input type="text" className="form-control" id="username" placeholder="Username" required="" /> */}
-                                <select className="form-select mb-3 form-control fontWeight400" id="username" aria-label=".form-select-lg example"
-                                 onChange={(event) => {
-                                    setEventName(event.target.value)
-                                }}  >
+                                <select
+                                    className="form-select mb-3 form-control fontWeight400"
+                                    id="username"
+                                    aria-label=".form-select-lg example"
+                                    onChange={(event) => {
+                                        // console.log('Value before parsing:', event.target.value); // Log the value before parsing
+                                        try {
+                                            setEvent(JSON.parse(event.target.value));
+                                        } catch (error) {
+                                            console.error('Error parsing JSON:', error);
+                                        }
+                                    }}
+                                >
                                     {events && (
                                         <>
-                                            <option>Choose Category..</option>
-                                            {
-                                                events.map((event, index) => (
-                                                    <option key={index} value={index}>{event}</option>
-                                                ))
-                                            }
+                                            <option value={JSON.stringify({
+                                                index: 'empty',
+                                                eventName: 'empty',
+                                            })}>
+                                                Choose Category..</option>
+                                            {events.map((event, index) => (
+                                                <option
+                                                    key={index}
+                                                    value={JSON.stringify({
+                                                        index: index,
+                                                        eventName: event,
+                                                    })}
+                                                >
+                                                    {event}
+                                                </option>
+                                            ))}
                                         </>
-                                    )
-                                    }
-                                    {/* <option>Choose Category..</option>
-                                    <option>Cadet Kata Male</option>
-                                    <option>Cadet Kumite Female</option>
-                                    <option>Cadet Kumite Male</option> */}
+                                    )}
                                 </select>
                                 <div className="invalid-feedback">
                                     Your category is required.
@@ -157,7 +221,7 @@ export default function RegistrationBody({ athletelist, events, eventId }) {
                         <div className="col-2 paddingTop">
 
                             <button className="btn btn-primary"
-                            onClick={handleAdd}
+                                onClick={handleAdd}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard2-plus-fill" viewBox="0 0 16 16">
                                     <path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z" />

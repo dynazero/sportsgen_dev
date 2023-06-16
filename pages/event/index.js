@@ -73,6 +73,7 @@ export default function events({ eventItem }) {
   }, [session, getTeamId]);
 
 
+  // console.log(eventItem)
   return (
     <>
       <div className='picClass mx-auto minWidth'>
@@ -212,7 +213,7 @@ export default function events({ eventItem }) {
 
                           {session && (
                             <>
-                              <RegistrationBody athletelist={athletelist} events={item.categoryTitles} eventId={item._id} />
+                              <RegistrationBody athletelist={athletelist} events={item.categoryTitles} eventId={item._id} entryFee={item.entryFee} />
                             </>
                           )}
 
