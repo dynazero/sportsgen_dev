@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useVerified } from '../verifiedContext';
+import { useVerified } from '../../context/verifiedContext';
 import axios from 'axios'
 // import { useRouter } from 'next/router';
 import { signIn, signOut, useSession, getSession } from "next-auth/react"

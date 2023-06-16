@@ -1,5 +1,5 @@
 import { SessionProvider } from "next-auth/react"
-import { VerifiedProvider } from './verifiedContext';
+import { VerifiedProvider } from '../context/verifiedContext';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../styles/globals.css';
 import { useEffect, useState } from 'react'
