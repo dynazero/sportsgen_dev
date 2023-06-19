@@ -1,0 +1,57 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+          GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          SPACES_ACCESS_KEY: ${{ secrets.SPACES_ACCESS_KEY }}
+          SPACES_SECRET_KEY: ${{ secrets.SPACES_SECRET_KEY }}
+          DO_SPACES_BUCKET: ${{ secrets.DO_SPACES_BUCKET }}
+          NEXT_PUBLIC_NEXTAUTH_URL: ${{ secrets.NEXT_PUBLIC_NEXTAUTH_URL }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXTAUTH_URL_DASHBOARD: ${{ secrets.NEXTAUTH_URL_DASHBOARD }}
+          NEXT_PUBLIC_DOSPACES_BUCKET: ${{ secrets.NEXT_PUBLIC_DOSPACES_BUCKET }}
+
+      - name: Transfer files to DigitalOcean Droplet
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DIGITALOCEAN_HOST }}
+          username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "."
+          target: "/path-to-your-project-directory-on-droplet"
+
+      - name: Install dependencies and Restart application on DigitalOcean Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DIGITALOCEAN_HOST }}
+          username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /path-to-your-project-directory-on-droplet
+            npm ci
+            pm2 restart all # If you're using PM2 to run your application

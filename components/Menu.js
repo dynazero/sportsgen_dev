@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import Image from 'next/image'
 import { signIn, signOut, useSession } from "next-auth/react"
+import { useVerified  } from '../context/verifiedContext'
 import Link from 'next/link'
 import logo from '../public/sportsgenph_Text_vector.png'
 import googlelogo from '../public/images/google.png'
@@ -10,11 +11,13 @@ import { motion } from 'framer-motion'
 import { bottom } from '@popperjs/core'
 import { toast } from "react-toastify";
 
-export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide, verified }) {
+export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) {
 
   const { data: session } = useSession()
+  const { isVerified } = useVerified();
   const router = useRouter();
   let timeout;
+
 
   useEffect(() => { 
     if(session){
@@ -26,7 +29,7 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide, ve
     clearTimeout(timeout);
 
     timeout = setTimeout(() => {
-      if (verified) {
+      if (isVerified) {
         router.push('/event/create');
       } else {
         toast.warning('Please proceed to my profile before creating an Event');

@@ -32,12 +32,15 @@ export default function dashboard({ verifiedFromServer, teamItem, athletelist, c
     localStorage.setItem('teamId', JSON.stringify(teamId))
 
   }, [])
+
+  useEffect(() => {
+    setIsVerified(verifiedFromServer);
+  }, [verifiedFromServer]);
   // const { params = [] } = router.query
 
   const mDB = passSBS ? "280px" : "0px"
   const mWidth = passSBS ? "calc(100% - 280px)" : "100%"
 
-  // console.log(teamId)
   // console.log(passPage)
 
   // default return
@@ -107,7 +110,7 @@ export async function getServerSideProps(context) {
 
   let teamItem = null;
   let teamId = null;
-  let verifiedFromServer = account.length > 0 && account[0].profileStatus === 'verified' ? true : false;
+  let verifiedFromServer = account.length > 0 && account[0]?.profileStatus === 'verified' ? true : false;
   let athletelist = [];
   let coachlist = [];
   let officiallist = [];
@@ -177,6 +180,8 @@ export async function getServerSideProps(context) {
     // Combine the lists into the members array
     members = [...athletelist, ...coachlist, ...officiallist];
   }
+
+  console.log(verifiedFromServer)
 
   return {
     props: {

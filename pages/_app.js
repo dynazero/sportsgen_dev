@@ -54,7 +54,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <>
       <VerifiedProvider>
         <SessionProvider session={session}>
-          <Menu modalClick={modalClick} modalOpen={modalOpen} panelSide={panelSide} verified={verified} />
+          <Menu modalClick={modalClick} modalOpen={modalOpen} panelSide={panelSide} />
           <Component {...pageProps} />
 
           <AnimatePresence
