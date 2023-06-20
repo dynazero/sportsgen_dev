@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import PaymentMethods from '../PaymentMethods'
 
 
-export default function RegistrationBody({ athletelist, events, eventId, entryFee }) {
+export default function RegistrationBody({ getTeamId, athletelist, events, eventId, entryFee }) {
 
     const [athleteFill, setAthleteFill] = useState(false)
     const [athletes, setAthletes] = useState([])
@@ -75,9 +75,11 @@ export default function RegistrationBody({ athletelist, events, eventId, entryFe
 
                     <Cart
                         eventId={eventId}
+                        getTeamId={getTeamId}
                         cartEvents={cartEvents}
                         paymentInfo={paymentInfo}
                         athleteFill={athleteFill}
+                        
                     />
 
                 </div>

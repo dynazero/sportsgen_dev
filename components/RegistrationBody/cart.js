@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import axios from 'axios';
 
 
-const Cart = ({ cartEvents, paymentInfo, eventId, athleteFill }) => {
+
+const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill }) => {
 
 
     const [cartEmpty, setCartEmpty] = useState(true);
     const [cartIndex, setCartIndex] = useState(0);
     const [cart, setCart] = useState([]);
+    const [status, setStatus] = useState('checkout');
 
     const [total, setTotal] = useState(0);
 
@@ -48,8 +51,44 @@ const Cart = ({ cartEvents, paymentInfo, eventId, athleteFill }) => {
         }
 
         // console.log('Information Complete, ready for submition')
+        // if (!teamRegistered) {
+        const formData = new FormData();
+        formData.append('tournamentId', eventId)
+        formData.append('team', getTeamId)
+        formData.append('registration', JSON.stringify(cartEvents));
+        formData.append('paymentmethod', paymentInfo.paymentMethod); 
+        formData.append('paymentproof', paymentInfo.paymentProof); 
+        formData.append('status', status)
+
+        const functionThatReturnPromise = axios.post(`../api/createCheckout`, formData);
+        toast.promise(
+            functionThatReturnPromise,
+            {
+                pending: 'Verifying information',
+                success: 'Proceeding to checkout! 👌',
+                error: 'Error checkout 🤯'
+            }
+        ).then(
+            (response) => {
+                // if (response.status === 201) { // Check if the profile was created successfully
+
+                //     setTimeout(() => {
+                //         router.push('/checkout');
+                //     }, 3000);
+                // }
+            console.log("registered successfully")
+            }
+        ).catch((error) => {
+            console.error('Error submission on checkout:', error);
+        });
+
+        // } else {
+        //     return toast.warning('Your team is already registered in this tournament');
+
+        // }
 
     }
+
 
     return (
         <>

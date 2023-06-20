@@ -213,7 +213,7 @@ export default function events({ eventItem }) {
 
                           {session && (
                             <>
-                              <RegistrationBody athletelist={athletelist} events={item.categoryTitles} eventId={item._id} entryFee={item.entryFee} />
+                              <RegistrationBody athletelist={athletelist} events={item.categoryTitles} eventId={item._id} entryFee={item.entryFee} getTeamId={getTeamId} />
                             </>
                           )}
 
