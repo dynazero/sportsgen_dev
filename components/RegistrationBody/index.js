@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Cart from './cart'
 import { toast } from 'react-toastify'
+import PaymentMethods from '../PaymentMethods'
 
 
 export default function RegistrationBody({ athletelist, events, eventId, entryFee }) {
@@ -11,6 +12,7 @@ export default function RegistrationBody({ athletelist, events, eventId, entryFe
     const [athlete, setAthlete] = useState([])
     const [event, setEvent] = useState([])
 
+    const [paymentInfo, setPaymentInfo] = useState([])
     const [cartEvents, setCartEvents] = useState([])
 
     useEffect(() => {
@@ -18,8 +20,6 @@ export default function RegistrationBody({ athletelist, events, eventId, entryFe
             setAthleteFill(true)
             setAthletes(athletelist)
         }
-
-
     }, [athletelist])
 
     const handleAdd = () => {
@@ -29,12 +29,6 @@ export default function RegistrationBody({ athletelist, events, eventId, entryFe
                 const participantName = athlete.athleteName;
                 const categoryName = event.eventName;
                 const categoryId = event.index;
-
-                // console.log(eventId);
-                // console.log(participantId);
-                // console.log(participantName);
-                // console.log(categoryName);
-                // console.log(categoryId);
 
                 if (participantId == 'empty' || participantId == undefined) {
                     toast.warning('Please choose a participant');
@@ -74,63 +68,25 @@ export default function RegistrationBody({ athletelist, events, eventId, entryFe
         });
     };
 
-
-
-
-    const SubmitHandler = async (e) => {
-        e.preventDefault();
-
-        if (athleteFill) {
-
-
-
-        } else {
-            toast.warning('Please sign up an athlete before registration');
-        }
-
-
-    }
-
-    // console.log(eventId)
-    // console.log(athleteName)
-    // console.log(eventName)
-    // console.log(cartEvents)
-
     return (
         <>
             <div className="row g-5">
                 <div className="col-md-5 col-lg-4 order-md-last">
 
                     <Cart
+                        eventId={eventId}
                         cartEvents={cartEvents}
+                        paymentInfo={paymentInfo}
+                        athleteFill={athleteFill}
                     />
-                    <hr className="my-4" />
 
-                    {/* <form className="card p-2">
-                                <div className="input-group">
-                                  <input type="text" className="form-control" placeholder="Promo code" />
-                                  <button type="submit" className="btn btn-secondary">Redeem</button>
-                                </div>
-                              </form> */}
-                    <button className="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
                 </div>
                 <div className="col-md-7 col-lg-8">
-                    <h4 className="mb-3">Fill up form</h4>
-                    <form onSubmit={SubmitHandler} className="needs-validation" noValidate="" />
+                    <h4 className="mb-3 caret">Fill up form</h4>
                     <div className="row g-3">
                         <div className="col-sm-5">
                             <label htmlFor="firstName" className="form-label">Athlete Name</label>
-                            {/* <input type="text" className="form-control" id="firstName" placeholder="" defaultValue="" required="" /> */}
                             <div>
-                                {/* dropdown options */}
-                                {/* <button class="btn btn-secondary dropdown-toggle form-control" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                      Choose a participant
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                      <li><h6 class="dropdown-header">Athletes:</h6></li>
-                                      <li><a class="dropdown-item" href="#">Kyle</a></li>
-                                      <li><a class="dropdown-item" href="#">Chris</a></li>
-                                    </ul> */}
                                 <select
                                     className="form-select mb-3 form-control fontWeight400"
                                     id="NameSelection"
@@ -176,8 +132,6 @@ export default function RegistrationBody({ athletelist, events, eventId, entryFe
                         <div className="col-sm-5" style={{ zIndex: '4' }}>
                             <label htmlFor="category" className="form-label">Category</label>
                             <div className="input-group has-validation">
-                                {/* <span className="input-group-text">@</span>
-                                    <input type="text" className="form-control" id="username" placeholder="Username" required="" /> */}
                                 <select
                                     className="form-select mb-3 form-control fontWeight400"
                                     id="username"
@@ -229,112 +183,9 @@ export default function RegistrationBody({ athletelist, events, eventId, entryFe
                                 </svg>
                             </button>
                         </div>
-
-
-
-                        {/* 
-                                <div className="col-md-5">
-                                  <label htmlFor="country" className="form-label">Country</label>
-                                  <select className="form-select" id="country" required="">
-                                    <option defaultValue="">Choose...</option>
-                                    <option>United States</option>
-                                  </select>
-                                  <div className="invalid-feedback">
-                                    Please select a valid country.
-                                  </div>
-                                </div> */}
-
-                        {/* <div className="col-md-4">
-                                  <label htmlFor="state" className="form-label">State</label>
-                                  <select className="form-select" id="state" required="">
-                                    <option defaultValue="">Choose...</option>
-                                    <option>California</option>
-                                  </select>
-                                  <div className="invalid-feedback">
-                                    Please provide a valid state.
-                                  </div>
-                                </div> */}
-
-                        {/* <div className="col-md-3">
-                                  <label htmlFor="zip" className="form-label">Zip</label>
-                                  <input type="text" className="form-control" id="zip" placeholder="" required="" />
-                                  <div className="invalid-feedback">
-                                    Zip code required.
-                                  </div>
-                                </div>*/}
                     </div>
-
-
-
                     <hr className="my-4" />
-
-                    <h4 className="mb-3">Payment</h4>
-
-                    <div className="my-3">
-                        <div className="form-check">
-                            <input
-                                id="credit"
-                                name="paymentMethod"
-                                type="radio"
-                                className="form-check-input"
-                                // checked="" 
-                                required="" />
-                            <label className="form-check-label" htmlFor="credit">Credit card</label>
-                        </div>
-                        <div className="form-check">
-                            <input id="debit" name="paymentMethod" type="radio" className="form-check-input" required="" />
-                            <label className="form-check-label" htmlFor="debit">Debit card</label>
-                        </div>
-                        <div className="form-check">
-                            <input id="paypal" name="paymentMethod" type="radio" className="form-check-input" required="" />
-                            <label className="form-check-label" htmlFor="paypal">Gcash</label>
-                        </div>
-                    </div>
-
-                    <div className="row gy-3">
-                        <div className="col-md-6">
-                            <label htmlFor="cc-name" className="form-label">Name on card</label>
-                            <input type="text" className="form-control" id="cc-name" placeholder="" required="" />
-                            <small className="text-muted">Full name as displayed on card</small>
-                            <div className="invalid-feedback">
-                                Name on card is required
-                            </div>
-                        </div>
-
-                        <div className="col-md-6">
-                            <label htmlFor="cc-number" className="form-label">Credit card number</label>
-                            <input type="text" className="form-control" id="cc-number" placeholder="" required="" />
-                            <div className="invalid-feedback">
-                                Credit card number is required
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor="cc-expiration" className="form-label">Expiration</label>
-                            <input type="text" className="form-control" id="cc-expiration" placeholder="" required="" />
-                            <div className="invalid-feedback">
-                                Expiration date required
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor="cc-cvv" className="form-label">CVV</label>
-                            <input type="text" className="form-control" id="cc-cvv" placeholder="" required="" />
-                            <div className="invalid-feedback">
-                                Security code required
-                            </div>
-                        </div>
-
-                        <div className="col-md-6">
-                            <label htmlFor="uploadProof" className="form-label">Upload</label>
-                            <input type="file" className="form-control" id="uploadProof" placeholder="" required="" />
-                            <div className="invalid-feedback">
-                                Valid Payment Photo required
-                            </div>
-                        </div>
-                    </div>
-
-
+                    <PaymentMethods paymentInfo={setPaymentInfo}/>
 
                 </div>
             </div>

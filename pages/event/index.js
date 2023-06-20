@@ -76,7 +76,7 @@ export default function events({ eventItem }) {
   // console.log(eventItem)
   return (
     <>
-      <div className='picClass mx-auto minWidth'>
+      <div className='picClass mx-auto minWidth caret'>
         <div className="accordion rmvBorder" id="accordionCreate">
           <div className="accordion-item rmvBorder">
             <h2 className="accordion-header" id="headingOne">
