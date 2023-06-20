@@ -1,0 +1,43 @@
+.myanchor {
+  cursor: pointer;
+  position: static;
+  transition: all .35s;
+}
+
+.myanchor > h6, .myanchor > small {
+  position: relative;
+  z-index: 2;
+}
+
+.myanchor:after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #fd1717;
+  transition: all .35s;
+}
+
+.myanchor:hover {
+  color: #ffffff;
+}
+
+.myanchor:hover:after {
+  width: 100%;
+}
+
+/* This will make the .remove element invisible by default */
+.remove {
+  position: absolute;
+  right: 10px;
+  opacity: 0;
+  transition: opacity .35s;
+  z-index: 3; 
+}
+
+/* This will make the .remove element visible when .myanchor is hovered */
+.myanchor:hover .remove {
+  opacity: 1;
+}

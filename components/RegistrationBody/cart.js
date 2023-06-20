@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import axios from 'axios';
+import styles from './button.module.css'
 
 
 
-const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill }) => {
+const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUpdate }) => {
 
 
     const [cartEmpty, setCartEmpty] = useState(true);
@@ -14,22 +15,33 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill }) => {
 
     const [total, setTotal] = useState(0);
 
+    const handleRemoveItem = (indexToRemove) => {
+        // Remove the item from the cart
+        const updatedCart = cart.filter((_, index) => index !== indexToRemove);
+
+        // Recalculate the total
+        const updatedTotal = updatedCart.reduce((sum, entry) => sum + entry.entryFee, 0);
+
+        // Update the state
+        setCart(updatedCart);
+        cartUpdate(updatedCart);
+        setTotal(updatedTotal);
+    }
+
     useEffect(() => {
         setCartIndex(cartEvents.length);
+
         if (cartEvents.length !== 0) {
-            setCartEmpty(false)
-            setCart(cartEvents)
+            setCartEmpty(false);
+            setCart(cartEvents);
 
             const totalEntryFees = cartEvents.reduce((sum, entry) => sum + entry.entryFee, 0);
-            setTotal(totalEntryFees)
+            setTotal(totalEntryFees);
+        } else {
+            setTotal(0);
         }
-    }, [cartEvents])
+    }, [cartEvents]);
 
-    // useEffect (() => {
-    //     if(payment === undefined){
-    //         console.log('im undefined')
-    //     } 
-    // }, [payment])
 
     const SubmitHandler = async (e) => {
         e.preventDefault();
@@ -56,8 +68,8 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill }) => {
         formData.append('tournamentId', eventId)
         formData.append('team', getTeamId)
         formData.append('registration', JSON.stringify(cartEvents));
-        formData.append('paymentmethod', paymentInfo.paymentMethod); 
-        formData.append('paymentproof', paymentInfo.paymentProof); 
+        formData.append('paymentmethod', paymentInfo.paymentMethod);
+        formData.append('paymentproof', paymentInfo.paymentProof);
         formData.append('status', status)
 
         const functionThatReturnPromise = axios.post(`../api/createCheckout`, formData);
@@ -76,7 +88,7 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill }) => {
                 //         router.push('/checkout');
                 //     }, 3000);
                 // }
-            console.log("registered successfully")
+                console.log("registered successfully")
             }
         ).catch((error) => {
             console.error('Error submission on checkout:', error);
@@ -103,17 +115,20 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill }) => {
                 <ul className="list-group mb-3">
                     {!cartEmpty && (
                         <>
-
                             {cart.map((cartList, index) => (
-                                <li key={index} className="list-group-item d-flex justify-content-between lh-sm">
-                                    <div>
+                                <li key={index} className={`list-group-item d-flex justify-content-between lh-sm ${styles.myAnchor}`}>
+                                    {/* <a className={`justify-content-between ${styles.myanchor}`} onClick={() => handleRemoveItem(index)}> */}
+                                    <div className={styles.myanchor} onClick={() => handleRemoveItem(index)}>
+                                        <h6 className="my-0 anchorHighlight">{cartList.categoryName}</h6>
+                                        <small className="text-muted anchorHighlight">{cartList.participantName}</small>
+                                        <span className={`text-muted ${styles.remove}`}>Remove</span>
 
-                                        <h6 className="my-0">{cartList.categoryName}</h6>
-                                        <small className="text-muted">{cartList.participantName}</small>
                                     </div>
-                                    {/* <span className="text-muted">{item.price[0]}</span> */}
-                                    <span className="text-muted">{cartList.entryFee}</span>
-
+                                    <div>
+                                        {/* Here we add a button to remove the item */}
+                                        <span className="text-muted">{cartList.entryFee}</span>
+                                    </div>
+                                    {/* </a> */}
                                 </li>
                             ))}
                         </>

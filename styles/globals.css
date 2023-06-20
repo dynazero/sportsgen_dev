@@ -32,6 +32,8 @@ a {
   }
 }
 
+
+
 .membersWidth{
 max-width: 119dvw;
 }
@@ -43,7 +45,6 @@ max-width: 119dvw;
 .paddingList{
   padding: 15px !important;
 }
-
 
 .caret{ 
 caret-color: transparent;
