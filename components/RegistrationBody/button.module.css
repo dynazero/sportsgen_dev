@@ -1,6 +1,16 @@
-.liList{
+.doubleTap {
+  font-size: smaller;
+  position: absolute;
+  width: 66px;
+  opacity: 0.7;
+  right: 0px;
+  bottom: 22px;
+}
+
+.liList {
   cursor: pointer;
 }
+
 .myanchor {
   position: static;
   transition: all .35s;
@@ -8,7 +18,8 @@
 
 }
 
-.myanchor > div > h6, .myanchor > div > small {
+.myanchor>div>h6,
+.myanchor>div>small {
   position: relative;
   z-index: 5;
 }
@@ -35,13 +46,14 @@
   transition: all .35s;
   opacity: .4;
 }
+
 /* This will make the .remove element invisible by default */
 .remove {
   position: absolute;
   right: 10px;
   opacity: 0;
   transition: opacity .35s;
-  z-index: 3; 
+  z-index: 3;
 }
 
 /* This will make the .remove element visible when .myanchor is hovered */
@@ -49,16 +61,23 @@
   opacity: 1;
 }
 
+.anchorTrigger:hover .sidePrice {
+  opacity: 0;
+}
+
 
 .mydivelement {
-  padding-right: 10px; /* Add padding to reduce space */
+  padding-right: 10px;
+  /* Add padding to reduce space */
 }
 
 .mycontainer {
   display: flex;
-  justify-content: flex-start; /* Align items at the start */
+  justify-content: flex-start;
+  /* Align items at the start */
 }
 
 .mydivelement:not(:last-child) {
-  margin-right: 95px; /* Add margin to the right of all elements except the last one */
+  margin-right: 95px;
+  /* Add margin to the right of all elements except the last one */
 }

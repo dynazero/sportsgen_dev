@@ -122,11 +122,11 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
                                         <div className={`${styles.myanchor} ${styles.mydivelement}`} onDoubleClick={() => handleRemoveItem(index)}>
                                             <h6 className="my-0 anchorHighlight">{cartList.categoryName}</h6>
                                             <small className="text-muted anchorHighlight">{cartList.participantName}</small>
-                                            <span className={`text-muted ${styles.remove}`}><span>double-tap</span>Remove</span>
+                                            <span className={`text-muted ${styles.remove}`}><span className={styles.doubleTap}>double-tap</span>Remove</span>
                                         </div>
                                         <div>
                                             {/* Here we add a button to remove the item */}
-                                            <span className="text-muted">{cartList.entryFee}</span>
+                                            <span className={`text-muted ${styles.sidePrice}`}>{cartList.entryFee}</span>
                                         </div>
                                     </div>
                                     {/* </a> */}
