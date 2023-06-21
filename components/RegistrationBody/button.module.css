@@ -1,12 +1,27 @@
-.myanchor {
+.liList{
   cursor: pointer;
+}
+.myanchor {
   position: static;
   transition: all .35s;
+  z-index: 5;
+
 }
 
-.myanchor > h6, .myanchor > small {
+.myanchor > div > h6, .myanchor > div > small {
   position: relative;
-  z-index: 2;
+  z-index: 5;
+}
+
+.anchorTrigger:hover .myanchor:after {
+  /* Add the properties you want when .anchorTrigger is hovered */
+  width: 100%;
+}
+
+.anchorTrigger:hover .myanchor {
+  /* Add the properties you want when .anchorTrigger is hovered */
+  color: black;
+  z-index: 5;
 }
 
 .myanchor:after {
@@ -16,18 +31,10 @@
   left: 0;
   width: 0;
   height: 100%;
-  background: #fd1717;
+  background: #004bac;
   transition: all .35s;
+  opacity: .4;
 }
-
-.myanchor:hover {
-  color: #ffffff;
-}
-
-.myanchor:hover:after {
-  width: 100%;
-}
-
 /* This will make the .remove element invisible by default */
 .remove {
   position: absolute;
@@ -38,6 +45,20 @@
 }
 
 /* This will make the .remove element visible when .myanchor is hovered */
-.myanchor:hover .remove {
+.anchorTrigger:hover .remove {
   opacity: 1;
+}
+
+
+.mydivelement {
+  padding-right: 10px; /* Add padding to reduce space */
+}
+
+.mycontainer {
+  display: flex;
+  justify-content: flex-start; /* Align items at the start */
+}
+
+.mydivelement:not(:last-child) {
+  margin-right: 95px; /* Add margin to the right of all elements except the last one */
 }

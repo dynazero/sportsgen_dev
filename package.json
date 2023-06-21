@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NEXT_PUBLIC_APP_ENV=dev next dev",
+    "ngrok": "cross-env NEXT_PUBLIC_APP_ENV=ngrok npx next dev -H 0.0.0.0",
+    "build:digitalOcean": "yarn install --production=false && rimraf dist && yarn build && yarn install --production --frozen-lockfile",
     "build": "next build",
     "start": "next start",
     "export": "next build && next export -o _static",
-    "lint": "next lint",
-    "build:digitalOcean": "yarn install --production=false && rimraf dist && yarn build && yarn install --production --frozen-lockfile"
+    "lint": "next lint"
   },
   "dependencies": {
     "@adibfirman/react-datepicker": "^1.0.3",
@@ -35,6 +36,7 @@
     "multer-s3": "^3.0.1",
     "next": "13.0.7",
     "next-auth": "^4.20.1",
+    "ngrok": "^5.0.0-beta.2",
     "popper.js": "^1.16.1",
     "react": "18.2.0",
     "react-bootstrap": "^2.7.0",

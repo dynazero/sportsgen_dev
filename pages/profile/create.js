@@ -212,7 +212,10 @@ export default CreateProfile;
 
 
 export async function getServerSideProps(context) {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
+    const NEXT_PUBLIC_API_URL = isDev ? process.env.NEXT_PUBLIC_DEV_API_URL : process.env.NEXT_PUBLIC_NGROK_API_URL;
+
+    const apiUrl = NEXT_PUBLIC_API_URL;
     const getProfileEndPoint = "/api/getProfile?email="
     const session = await getServerSession(context.req, context.res, authOptions)
     const nextAuthSession = await getSession(context);

@@ -12,13 +12,15 @@ import Members from './members'
 
 export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
     const { data: session } = useSession()
+    const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
+    const NEXT_PUBLIC_NEXTAUTH_URL = isDev ? process.env.NEXT_PUBLIC_DEV_NEXTAUTH_URL : process.env.NEXT_PUBLIC_NGROK_NEXTAUTH_URL;
 
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const apiUrl = process.env.NEXT_PUBLIC_NEXTAUTH_URL;
+                const apiUrl = NEXT_PUBLIC_NEXTAUTH_URL;
                 const { data } = await axios.get(`${apiUrl}/api/getEventCategory`)
                 setCategories(data.data)
             } catch (error) {

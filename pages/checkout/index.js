@@ -148,13 +148,16 @@ const calculateCountdown = (startDate) => {
   const diffTime = Math.abs(eventDate - now);
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   const diffHours = Math.floor((diffTime / (1000 * 60 * 60)) % 24);
-  
+
   return `${diffDays} Days ${diffHours} Hours`;
 };
 
 export async function getServerSideProps(context) {
+  const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
+  const NEXT_PUBLIC_API_URL = isDev ? process.env.NEXT_PUBLIC_DEV_API_URL : process.env.NEXT_PUBLIC_NGROK_API_URL;
+  
   // Fetch data from an API
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl = NEXT_PUBLIC_API_URL;
   const getEventsEndPoint = "/api/getEvents"
   const res = await axios.get(`${apiUrl}${getEventsEndPoint}`);
 
@@ -163,17 +166,17 @@ export async function getServerSideProps(context) {
     const eventEndDate = new Date(event.endDate);
     const region = 'sgp1';
     const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/eventLogos/${event.originalFileName}`;
-    
+
     const countdown = calculateCountdown(eventStartDate);
 
     const formatDate = (date) => {
       const year = date.getFullYear();
       const month = ("0" + (date.getMonth() + 1)).slice(-2); // JavaScript months are 0-11
       const day = ("0" + date.getDate()).slice(-2);
-  
+
       return `${year}.${month}.${day}`;
     };
-    
+
     const formattedStartDate = formatDate(eventStartDate);
     const formattedEndDate = formatDate(eventEndDate);
 

@@ -14,6 +14,8 @@ import ReactCountryFlag from "react-country-flag"
 export default function events({ eventItem }) {
 
   const { data: session } = useSession()
+  const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
+  const NEXT_PUBLIC_API_URL = isDev ? process.env.NEXT_PUBLIC_DEV_API_URL : process.env.NEXT_PUBLIC_NGROK_API_URL;
 
   const [events, setEvents] = useState(false);
   const MotionLink = motion(Link)
@@ -27,7 +29,7 @@ export default function events({ eventItem }) {
       const teamIdWithoutQuotes = storedTeamId.replace(/"/g, '');
       setGetTeamId(teamIdWithoutQuotes);
     }
-}, [])
+  }, [])
 
 
   useEffect(() => {
@@ -47,10 +49,10 @@ export default function events({ eventItem }) {
 
   useEffect(() => {
     if (session) {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const apiUrl = NEXT_PUBLIC_API_URL;
       const getAthleteEndPoint = "/api/getUserAthletes?team=";
       const teamId = getTeamId
-      // const region = 'sgp1';
+      const region = 'sgp1';
       const fetchAthletes = async () => {
         let athletes = await fetchData(`${apiUrl}${getAthleteEndPoint}`, { team: teamId });
         athletes = athletes.map((athlete, index) => ({
@@ -67,7 +69,7 @@ export default function events({ eventItem }) {
         }));
         setAthleteList(athletes);
       };
-
+      
       fetchAthletes();
     }
   }, [session, getTeamId]);
@@ -254,8 +256,10 @@ const calculateCountdown = (startDate) => {
 };
 
 export async function getServerSideProps(context) {
+  const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
+  const NEXT_PUBLIC_API_URL = isDev ? process.env.NEXT_PUBLIC_DEV_API_URL : process.env.NEXT_PUBLIC_NGROK_API_URL;
   // Fetch data from APIs
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiUrl = NEXT_PUBLIC_API_URL;
   const getEventsEndPoint = "/api/getEvents"
   const getEventCategoryEndPoint = "/api/getEventCategory"
   const res = await axios.get(`${apiUrl}${getEventsEndPoint}`);

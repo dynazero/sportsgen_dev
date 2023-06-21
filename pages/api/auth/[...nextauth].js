@@ -4,9 +4,11 @@ import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from "../../../lib/mongodb";
 
 
+const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
+const NEXTAUTH_URL_DASHBOARD = isDev ? process.env.DEV_NEXTAUTH_URL_DASHBOARD : process.env.NGROK_NEXTAUTH_URL_DASHBOARD;
 
 export const authOptions = {
-  url: process.env.NEXTAUTH_URL_DASHBOARD,
+  url: NEXTAUTH_URL_DASHBOARD,
   secret: process.env.AUTH_SECRET,
   adapter: MongoDBAdapter(clientPromise),
   // Configure one or more authentication providers
@@ -19,7 +21,7 @@ export const authOptions = {
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
-      return process.env.NEXTAUTH_URL_DASHBOARD
+      return NEXTAUTH_URL_DASHBOARD
     },
     debug: process.env.NODE_ENV === "development",
   }

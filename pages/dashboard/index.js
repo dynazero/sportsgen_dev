@@ -78,7 +78,10 @@ const constructImageUrl = (bucket, region, path, fileName) =>
   `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
 
 export async function getServerSideProps(context) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
+  const NEXT_PUBLIC_API_URL = isDev ? process.env.NEXT_PUBLIC_DEV_API_URL : process.env.NEXT_PUBLIC_NGROK_API_URL;
+
+  const apiUrl = NEXT_PUBLIC_API_URL;
   const getProfileEndPoint = "/api/getProfile"
   const getTeamEndPoint = "/api/getUserTeam"
   const getAthleteEndPoint = "/api/getUserAthletes"
@@ -117,7 +120,7 @@ export async function getServerSideProps(context) {
   let members = [];
 
   if (team.length > 0) {
-     teamId = team[0]._id;
+    teamId = team[0]._id;
 
 
     teamItem = team.map((team) => ({
@@ -181,7 +184,6 @@ export async function getServerSideProps(context) {
     members = [...athletelist, ...coachlist, ...officiallist];
   }
 
-  console.log(verifiedFromServer)
 
   return {
     props: {
