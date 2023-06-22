@@ -78,8 +78,24 @@ const constructImageUrl = (bucket, region, path, fileName) =>
   `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
 
 export async function getServerSideProps(context) {
-  const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
-  const NEXT_PUBLIC_API_URL = isDev ? process.env.NEXT_PUBLIC_DEV_API_URL : process.env.NEXT_PUBLIC_NGROK_API_URL;
+  const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
+
+  let NEXT_PUBLIC_API_URL;
+
+  switch (NEXT_PUBLIC_APP_ENV) {
+    case 'dev':
+      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
+      break;
+    case 'ngrok':
+      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_NGROK_API_URL;
+      break;
+    case 'production':
+      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+      break;
+    default:
+      console.error('Invalid environment specified in NEXT_PUBLIC_APP_ENV');
+      break;
+  }
 
   const apiUrl = NEXT_PUBLIC_API_URL;
   const getProfileEndPoint = "/api/getProfile"

@@ -12,10 +12,26 @@ import ReactCountryFlag from "react-country-flag"
 
 
 export default function events({ eventItem }) {
+  const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
+
+  let NEXT_PUBLIC_API_URL;
+
+  switch (NEXT_PUBLIC_APP_ENV) {
+    case 'dev':
+      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
+      break;
+    case 'ngrok':
+      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_NGROK_API_URL;
+      break;
+    case 'production':
+      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+      break;
+    default:
+      console.error('Invalid environment specified in NEXT_PUBLIC_APP_ENV');
+      break;
+  }
 
   const { data: session } = useSession()
-  const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
-  const NEXT_PUBLIC_API_URL = isDev ? process.env.NEXT_PUBLIC_DEV_API_URL : process.env.NEXT_PUBLIC_NGROK_API_URL;
 
   const [events, setEvents] = useState(false);
   const MotionLink = motion(Link)
@@ -69,7 +85,7 @@ export default function events({ eventItem }) {
         }));
         setAthleteList(athletes);
       };
-      
+
       fetchAthletes();
     }
   }, [session, getTeamId]);
@@ -256,8 +272,24 @@ const calculateCountdown = (startDate) => {
 };
 
 export async function getServerSideProps(context) {
-  const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
-  const NEXT_PUBLIC_API_URL = isDev ? process.env.NEXT_PUBLIC_DEV_API_URL : process.env.NEXT_PUBLIC_NGROK_API_URL;
+  const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
+
+  let NEXT_PUBLIC_API_URL;
+
+  switch (NEXT_PUBLIC_APP_ENV) {
+    case 'dev':
+      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
+      break;
+    case 'ngrok':
+      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_NGROK_API_URL;
+      break;
+    case 'production':
+      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+      break;
+    default:
+      console.error('Invalid environment specified in NEXT_PUBLIC_APP_ENV');
+      break;
+  }
   // Fetch data from APIs
   const apiUrl = NEXT_PUBLIC_API_URL;
   const getEventsEndPoint = "/api/getEvents"

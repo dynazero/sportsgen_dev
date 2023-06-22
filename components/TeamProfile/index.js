@@ -12,8 +12,24 @@ import Members from './members'
 
 export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
     const { data: session } = useSession()
-    const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
-    const NEXT_PUBLIC_NEXTAUTH_URL = isDev ? process.env.NEXT_PUBLIC_DEV_NEXTAUTH_URL : process.env.NEXT_PUBLIC_NGROK_NEXTAUTH_URL;
+    const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
+
+    let NEXT_PUBLIC_NEXTAUTH_URL;
+
+    switch (NEXT_PUBLIC_APP_ENV) {
+        case 'dev':
+            NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_DEV_NEXTAUTH_URL;
+            break;
+        case 'ngrok':
+            NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NGROK_NEXTAUTH_URL;
+            break;
+        case 'production':
+            NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL;
+            break;
+        default:
+            console.error('Invalid environment specified in NEXT_PUBLIC_APP_ENV');
+            break;
+    }
 
     const [categories, setCategories] = useState([])
 
@@ -102,13 +118,13 @@ export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
                     <div className="row membersWidth">
                         <div className="col-8 p-3 mb-4 bg-light rounded-3 minW480 caret marginRight">
                             <div className='p-5 panelDark rounded-3'>
-                            <Members members={members}/>
+                                <Members members={members} />
                             </div>
 
                         </div>
                         <div className="col-3 p-3 mb-4 bg-light rounded-3 caret ">
                             <div className='p-5 panelDark rounded-3'>
-                            Ongoing Events
+                                Ongoing Events
                             </div>
 
                         </div>

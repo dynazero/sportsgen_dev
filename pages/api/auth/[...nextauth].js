@@ -4,8 +4,25 @@ import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from "../../../lib/mongodb";
 
 
-const isDev = process.env.NEXT_PUBLIC_APP_ENV === 'dev';
-const NEXTAUTH_URL_DASHBOARD = isDev ? process.env.DEV_NEXTAUTH_URL_DASHBOARD : process.env.NGROK_NEXTAUTH_URL_DASHBOARD;
+
+const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
+
+let NEXTAUTH_URL_DASHBOARD;
+
+switch (NEXT_PUBLIC_APP_ENV) {
+  case 'dev':
+    NEXTAUTH_URL_DASHBOARD = process.env.DEV_NEXTAUTH_URL_DASHBOARD;
+    break;
+  case 'ngrok':
+    NEXTAUTH_URL_DASHBOARD = process.env.NGROK_NEXTAUTH_URL_DASHBOARD;
+    break;
+  case 'production':
+    NEXTAUTH_URL_DASHBOARD = process.env.NEXTAUTH_URL_DASHBOARD;
+    break;
+  default:
+    console.error('Invalid environment specified in NEXT_PUBLIC_APP_ENV');
+    break;
+}
 
 export const authOptions = {
   url: NEXTAUTH_URL_DASHBOARD,
