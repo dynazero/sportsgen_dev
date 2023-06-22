@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import styles from './button.module.css'
 
 
 
+
 const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUpdate }) => {
 
+    const router = useRouter();
 
     const [cartEmpty, setCartEmpty] = useState(true);
     const [cartIndex, setCartIndex] = useState(0);
@@ -77,17 +80,17 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
             functionThatReturnPromise,
             {
                 pending: 'Verifying information',
-                success: 'Proceeding to checkout! 👌',
+                success: 'Checkout saved, participants registered!, Proceeding to summary 👌',
                 error: 'Error checkout 🤯'
             }
         ).then(
             (response) => {
-                // if (response.status === 201) { // Check if the profile was created successfully
-
-                //     setTimeout(() => {
-                //         router.push('/checkout');
-                //     }, 3000);
-                // }
+                if (response.status === 201) { // Check if the profile was created successfully
+                    // navigate to the checkout page using the received id
+                    setTimeout(() => {
+                        router.push(`/checkout/${response.data.id}`);
+                    }, 3000);
+                }
                 console.log("registered successfully")
             }
         ).catch((error) => {
@@ -140,7 +143,7 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
                     </li>
                 </ul>
                 <hr className="my-4" />
-                <button className="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+                <button className="w-100 btn btn-primary btn-lg" type="submit">Register »</button>
             </form>
         </>
     )

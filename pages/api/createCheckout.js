@@ -8,7 +8,7 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
 connectDB();
-
+//Create checkout and participant
 const spacesEndpoint = "https://sgp1.digitaloceanspaces.com";
 const s3Client = new S3Client({
   endpoint: spacesEndpoint,
@@ -64,7 +64,7 @@ export default async (req, res) => {
             team,
             athleteId: reg.participantId,
             athlete: reg.participantName,
-            eventId: reg.categoryId,
+            categoryId: reg.categoryId,
             event: reg.categoryName,
             status,
           });
@@ -121,8 +121,8 @@ export default async (req, res) => {
         status,
       });
 
-      await newCheckout.save();
-      res.status(201).json({ message: "Checkout created successfully" });
+      const savedCheckoutId = await newCheckout.save();
+      res.status(201).json({ message: "Checkout created successfully", id: savedCheckoutId._id  });
     } catch (error) {
       console.error("Error uploading file:", error);
       res.status(500).json({ message: "Error uploading file", error: error.message });

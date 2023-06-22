@@ -9,10 +9,10 @@ export default function error() {
         <>
             <div className="center">
             <span>
-              <Image src={logo} alt="sportsgenbull" width={90} height={120} />
+              <Image src={logo} alt="sportsgenbull" width={90} height={120} priority/>
             </span>
                 <h1>404</h1>
-                <div>You need to login before creating an Event</div>
+                <div>You have error page</div>
             </div>
 
         </>
