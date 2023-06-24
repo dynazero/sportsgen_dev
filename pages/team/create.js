@@ -257,7 +257,7 @@ export async function getServerSideProps(context) {
         case 'dev':
             NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
             break;
-        case 'ngrok':
+        case 'test':
             NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_NGROK_API_URL;
             break;
         case 'production':

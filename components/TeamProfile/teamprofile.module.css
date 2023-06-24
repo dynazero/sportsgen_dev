@@ -1,0 +1,19 @@
+.container{
+    margin-bottom: 30px;
+}
+
+.topStyles{
+    height: 38dvh;
+}
+
+.botStyles{
+    height: 44dvh;
+}
+
+.minWidth{
+    min-width: 350px;
+}
+
+.overflowControl{
+    overflow: overlay;
+}  

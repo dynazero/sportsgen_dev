@@ -9,28 +9,31 @@ const Members = ({ members }) => {
     }, [members])
 
     return (
+        <>
+            <strong className="d-inline-block mb-2 text-primary">Members list:</strong>
+            <table className="table table-striped">
 
-        <table className="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">First</th>
-                    {/* <th scope="col">Profile</th> */}
-                </tr>
-            </thead>
-            <tbody>
-                {membersList && members.map((item, i) => (
-                    <tr key={item.combinedSequence}>
-                        <th scope="row" className='paddingList'>{item.combinedSequence}</th>
-                        <td className='paddingList'>{item.lname}</td>
-                        <td className='paddingList'>{item.fname}</td>
-
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">First</th>
+                        {/* <th scope="col">Profile</th> */}
                     </tr>
-                ))}
+                </thead>
+                <tbody>
+                    {membersList && members.map((item, i) => (
+                        <tr key={item.combinedSequence}>
+                            <th scope="row" className='paddingList'>{item.combinedSequence}</th>
+                            <td className='paddingList'>{item.lname}</td>
+                            <td className='paddingList'>{item.fname}</td>
 
-            </tbody>
-        </table>
+                        </tr>
+                    ))}
+
+                </tbody>
+            </table>
+        </>
 
     )
 }

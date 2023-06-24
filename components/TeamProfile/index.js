@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useSession } from "next-auth/react"
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import styles from './teamprofile.module.css'
 import ReactCountryFlag from 'react-country-flag';
 import Create from './create'
 import Members from './members'
@@ -20,7 +21,7 @@ export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
         case 'dev':
             NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_DEV_NEXTAUTH_URL;
             break;
-        case 'ngrok':
+        case 'test':
             NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NGROK_NEXTAUTH_URL;
             break;
         case 'production':
@@ -49,7 +50,7 @@ export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
 
 
     return (
-        <div className='container'>
+        <div className={`container ${styles.container}`}>
             {(!teamItem || teamItem.length === 0) &&
                 // <Link href="/team/create">
                 //     <motion.button
@@ -75,10 +76,10 @@ export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
 
 
 
-                        <div className="col-6 p-3 mb-4 bg-light rounded-3 minW480 caret marginRight">
+                        <div className={`col-6 p-3 mb-4 bg-light rounded-3 minW480 caret marginRight ${styles.topStyles}}`} >
                             <div className='p-5 panelDark rounded-3'>
                                 <div className='container'>
-                                    <div className='row mx-auto' style={{ width: '350px' }}>
+                                    <div className={`row mx-auto ${styles.minWidth}`} >
                                         <div className="justify-content-md-center"
                                             style={{ display: 'grid' }}
                                         >
@@ -100,7 +101,7 @@ export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
                                                 />
                                             </h2>
                                             <p>{teamItem[0].description}</p>
-                                            <p><a className="btn btn-secondary" href="#">View details »</a></p>
+                                            <p><a className="btn btn-secondary" href="#">Edit Details »</a></p>
                                         </div>
 
                                     </div>
@@ -116,13 +117,13 @@ export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
                     </div>
 
                     <div className="row membersWidth">
-                        <div className="col-8 p-3 mb-4 bg-light rounded-3 minW480 caret marginRight">
+                        <div className={`col-8 p-3 mb-4 bg-light rounded-3 minW480 caret marginRight ${styles.botStyles} ${styles.overflowControl}`}>
                             <div className='p-5 panelDark rounded-3'>
                                 <Members members={members} />
                             </div>
 
                         </div>
-                        <div className="col-3 p-3 mb-4 bg-light rounded-3 caret ">
+                        <div className={`col-3 p-3 mb-4 bg-light rounded-3 caret ${styles.botStyles} ${styles.overflowControl}`}>
                             <div className='p-5 panelDark rounded-3'>
                                 Ongoing Events
                             </div>

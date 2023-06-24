@@ -13,7 +13,7 @@ switch (NEXT_PUBLIC_APP_ENV) {
   case 'dev':
     NEXTAUTH_URL_DASHBOARD = process.env.DEV_NEXTAUTH_URL_DASHBOARD;
     break;
-  case 'ngrok':
+  case 'test':
     NEXTAUTH_URL_DASHBOARD = process.env.NGROK_NEXTAUTH_URL_DASHBOARD;
     break;
   case 'production':
@@ -38,9 +38,21 @@ export const authOptions = {
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
-      return NEXTAUTH_URL_DASHBOARD
+      if (url === "/") {
+        // If user is logging in from the homepage, redirect to dashboard
+        return `${baseUrl}/dashboard`;
+      } else if (url.startsWith("/")) {
+        // For other relative URLs, return the URL as is
+        return `${baseUrl}${url}`;
+      } else if (new URL(url).origin === baseUrl) {
+        // If the URL is on the same origin, return the URL as is
+        return url;
+      } else {
+        // In all other cases, return the base URL
+        return baseUrl;
+      }
     },
-    debug: process.env.NODE_ENV === "development",
+    debug: NEXT_PUBLIC_APP_ENV === "dev",
   }
 }
 export default NextAuth(authOptions)

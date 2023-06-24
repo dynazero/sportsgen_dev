@@ -143,7 +143,7 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
                     </li>
                 </ul>
                 <hr className="my-4" />
-                <button className="w-100 btn btn-primary btn-lg" type="submit">Register »</button>
+                <button className="w-100 btn btn-primary btn-lg" type="submit">Continue »</button>
             </form>
         </>
     )
