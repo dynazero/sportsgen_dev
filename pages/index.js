@@ -34,10 +34,6 @@ const LOGO2 = () => (
 
 )
 
-
-
-
-
 export default function Home() {
  
   return (

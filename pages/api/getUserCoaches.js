@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB"
-import Coach from "../../model/coachModel"
+import Coach from "../../model/Coach"
 
 connectDB()
 

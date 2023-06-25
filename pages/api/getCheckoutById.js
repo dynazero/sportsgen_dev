@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB"
-import Checkout from "../../model/checkoutSchema"
+import Checkout from "../../model/Checkout"
 
 connectDB()
 

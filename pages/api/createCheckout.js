@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB";
-import Checkout from "../../model/checkoutSchema";
+import Checkout from "../../model/Checkout";
 import Participant from "../../model/participantSchema";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import formidable from "formidable";

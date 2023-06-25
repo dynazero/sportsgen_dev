@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB"
-import Category from "../../model/categoryModel"
+import Category from "../../model/Category"
 
 connectDB()
 

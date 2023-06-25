@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB";
-import Team from "../../model/teamSchema";
+import Team from "../../model/Team";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import formidable from "formidable";
 import { createReadStream } from "fs";

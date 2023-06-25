@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB"
-import Official from "../../model/officialModel"
+import Official from "../../model/Official"
 
 connectDB()
 

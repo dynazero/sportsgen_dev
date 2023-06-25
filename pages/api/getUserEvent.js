@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB"
-import Event from "../../model/eventSchema"
+import Event from "../../model/Event"
 // import { ObjectId } from 'mongodb';
 
 connectDB()

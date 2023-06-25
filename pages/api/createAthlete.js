@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB";
-import Athlete from "../../model/athleteModel"
+import Athlete from "../../model/Athlete"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import formidable from "formidable";
 import { createReadStream } from "fs";

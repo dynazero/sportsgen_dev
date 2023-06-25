@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB"
-import Team from "../../model/teamSchema"
+import Team from "../../model/Team"
 
 connectDB()
 

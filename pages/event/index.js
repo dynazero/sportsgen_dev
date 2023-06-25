@@ -91,7 +91,7 @@ export default function events({ eventItem }) {
   }, [session, getTeamId]);
 
 
-  // console.log(eventItem)
+  console.log(eventItem)
   return (
     <>
       <div className='picClass mx-auto minWidth caret'>

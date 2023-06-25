@@ -12,7 +12,7 @@ import ReactCountryFlag from 'react-country-flag';
 
 
 
-function index({ id, email, checkoutItem, teamItem }) {
+function Index({ id, email, checkoutItem, teamItem }) {
   const router = useRouter()
 
   const [eventData, setEventData] = useState([])
@@ -185,6 +185,9 @@ function index({ id, email, checkoutItem, teamItem }) {
   )
 }
 
+export default Index;
+
+
 const constructImageUrl = (bucket, region, path, fileName) =>
   `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
 
@@ -209,7 +212,7 @@ export async function getServerSideProps(context) {
   }
 
   const apiUrl = NEXT_PUBLIC_API_URL;
-  const getCheckoutEndPoint = "/api/getUserCheckout?id="
+  const getCheckoutEndPoint = "/api/getCheckoutById?id="
   const getUserTeamEndPoint = "/api/getSpecificTeam?registeredEmail="
   const getAthleteByIdEndPoint = "/api/getAthleteById?id="
   const getParticipantsEndPoint = "/api/getParticipantsById?id="
@@ -344,5 +347,3 @@ export async function getServerSideProps(context) {
     },
   };
 }
-
-export default index;

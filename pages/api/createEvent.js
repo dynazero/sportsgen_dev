@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB";
-import Event from "../../model/eventSchema";
+import Event from "../../model/Event";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import formidable from "formidable";
 import { createReadStream } from "fs";
