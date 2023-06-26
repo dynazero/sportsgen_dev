@@ -45,6 +45,7 @@ jobs:
           password: ${{ secrets.DIGITALOCEAN_PASSWORD }}
           source: "."
           target: "/var/www/nextjs"
+          port: 22
 
       - name: Install dependencies and Restart application on DigitalOcean Droplet
         uses: appleboy/ssh-action@master
