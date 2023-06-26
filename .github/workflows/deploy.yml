@@ -60,18 +60,19 @@ jobs:
             nvm install 16
             nvm use 16
             cd /var/www/nextjs
-            export GOOGLE_ID=${{ secrets.GOOGLE_ID }}
-            export GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}
-            export AUTH_SECRET=${{ secrets.AUTH_SECRET }}
-            export NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
-            export MONGODB_URI=${{ secrets.MONGODB_URI }}
-            export SPACES_ACCESS_KEY=${{ secrets.SPACES_ACCESS_KEY }}
-            export SPACES_SECRET_KEY=${{ secrets.SPACES_SECRET_KEY }}
-            export DO_SPACES_BUCKET=${{ secrets.DO_SPACES_BUCKET }}
-            export NEXT_PUBLIC_NEXTAUTH_URL=${{ secrets.NEXT_PUBLIC_NEXTAUTH_URL }}
-            export NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
-            export NEXTAUTH_URL_DASHBOARD=${{ secrets.NEXTAUTH_URL_DASHBOARD }}
-            export NEXT_PUBLIC_DOSPACES_BUCKET=${{ secrets.NEXT_PUBLIC_DOSPACES_BUCKET }}
+            echo "GOOGLE_ID=${{ secrets.GOOGLE_ID }}" >> .env
+            echo "GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}" >> .env
+            echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
+            echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
+            echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+            echo "SPACES_ACCESS_KEY=${{ secrets.SPACES_ACCESS_KEY }}" >> .env
+            echo "SPACES_SECRET_KEY=${{ secrets.SPACES_SECRET_KEY }}" >> .env
+            echo "DO_SPACES_BUCKET=${{ secrets.DO_SPACES_BUCKET }}" >> .env
+            echo "NEXT_PUBLIC_NEXTAUTH_URL=${{ secrets.NEXT_PUBLIC_NEXTAUTH_URL }}" >> .env
+            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env
+            echo "NEXTAUTH_URL_DASHBOARD=${{ secrets.NEXTAUTH_URL_DASHBOARD }}" >> .env
+            echo "NEXT_PUBLIC_DOSPACES_BUCKET=${{ secrets.NEXT_PUBLIC_DOSPACES_BUCKET }}" >> .env
+            source .env
             yarn install --frozen-lockfile
             yarn build
             yarn global add pm2
