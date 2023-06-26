@@ -57,4 +57,5 @@ jobs:
             cd /var/www/nextjs
             yarn install --frozen-lockfile
             yarn build
-            pm2 restart all # If you're using PM2 to run your application
+            yarn global add pm2
+            pm2 restart all
