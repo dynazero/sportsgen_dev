@@ -1,6 +1,6 @@
 import connectDB from "../../connectDB";
 import Checkout from "../../model/Checkout";
-import Participant from "../../model/participantSchema";
+import Participant from "../../model/Participant";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import formidable from "formidable";
 import { createReadStream } from "fs";

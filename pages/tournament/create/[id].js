@@ -4,9 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { getSession } from "next-auth/react"
-import { authOptions } from '../api/auth/[...nextauth]'
+import { authOptions } from '../../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
-import styles from './summary.module.css'
 import ReactCountryFlag from 'react-country-flag';
 
 function Index({id, email}) {

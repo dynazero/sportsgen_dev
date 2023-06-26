@@ -1,5 +1,5 @@
 import connectDB from "../../connectDB"
-import Participant from "../../model/participantSchema"
+import Participant from "../../model/Participant"
 
 connectDB()
 
