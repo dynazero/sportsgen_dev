@@ -303,7 +303,7 @@ export async function getServerSideProps(context) {
     const eventStartDate = new Date(event.startDate);
     const eventEndDate = new Date(event.endDate);
     const region = 'sgp1';
-    const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/eventLogos/${event.originalFileName}`;
+    const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/eventLogos/${event.eventLogo}`;
     const countdown = calculateCountdown(event.startDate);
 
     const formatDate = (date) => {

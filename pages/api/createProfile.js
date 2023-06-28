@@ -83,7 +83,7 @@ export default async (req, res) => {
                     fname: fname,
                     lname: lname,
                     email: email,
-                    originalFileName: originalFileName,
+                    document: originalFileName,
                     profileStatus: profileStatus
                 });
             

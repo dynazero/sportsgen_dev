@@ -25,7 +25,7 @@ const teamSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    originalFileName: {
+    teamLogo: {
         type: String,
         required: true, 
     }  

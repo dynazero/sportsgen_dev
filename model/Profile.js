@@ -13,7 +13,7 @@ const profileSchema =  new mongoose.Schema({
         required: true,
         unique:true
     },
-    originalFileName: {
+    document: {
         type: String,
         required: true, 
     },

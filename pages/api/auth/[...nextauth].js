@@ -38,7 +38,6 @@ export const authOptions = {
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
-      console.log("URL before redirect:", url);
       const path = new URL(url).pathname;
       
       if (path === "/") {
