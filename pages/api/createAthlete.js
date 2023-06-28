@@ -118,7 +118,7 @@ export default async (req, res) => {
                   fname: fname,
                   lname: lname,
                   email: email,
-                  team: team,
+                  team,
                   profilePicture: uniqueFileName,  // Store unique file name
                   documentId: uniqueFileName1,  // Store unique file name
                   profileStatus: profileStatus,
