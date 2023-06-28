@@ -120,7 +120,7 @@ export default async (req, res) => {
                   email: email,
                   team,
                   profilePicture: uniqueFileName,  // Store unique file name
-                  documentId: uniqueFileName1,  // Store unique file name
+                  document: uniqueFileName1,  // Store unique file name
                   profileStatus: profileStatus,
                   // overallRank: overallRank,
                   titles: titles,

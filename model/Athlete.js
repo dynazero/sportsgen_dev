@@ -23,7 +23,7 @@ const athleteSchema =  new mongoose.Schema({
         type: String,
         required: true, 
     },
-    documentId: {
+    document: {
         type: String,
         required: true, 
     },
