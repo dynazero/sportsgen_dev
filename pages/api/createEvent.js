@@ -94,7 +94,7 @@ export default async (req, res) => {
           entryFee,
           categories: categoryKeys, 
           eventStatus,
-          originalFileName: originalFileName,
+          eventLogo: originalFileName,
         });
 
         await newEvent.save();

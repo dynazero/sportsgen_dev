@@ -80,7 +80,7 @@ export default async (req, res) => {
           clubName,
           country,
           description,
-          originalFileName: originalFileName,
+          teamLogo: originalFileName,
         });
 
         await newTeam.save();

@@ -145,7 +145,7 @@ export async function getServerSideProps(context) {
         process.env.DO_SPACES_BUCKET,
         'sgp1',
         'teamLogos',
-        team.originalFileName
+        team.teamLogo
       ),
     }));
 
