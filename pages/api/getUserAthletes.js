@@ -6,7 +6,7 @@ connectDB()
 export default async (req, res) => {
   try {
     if (req.method === "GET") {
-      const team = await Athlete.find({ team: req.query.team })
+      const team = await Athlete.find({team: req.query.team})
       res.status(200).json({ data: team })
     }
   } catch (error) {

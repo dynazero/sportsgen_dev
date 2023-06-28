@@ -16,7 +16,7 @@ const athleteSchema =  new mongoose.Schema({
         unique:true
     },
     team: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true,
     },
     profilePicture: {

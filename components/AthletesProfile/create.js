@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 
 const Create = ({ teamId }) => {
     const { data: session } = useSession()
+    const router = useRouter();
 
     const [fname, setFName] = useState('');
     const [lname, setLName] = useState('');
@@ -85,11 +86,11 @@ const Create = ({ teamId }) => {
                         setTitles('');
                         fileInputRef.current.value = '';
                         fileInputRef1.current.value = '';
-
+                        
                         // Navigate to another page (e.g., the home page)
                         setTimeout(() => {
                             router.replace(router.asPath);
-                        }, 3000);
+                        }, 2000);
                     }
                 }
             ).catch((error) => {
@@ -213,7 +214,7 @@ const Create = ({ teamId }) => {
                                 type="text"
                                 className="form-control"
                                 id="email"
-                                placeholder="Email (optional)"
+                                placeholder="Email (required)"
                                 value={email}
                                 onChange={(event) => handleFormChange(event, 3, event.target.value)}
                                 required

@@ -46,8 +46,7 @@ export default function events({ eventItem }) {
       setGetTeamId(teamIdWithoutQuotes);
     }
   }, [])
-
-
+  
   useEffect(() => {
     if (eventItem.length !== 0) {
       setEvents(true);
@@ -56,7 +55,7 @@ export default function events({ eventItem }) {
   }, [eventItem]);
 
   const fetchData = async (url, params) =>
-    axios.get(url, { params }).then(response => response.data.data || []);
+    axios.get(url+params.team ).then(response => response.data.data || []);
 
   // const constructImageUrl = (bucket, region, path, fileName) =>
   //   `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
@@ -64,13 +63,13 @@ export default function events({ eventItem }) {
 
 
   useEffect(() => {
-    if (session) {
+    if (session && getTeamId !== undefined) {
       const apiUrl = NEXT_PUBLIC_API_URL;
       const getAthleteEndPoint = "/api/getUserAthletes?team=";
       const teamId = getTeamId
       const region = 'sgp1';
       const fetchAthletes = async () => {
-        let athletes = await fetchData(`${apiUrl}${getAthleteEndPoint}`, { team: teamId });
+        let athletes = await fetchData(`${apiUrl}${getAthleteEndPoint}`,{ team:teamId });
         athletes = athletes.map((athlete, index) => ({
           ...athlete,
           type: 'athlete',
@@ -87,11 +86,12 @@ export default function events({ eventItem }) {
       };
 
       fetchAthletes();
+      
     }
   }, [session, getTeamId]);
 
 
-  console.log(eventItem)
+  // console.log(eventItem)
   return (
     <>
       <div className='picClass mx-auto minWidth caret'>
