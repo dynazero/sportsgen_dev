@@ -92,7 +92,7 @@ export default function Menu({ modalClick, modalOpen, panelSwitch, panelSide }) 
                 </ul>
               </li>
               <li className="nav-item">
-                {/* <Link className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</Link> */}
+                {/* <Link className="nav-link disabled" href="#" tabIndex="-1" aria-disabled="true">Disabled</Link> */}
               </li>
             </ul>
 

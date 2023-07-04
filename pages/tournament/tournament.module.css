@@ -1,0 +1,28 @@
+.details{
+    font-weight: 600;
+}
+
+.participantsH{
+    height: 65%;
+}
+
+.textRight{
+    text-align: right;
+}
+
+.wrapperFormStyle{
+    justify-content: 'flex-start';
+    padding-top: '20px';
+}
+
+.containerform{
+    display: flex;
+    height: 90dvh;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid #41464b33;
+    width: 55dvw;
+    border-radius: 32px;
+    overflow: hidden;
+}
