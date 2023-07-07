@@ -292,7 +292,7 @@ export async function getServerSideProps(context) {
   }
   // Fetch data from APIs
   const apiUrl = NEXT_PUBLIC_API_URL;
-  const getEventsEndPoint = "/api/getEvents"
+  const getEventsEndPoint = "/api/getLaterEvents"
   const getEventCategoryEndPoint = "/api/getEventCategory"
   const res = await axios.get(`${apiUrl}${getEventsEndPoint}`);
   const resCategories = await axios.get(`${apiUrl}${getEventCategoryEndPoint}`); // Using your provided API endpoint for categories
