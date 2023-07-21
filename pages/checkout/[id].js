@@ -40,7 +40,7 @@ function Index({ id, email, checkoutItem, teamItem }) {
   }
 
 
-  const getEventEndPoint = "/api/getUserEvent?id="
+  const getEventEndPoint = "/api/getEventById?id="
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -57,7 +57,7 @@ function Index({ id, email, checkoutItem, teamItem }) {
   }, [])
 
   function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return string?.charAt(0).toUpperCase() + string?.slice(1);
   }
 
   const eventStartDate = new Date(eventData.startDate);
@@ -65,8 +65,8 @@ function Index({ id, email, checkoutItem, teamItem }) {
   const eventdateD = eventStartDate.getDate().toString().padStart(2, '0')
   const eventdateM = capitalizeFirstLetter(eventStartDate.toLocaleString('default', { month: 'short' }))
   const eventdateY = eventStartDate.getFullYear().toString()
-  const paymentMethod = capitalizeFirstLetter(checkoutInfo.paymentMethod)
-  const status = checkoutInfo.status.toUpperCase()
+  const paymentMethod = capitalizeFirstLetter(checkoutInfo?.paymentMethod)
+  const status = checkoutInfo?.status.toUpperCase()
 
   // console.log(teamItem)
   return (
@@ -213,7 +213,7 @@ export async function getServerSideProps(context) {
 
   const apiUrl = NEXT_PUBLIC_API_URL;
   const getCheckoutEndPoint = "/api/getCheckoutById?id="
-  const getUserTeamEndPoint = "/api/getSpecificTeam?registeredEmail="
+  const getUserTeamEndPoint = "/api/getTeamByRegisteredEmail?registeredEmail="
   const getAthleteByIdEndPoint = "/api/getAthleteById?id="
   const getParticipantsEndPoint = "/api/getParticipantsById?id="
   const session = await getServerSession(context.req, context.res, authOptions)
@@ -253,6 +253,7 @@ export async function getServerSideProps(context) {
       const checkoutData = checkoutResponse.data.data;
       const region = 'sgp1.cdn';
 
+      if (!checkoutData) return null;
 
       // Check if checkout data is available
       if (checkoutData) {
@@ -316,8 +317,7 @@ export async function getServerSideProps(context) {
   if (nextAuthSession) {
     const teamdata = await fetchUserTeam(email);
     const checkoutdata = await fetchCheckoutData(id);
-    checkoutItem = checkoutdata;
-    teamItem = teamdata;
+  
     if (checkoutdata === null) {
       return {
         redirect: {
@@ -326,8 +326,15 @@ export async function getServerSideProps(context) {
         },
       }
     }
+  
+    return {
+      props: {
+        checkoutItem: checkoutdata,
+        teamItem: teamdata || null,
+      },
+    };
   }
-
+  
   if (!session) {
     return {
       redirect: {
@@ -336,6 +343,7 @@ export async function getServerSideProps(context) {
       },
     }
   }
+  
 
   // Pass 'id' as a prop to your component
   return {

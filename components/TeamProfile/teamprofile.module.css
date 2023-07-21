@@ -1,19 +1,32 @@
-.container{
+
+.heightWrapperMem {
+    min-height: 25.6rem;
+}
+
+.heightWrapper {
+    min-height: 22rem;
+}
+
+.heightWrapperOrg {
+    min-height: 25.6rem;
+}
+
+.container {
     margin-bottom: 30px;
 }
 
-.topStyles{
+.topStyles {
     height: 38dvh;
 }
 
-.botStyles{
+.botStyles {
     height: 44dvh;
 }
 
-.minWidth{
+.minWidth {
     min-width: 350px;
 }
 
-.overflowControl{
+.overflowControl {
     overflow: overlay;
-}  
+}

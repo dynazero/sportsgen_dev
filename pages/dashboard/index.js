@@ -11,7 +11,18 @@ import { toast } from "react-toastify";
 
 
 
-export default function dashboard({ verifiedFromServer, teamItem, athletelist, coachlist, officiallist, members, teamId }) {
+export default function dashboard({
+  verifiedFromServer,
+  teamItem,
+  athletelist,
+  coachlist,
+  officiallist,
+  members,
+  teamId,
+  organizedUpcomingEvents,
+  organizedOngoingEvents,
+  upcomingEvents,
+  archivedEvents }) {
   // const router = useRouter()
   const { setIsVerified } = useVerified();
   const [passSBS, setPassSBS] = useState(true)
@@ -41,9 +52,6 @@ export default function dashboard({ verifiedFromServer, teamItem, athletelist, c
   const mDB = passSBS ? "280px" : "0px"
   const mWidth = passSBS ? "calc(100% - 280px)" : "100%"
 
-  // console.log(passPage)
-
-  // default return
   return (
     <div className='dashboard panelsBG'>
 
@@ -56,7 +64,20 @@ export default function dashboard({ verifiedFromServer, teamItem, athletelist, c
           transition: ".4s",
           width: mWidth
         }}>
-        <MyDashboard passPage={passPage} setCurPage={setCurPage} teamItem={teamItem} athletelist={athletelist} coachlist={coachlist} officiallist={officiallist} verifiedFromServer={verifiedFromServer} members={members} />
+        <MyDashboard
+          passPage={passPage}
+          setCurPage={setCurPage}
+          teamItem={teamItem}
+          athletelist={athletelist}
+          coachlist={coachlist}
+          officiallist={officiallist}
+          verifiedFromServer={verifiedFromServer}
+          members={members}
+          organizedUpcomingEvents={organizedUpcomingEvents}
+          organizedOngoingEvents={organizedOngoingEvents}
+          upcomingEvents={upcomingEvents}
+          archivedEvents={archivedEvents}
+        />
       </div>
 
       {arrowV && (
@@ -71,6 +92,27 @@ export default function dashboard({ verifiedFromServer, teamItem, athletelist, c
     </div>
   )
 }
+
+const calculateCountdown = (startDate) => {
+  const now = new Date();
+  const eventDate = new Date(startDate);
+
+  const diffTime = Math.abs(eventDate - now);
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const diffHours = Math.floor((diffTime / (1000 * 60 * 60)) % 24);
+
+  return `${diffDays} Days ${diffHours} Hours`;
+};
+
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2); // JavaScript months are 0-11
+  const day = ("0" + date.getDate()).slice(-2);
+
+  return `${month}.${day}.${year}`;
+};
+
+
 const fetchData = async (url, params) =>
   axios.get(url, { params }).then((response) => response.data.data || []);
 
@@ -103,8 +145,10 @@ export async function getServerSideProps(context) {
   const getAthleteEndPoint = "/api/getUserAthletes"
   const getCoachEndPoint = "/api/getUserCoaches"
   const getOfficialEndPoint = "/api/getUserOfficials"
+  const getEventsEndPoint = "/api/getEvents"
   const session = await getServerSession(context.req, context.res, authOptions);
   let combinedSequenceCounter = 1;
+
 
   if (!session) {
     return {
@@ -126,10 +170,10 @@ export async function getServerSideProps(context) {
   const email = nextAuthSession.user.email;
   const account = await fetchData(`${apiUrl}${getProfileEndPoint}`, { email });
   const team = await fetchData(`${apiUrl}${getTeamEndPoint}`, { registeredEmail: email });
-
   let teamItem = null;
   let teamId = null;
   let verifiedFromServer = account.length > 0 && account[0]?.profileStatus === 'verified' ? true : false;
+  let eventslist = [];
   let athletelist = [];
   let coachlist = [];
   let officiallist = [];
@@ -151,6 +195,7 @@ export async function getServerSideProps(context) {
 
     const region = 'sgp1';
 
+    eventslist = await fetchData(`${apiUrl}${getEventsEndPoint}`);
     athletelist = await fetchData(`${apiUrl}${getAthleteEndPoint}`, { team: teamId });
     athletelist = athletelist.map((athlete, index) => ({
       ...athlete,
@@ -200,6 +245,60 @@ export async function getServerSideProps(context) {
     members = [...athletelist, ...coachlist, ...officiallist];
   }
 
+  const orgLiveEvents = eventslist.filter(event =>
+    event.registeredEmail === email && event.eventStatus === 'active' && new Date(event.startDate) <= Date.now()
+  );
+
+  const organizedOngoingEvents = orgLiveEvents.map(event => {
+    const region = 'sgp1';
+    const eventId = event._id;
+    const eventTitle = event.eventName;
+    const eventStatus = (event.eventStatus !== 'active' ? event.eventStatus : 'Ready' )
+    const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/eventLogos/${event.eventLogo}`;
+
+    return {
+      eventId,
+      eventTitle,
+      eventStatus,
+      logoURL
+    }
+  });
+
+  const orgUpEvents = eventslist.filter(event =>
+    event.registeredEmail === email && event.eventStatus === 'active' && new Date(event.startDate) > Date.now()
+  );
+  const organizedUpcomingEvents = orgUpEvents.map(event => {
+    const region = 'sgp1';
+    const eventId = event._id;
+    const eventTitle = event.eventName;
+    const address = event.address;
+    const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/eventLogos/${event.eventLogo}`;
+    const countdown = calculateCountdown(event.startDate);
+    const eventStartDate = new Date(event.startDate);
+    const startDate = formatDate(eventStartDate);
+
+    return {
+      eventId,
+      eventTitle,
+      address,
+      countdown,
+      startDate,
+      logoURL
+    }
+  })
+
+  const upcomingEvents = eventslist.filter(event =>
+    event.registeredEmail !== email && event.eventStatus === 'active'
+  );
+
+  const archivedEvents = eventslist.filter(event =>
+    event.registeredEmail === email && event.eventStatus === 'closed'
+  );
+
+  // console.log(organizedUpcomingEvents, 'organizedUpcomingEvents')
+  // console.log(organizedOngoingEvents, 'organizedOngoingEvents')
+  // console.log(upcomingEvents, 'upcomingEvents')
+  // console.log(archivedEvents, 'archived')
 
   return {
     props: {
@@ -210,7 +309,11 @@ export async function getServerSideProps(context) {
       coachlist,
       officiallist,
       members,
-      teamId
+      teamId,
+      organizedUpcomingEvents,
+      organizedOngoingEvents,
+      upcomingEvents,
+      archivedEvents
     },
   };
 }

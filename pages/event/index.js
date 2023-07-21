@@ -271,6 +271,14 @@ const calculateCountdown = (startDate) => {
   return `${diffDays} Days ${diffHours} Hours`;
 };
 
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = ("0" + (date.getMonth() + 1)).slice(-2); // JavaScript months are 0-11
+  const day = ("0" + date.getDate()).slice(-2);
+
+  return `${year}.${month}.${day}`;
+};
+
 export async function getServerSideProps(context) {
   const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
 
@@ -292,27 +300,19 @@ export async function getServerSideProps(context) {
   }
   // Fetch data from APIs
   const apiUrl = NEXT_PUBLIC_API_URL;
-  const getEventsEndPoint = "/api/getLaterEvents"
+  const getLaterEventsEndPoint = "/api/getLaterEvents"
   const getEventCategoryEndPoint = "/api/getEventCategory"
-  const res = await axios.get(`${apiUrl}${getEventsEndPoint}`);
-  const resCategories = await axios.get(`${apiUrl}${getEventCategoryEndPoint}`); // Using your provided API endpoint for categories
+  const res = await fetchData(`${apiUrl}${getLaterEventsEndPoint}`);
+  const resCategories = await fetchData(`${apiUrl}${getEventCategoryEndPoint}`); // Using your provided API endpoint for categories
 
-  const categories = resCategories.data.data;
-  const eventItem = res.data.data.map(event => {
+  const categories = resCategories;
+  const eventItem = res.map(event => {
     // Your existing map operation...
     const eventStartDate = new Date(event.startDate);
     const eventEndDate = new Date(event.endDate);
     const region = 'sgp1';
     const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/eventLogos/${event.eventLogo}`;
     const countdown = calculateCountdown(event.startDate);
-
-    const formatDate = (date) => {
-      const year = date.getFullYear();
-      const month = ("0" + (date.getMonth() + 1)).slice(-2); // JavaScript months are 0-11
-      const day = ("0" + date.getDate()).slice(-2);
-
-      return `${year}.${month}.${day}`;
-    };
 
     const formattedStartDate = formatDate(eventStartDate);
     const formattedEndDate = formatDate(eventEndDate);

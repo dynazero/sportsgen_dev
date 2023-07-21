@@ -1,0 +1,19 @@
+.perList{
+    margin-bottom: 8px;
+    border-radius: 8px !important;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.perList:hover{
+    box-shadow: 6px 6px 5px 0px rgba(0,0,0,0.75)
+}
+
+.zIndexZero {
+    z-index: 0 !important;
+}
+
+.noWrapEllipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -1,21 +1,37 @@
-.details{
+.tournamentForm {
+    overflow: overlay;
+    padding: 26px;
+    height: 90%;
+    width: 100%;
+    margin-right: 16px;
+    margin-bottom: 16px;
+    
+}
+
+.custom-time-picker div,
+.custom-time-picker input {
+    border: none !important;
+    /* The `!important` flag can be used to override the existing styles, but use it sparingly. */
+}
+
+.details {
     font-weight: 600;
 }
 
-.participantsH{
+.participantsH {
     height: 65%;
 }
 
-.textRight{
+.textRight {
     text-align: right;
 }
 
-.wrapperFormStyle{
+.wrapperFormStyle {
     justify-content: 'flex-start';
     padding-top: '20px';
 }
 
-.containerform{
+.containerform {
     display: flex;
     height: 90dvh;
     flex-direction: column;
@@ -25,4 +41,5 @@
     width: 55dvw;
     border-radius: 32px;
     overflow: hidden;
+    min-width: 596px;  
 }

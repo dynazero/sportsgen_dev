@@ -8,10 +8,21 @@ import styles from './teamprofile.module.css'
 import ReactCountryFlag from 'react-country-flag';
 import Create from './create'
 import Members from './members'
+import OrgOngoingEvents from './orgongoingevents';
+import UpComingEvents from './upcomingevents';
 
 
 
-export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
+export default function TeamProfile({
+    teamItem,
+    verifiedFromServer,
+    members,
+    organizedUpcomingEvents,
+    organizedOngoingEvents,
+    upcomingEvents,
+    archivedEvents
+}) {
+
     const { data: session } = useSession()
     const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
 
@@ -110,22 +121,26 @@ export default function TeamProfile({ teamItem, verifiedFromServer, members }) {
                         </div>
 
                         <div className="col-5 p-3 mb-4 bg-light rounded-3 minW480 caret">
-                            <div className='p-5 panelDark rounded-3'>
-                                No Events
+                            <div className={`p-1 panelDark rounded-3 ${styles.heightWrapper}`}>
+                                <UpComingEvents upcomingEvents={upcomingEvents} />
                             </div>
                         </div>
                     </div>
 
                     <div className="row membersWidth">
                         <div className={`col-8 p-3 mb-4 bg-light rounded-3 minW480 caret marginRight ${styles.botStyles} ${styles.overflowControl}`}>
-                            <div className='p-5 panelDark rounded-3'>
+                            <div className={`p-5 panelDark rounded-3 ${styles.heightWrapperMem}`}>
                                 <Members members={members} />
                             </div>
 
                         </div>
                         <div className={`col-3 p-3 mb-4 bg-light rounded-3 caret ${styles.botStyles} ${styles.overflowControl}`}>
-                            <div className='p-5 panelDark rounded-3'>
-                                Ongoing Events
+                            <div className={`panelDark rounded-3 ${styles.heightWrapperOrg}`}>
+                                <OrgOngoingEvents
+                                 organizedUpcomingEvents={organizedUpcomingEvents}
+                                 organizedOngoingEvents={organizedOngoingEvents}
+                                 archivedEvents={archivedEvents}
+                                />
                             </div>
 
                         </div>
