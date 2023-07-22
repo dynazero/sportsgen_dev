@@ -7,7 +7,12 @@ export default async (req, res) => {
   try {
     if (req.method === "GET") {
       //currently filtered with eventStatus - you can rmv to retrieve all
-      const categories = await Event.find({ eventStatus: 'active' })
+      const categories = await Event.find({
+        $or: [
+          { eventStatus: 'active' },
+          { eventStatus: 'ready' }
+        ]
+      });
       res.status(200).json({ data: categories })
     }
   } catch (error) {

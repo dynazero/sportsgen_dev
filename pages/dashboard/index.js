@@ -30,7 +30,6 @@ export default function dashboard({
   const [curPage, setCurPage] = useState('')
   const [arrowV, setArrowV] = useState(false)
 
-
   useEffect(() => {
     if (!verifiedFromServer) {
       toast.success('Thank you for signing up, please proceed to your My Profile to complete your verification');
@@ -43,6 +42,21 @@ export default function dashboard({
     localStorage.setItem('teamId', JSON.stringify(teamId))
 
   }, [])
+
+  useEffect(() => {
+    const toUpdate = organizedOngoingEvents.filter(event => event.eventStatus === 'active')
+  
+    if(toUpdate.length === 0) return;
+  
+    toUpdate.forEach(async (event) => {
+      try {
+        await axios.put(`../../api/updateReadyEventStatus`, {eventId: event.eventId});
+      } catch(error) {
+        console.error("Failed to update event status", error);
+      }
+    });
+  }, [organizedOngoingEvents]);
+  
 
   useEffect(() => {
     setIsVerified(verifiedFromServer);
@@ -145,7 +159,7 @@ export async function getServerSideProps(context) {
   const getAthleteEndPoint = "/api/getUserAthletes"
   const getCoachEndPoint = "/api/getUserCoaches"
   const getOfficialEndPoint = "/api/getUserOfficials"
-  const getEventsEndPoint = "/api/getEvents"
+  const getEventsEndPoint = "/api/getActiveEvents"
   const session = await getServerSession(context.req, context.res, authOptions);
   let combinedSequenceCounter = 1;
 
@@ -246,14 +260,16 @@ export async function getServerSideProps(context) {
   }
 
   const orgLiveEvents = eventslist.filter(event =>
-    event.registeredEmail === email && event.eventStatus === 'active' && new Date(event.startDate) <= Date.now()
-  );
-
+    event.registeredEmail === email && 
+    (event.eventStatus === 'active' || event.eventStatus === 'ready') && 
+    new Date(event.startDate) <= Date.now()
+);
   const organizedOngoingEvents = orgLiveEvents.map(event => {
     const region = 'sgp1';
     const eventId = event._id;
     const eventTitle = event.eventName;
-    const eventStatus = (event.eventStatus !== 'active' ? event.eventStatus : 'Ready' )
+    // const eventStatus = (event.eventStatus !== 'active' ? event.eventStatus : 'Ready' )
+    const eventStatus = event.eventStatus
     const logoURL = `https://${process.env.DO_SPACES_BUCKET}.${region}.digitaloceanspaces.com/eventLogos/${event.eventLogo}`;
 
     return {
