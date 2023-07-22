@@ -140,6 +140,7 @@ function Index({ id, email, eventData }) {
     formData.append('eventName', eventData.eventName);
     formData.append('eventLogo', eventData.logoURL);
     formData.append('organizer', eventData.organizer);
+    formData.append('organizerEmail', email);
     formData.append('categories', categoryKeys);
     formData.append('flag', eventData.flag);
     formData.append('address', eventData.address);

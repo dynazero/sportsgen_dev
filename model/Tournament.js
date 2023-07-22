@@ -18,6 +18,10 @@ const tournamentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    organizerEmail: {
+        type: String,
+        required: true
+    },
     categories: {
         type: [Number],
         required: true
