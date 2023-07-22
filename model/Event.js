@@ -47,8 +47,8 @@ const eventSchema = new mongoose.Schema({
   },
   eventStatus: {
     type: String,
-    required: true,
-    trim: true,
+    enum: ['active', 'ready', 'closed'],
+    default: 'Check-in'
   },
   eventLogo: {
     type: String,

@@ -71,6 +71,11 @@ const tournamentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    status: {
+        type: String,
+        enum: ['Check-in', 'Live', 'Finals', 'Awarding', 'Closed'],
+        default: 'Check-in'
+    },
     // eventType: {
     //     type: String,
     //     required: true

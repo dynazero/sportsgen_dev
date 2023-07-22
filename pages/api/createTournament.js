@@ -1,5 +1,6 @@
 import connectDB from "../../connectDB";
 import Tournament from "../../model/Tournament";
+import Event from "../../model/Event";
 import formidable from "formidable";
 
 connectDB();
@@ -42,7 +43,8 @@ export default async (req, res) => {
         matchForThird,
         registrationFee,
         maxParticipants,
-        startTime
+        startTime,
+        status
       } = fields;
 
       const categoryKeys = JSON.parse(fields.categories);
@@ -73,10 +75,15 @@ export default async (req, res) => {
           matchForThird,
           registrationFee,
           maxParticipants,
-          startTime
+          startTime,
+          status
         });
 
         const savedTournament =  await newTournament.save();
+
+         // Update the corresponding event's status to 'closed'
+         await Event.findByIdAndUpdate(eventId, { eventStatus: 'closed' });
+
         res.status(201).json({ message: "Tournament Initialized", tournamentId: savedTournament._id });
       } catch (error) {
         console.error("Error uploading file:", error);

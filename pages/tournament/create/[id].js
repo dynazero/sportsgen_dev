@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-import Link from 'next/link'
 import Image from 'next/image'
 import SingletonRouter, { useRouter, Router } from 'next/router'
 import { getSession } from "next-auth/react"
@@ -43,6 +42,7 @@ function Index({ id, email, eventData }) {
   const [battleForThird, setBattleForThird] = useState(false);
   const [maxParticipants, setMaxParticipants] = useState(6);
   const [startTime, setStartTime] = useState('10:00');
+  const [tournamentStatus, setTournamentStatus] = useState('Check-in');
   const stringToDisplay = 'Do you want to save before leaving the page ?';
 
   useEffect(() => {
@@ -153,6 +153,7 @@ function Index({ id, email, eventData }) {
     formData.append('registrationFee', eventData.entryFee);
     formData.append('maxParticipants', maxParticipants);
     formData.append('startTime', startTime);
+    formData.append('status', tournamentStatus);
 
     const functionThatReturnPromise = axios.post(`../../api/createTournament`, formData);
     toast.promise(
@@ -195,11 +196,11 @@ function Index({ id, email, eventData }) {
 
 
   return (
-    <div className={`wrapperForm ${styles.wrapperFormStyle}`}>
-      <div className='headerForm'>
-        <h2 className="mb-3">Tournament Initialization</h2>
-      </div>
-      <form onSubmit={SubmitHandler} className="needs-validation" noValidate="" >
+    <form onSubmit={SubmitHandler} className="needs-validation" noValidate="" >
+      <div className={`wrapperForm ${styles.wrapperFormStyle}`}>
+        <div className='headerForm'>
+          <h2 className="mb-3">Tournament Initialization</h2>
+        </div>
         <div className={`${styles.containerform}`}>
           <div className={`col-md-7 col-lg-8 ${styles.tournamentForm}`}>
             <ul className="list-group list-group-flush">
@@ -338,8 +339,8 @@ function Index({ id, email, eventData }) {
             </div>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   )
 }
 
@@ -452,7 +453,7 @@ export async function getServerSideProps(context) {
         console.log('Tournament is Open')
         return false;
       }
-      
+
       return true;
 
     } catch (error) {
