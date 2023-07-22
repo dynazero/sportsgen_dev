@@ -2,15 +2,17 @@ import React, { useEffect } from 'react'
 import TeamProfile from './TeamProfile';
 
 
-export default function MyTeam({ 
-  onPageChange, 
-  teamItem, 
-  verifiedFromServer, 
+export default function MyTeam({
+  onPageChange,
+  teamItem,
+  verifiedFromServer,
   members,
   organizedUpcomingEvents,
   organizedOngoingEvents,
   upcomingEvents,
-  archivedEvents
+  archivedEvents,
+  orgLiveTournaments,
+  liveTournaments
 }) {
 
   useEffect(() => {
@@ -19,14 +21,16 @@ export default function MyTeam({
 
   return (
     <div>
-      <TeamProfile 
-      teamItem={teamItem} 
-      verifiedFromServer={verifiedFromServer} 
-      members={members} 
-      organizedUpcomingEvents={organizedUpcomingEvents}
-      organizedOngoingEvents={organizedOngoingEvents}
-      upcomingEvents={upcomingEvents}
-      archivedEvents={archivedEvents}
+      <TeamProfile
+        teamItem={teamItem}
+        verifiedFromServer={verifiedFromServer}
+        members={members}
+        organizedUpcomingEvents={organizedUpcomingEvents}
+        organizedOngoingEvents={organizedOngoingEvents}
+        upcomingEvents={upcomingEvents}
+        archivedEvents={archivedEvents}
+        orgLiveTournaments={orgLiveTournaments}
+        liveTournaments={liveTournaments}
       />
 
     </div>

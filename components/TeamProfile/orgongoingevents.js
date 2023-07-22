@@ -8,9 +8,10 @@ import Link from 'next/link';
 export default function OrgOngoingEvents({
   organizedUpcomingEvents,
   organizedOngoingEvents,
-  archivedEvents
+  archivedEvents,
+  orgLiveTournaments
 }) {
-
+console.log(orgLiveTournaments)
   return (
 
     <>
@@ -28,6 +29,25 @@ export default function OrgOngoingEvents({
       <div className="p-2 list-group">
         <div className="tab-content" id="pills-tabContent-org">
           <div className="tab-pane fade show active" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab">
+            {orgLiveTournaments &&
+              orgLiveTournaments.map((item, i) => (
+                <Link href={`/tournament/${item.tournamentId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`}  aria-current="true">
+                  <div className="d-flex w-100 justify-content-between">
+                    <Image src={item.tournamentLogo} alt='event logo' width={40} height={40} priority />
+                    <h5
+                      className={`mb-1 ${styles.noWrapEllipsis}`}
+                      data-tooltip-id="myTooltip"
+                      data-tooltip-content={item.tournamentTitle}
+                    >{item.tournamentTitle}</h5>
+                    <small style={{ whiteSpace: 'nowrap' }}>{item.tournamentStatus}</small>
+                  </div>
+                  <div>
+                  {/* <small>Event Settings  »</small> */}
+                  </div>
+                  {/* <p className="mb-1">Live</p> */}
+                </Link>
+              ))}
+            
             {(!organizedOngoingEvents || !organizedOngoingEvents.length) && <div>No Ongoing Events</div>}
             {organizedOngoingEvents &&
               organizedOngoingEvents.map((item, i) => (

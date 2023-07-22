@@ -22,7 +22,9 @@ export default function dashboard({
   organizedUpcomingEvents,
   organizedOngoingEvents,
   upcomingEvents,
-  archivedEvents }) {
+  archivedEvents,
+  orgLiveTournaments,
+  liveTournaments }) {
   // const router = useRouter()
   const { setIsVerified } = useVerified();
   const [passSBS, setPassSBS] = useState(true)
@@ -45,18 +47,18 @@ export default function dashboard({
 
   useEffect(() => {
     const toUpdate = organizedOngoingEvents.filter(event => event.eventStatus === 'active')
-  
-    if(toUpdate.length === 0) return;
-  
+
+    if (toUpdate.length === 0) return;
+
     toUpdate.forEach(async (event) => {
       try {
-        await axios.put(`../../api/updateReadyEventStatus`, {eventId: event.eventId});
-      } catch(error) {
+        await axios.put(`../../api/updateReadyEventStatus`, { eventId: event.eventId });
+      } catch (error) {
         console.error("Failed to update event status", error);
       }
     });
   }, [organizedOngoingEvents]);
-  
+
 
   useEffect(() => {
     setIsVerified(verifiedFromServer);
@@ -91,6 +93,8 @@ export default function dashboard({
           organizedOngoingEvents={organizedOngoingEvents}
           upcomingEvents={upcomingEvents}
           archivedEvents={archivedEvents}
+          orgLiveTournaments={orgLiveTournaments}
+          liveTournaments={liveTournaments}
         />
       </div>
 
@@ -160,6 +164,7 @@ export async function getServerSideProps(context) {
   const getCoachEndPoint = "/api/getUserCoaches"
   const getOfficialEndPoint = "/api/getUserOfficials"
   const getEventsEndPoint = "/api/getActiveEvents"
+  const getTournamentEndPoint = "/api/getTournamentForDashboard"
   const session = await getServerSession(context.req, context.res, authOptions);
   let combinedSequenceCounter = 1;
 
@@ -188,6 +193,7 @@ export async function getServerSideProps(context) {
   let teamId = null;
   let verifiedFromServer = account.length > 0 && account[0]?.profileStatus === 'verified' ? true : false;
   let eventslist = [];
+  let orgtournamentlist = [];
   let athletelist = [];
   let coachlist = [];
   let officiallist = [];
@@ -210,6 +216,7 @@ export async function getServerSideProps(context) {
     const region = 'sgp1';
 
     eventslist = await fetchData(`${apiUrl}${getEventsEndPoint}`);
+    orgtournamentlist = await fetchData(`${apiUrl}${getTournamentEndPoint}`);
     athletelist = await fetchData(`${apiUrl}${getAthleteEndPoint}`, { team: teamId });
     athletelist = athletelist.map((athlete, index) => ({
       ...athlete,
@@ -259,11 +266,57 @@ export async function getServerSideProps(context) {
     members = [...athletelist, ...coachlist, ...officiallist];
   }
 
+  const orgLiveTournamentRes = orgtournamentlist.filter(event =>
+    event.organizerEmail === email
+  )
+
+  const orgLiveTournaments = orgLiveTournamentRes.map(event => {
+    const tournamentId = event._id;
+    const tournamentTitle = event.eventName;
+    const tournamentLogo = event.eventLogo;
+    const tournamentFlag = event.flag;
+    const tournamentStatus = event.status;
+    const tournamentStartTime = event.startTime;
+
+
+    return {
+      tournamentId,
+      tournamentTitle,
+      tournamentLogo,
+      tournamentFlag,
+      tournamentStatus,
+      tournamentStartTime
+    }
+  })
+
+  const liveTournamentsRes = orgtournamentlist.filter(event =>
+    event.organizerEmail !== email
+  )
+
+  const liveTournaments = liveTournamentsRes.map(event => {
+    const tournamentId = event._id;
+    const tournamentTitle = event.eventName;
+    const tournamentLogo = event.eventLogo;
+    const tournamentFlag = event.flag;
+    const tournamentStatus = event.status;
+    const tournamentStartTime = event.startTime;
+
+
+    return {
+      tournamentId,
+      tournamentTitle,
+      tournamentLogo,
+      tournamentFlag,
+      tournamentStatus,
+      tournamentStartTime
+    }
+  })
+
   const orgLiveEvents = eventslist.filter(event =>
-    event.registeredEmail === email && 
-    (event.eventStatus === 'active' || event.eventStatus === 'ready') && 
+    event.registeredEmail === email &&
+    (event.eventStatus === 'active' || event.eventStatus === 'ready') &&
     new Date(event.startDate) <= Date.now()
-);
+  );
   const organizedOngoingEvents = orgLiveEvents.map(event => {
     const region = 'sgp1';
     const eventId = event._id;
@@ -329,7 +382,9 @@ export async function getServerSideProps(context) {
       organizedUpcomingEvents,
       organizedOngoingEvents,
       upcomingEvents,
-      archivedEvents
+      archivedEvents,
+      orgLiveTournaments,
+      liveTournaments
     },
   };
 }

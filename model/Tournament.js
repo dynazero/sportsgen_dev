@@ -1,58 +1,70 @@
 import mongoose from "mongoose";
 
 const tournamentSchema = new mongoose.Schema({
-
     eventId: {
         type: mongoose.Types.ObjectId,
-        required: true
+        required: true,
+        trim: true,
     },
     eventName: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     },
     eventLogo: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     },
     organizer: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     },
     organizerEmail: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     },
     categories: {
         type: [Number],
-        required: true
+        required: true,
+        trim: true,
     },
     flag: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     },
     address: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     },
     city: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     },
     url: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     },
     startDate: {
         type: Date,
-        required: true
+        required: true,
+        trim: true,
     },
     endDate: {
         type: Date,
-        required: true
+        required: true,
+        trim: true,
     },
     description: {
         type: String,
-        required: false
+        required: false,
+        trim: true,
     },
     format: {
         type: String,
@@ -61,11 +73,13 @@ const tournamentSchema = new mongoose.Schema({
     },
     matchForThird: {
         type: Boolean,
-        default: false
+        default: false,
+        trim: true,
     },
     registrationFee: {
         type: Number,
-        required: true
+        required: true,
+        trim: true,
     },
     maxParticipants: {
         type: Number,
@@ -74,6 +88,7 @@ const tournamentSchema = new mongoose.Schema({
     startTime: {
         type: String,
         required: true,
+        trim: true,
     },
     status: {
         type: String,

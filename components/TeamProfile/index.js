@@ -20,7 +20,9 @@ export default function TeamProfile({
     organizedUpcomingEvents,
     organizedOngoingEvents,
     upcomingEvents,
-    archivedEvents
+    archivedEvents,
+    orgLiveTournaments,
+    liveTournaments
 }) {
 
     const { data: session } = useSession()
@@ -122,7 +124,7 @@ export default function TeamProfile({
 
                         <div className="col-5 p-3 mb-4 bg-light rounded-3 minW480 caret">
                             <div className={`p-1 panelDark rounded-3 ${styles.heightWrapper}`}>
-                                <UpComingEvents upcomingEvents={upcomingEvents} />
+                                <UpComingEvents upcomingEvents={upcomingEvents} liveTournaments={liveTournaments} />
                             </div>
                         </div>
                     </div>
@@ -137,9 +139,10 @@ export default function TeamProfile({
                         <div className={`col-3 p-3 mb-4 bg-light rounded-3 caret ${styles.botStyles} ${styles.overflowControl}`}>
                             <div className={`panelDark rounded-3 ${styles.heightWrapperOrg}`}>
                                 <OrgOngoingEvents
-                                 organizedUpcomingEvents={organizedUpcomingEvents}
-                                 organizedOngoingEvents={organizedOngoingEvents}
-                                 archivedEvents={archivedEvents}
+                                    organizedUpcomingEvents={organizedUpcomingEvents}
+                                    organizedOngoingEvents={organizedOngoingEvents}
+                                    archivedEvents={archivedEvents}
+                                    orgLiveTournaments={orgLiveTournaments}
                                 />
                             </div>
 

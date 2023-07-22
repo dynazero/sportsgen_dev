@@ -17,7 +17,9 @@ export default function MyDashboard({
   organizedUpcomingEvents,
   organizedOngoingEvents,
   upcomingEvents,
-  archivedEvents
+  archivedEvents,
+  orgLiveTournaments,
+  liveTournaments
 }) {
   const [currentPage, setCurrentPage] = useState(0)
 
@@ -81,6 +83,8 @@ export default function MyDashboard({
       organizedOngoingEvents={organizedOngoingEvents}
       upcomingEvents={upcomingEvents}
       archivedEvents={archivedEvents}
+      orgLiveTournaments={orgLiveTournaments}
+      liveTournaments={liveTournaments}
     />
   )
 

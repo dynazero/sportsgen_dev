@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function UpComingEvents({ upcomingEvents }) {
+export default function UpComingEvents({ upcomingEvents, liveTournaments }) {
 
 
   return (
@@ -14,11 +14,24 @@ export default function UpComingEvents({ upcomingEvents }) {
         </div>
       </div>
 
-      
+
       <div className="p-2 list-group">
         <div className="tab-content" id="pills-tabContent">
           <div className="tab-pane fade" id="pills-live" role="tabpanel" aria-labelledby="pills-live-tab">
-            Live
+            {(!liveTournaments || !liveTournaments.length) && <div>No Live Tournaments as of the moment</div>}
+            {liveTournaments &&
+              liveTournaments.map((item, i) => (
+
+
+                <a href="#" key={i} className="list-group-item list-group-item-action" aria-current="true">
+                  <div className="d-flex w-100 justify-content-between">
+                    <h5 className="mb-1">{item.eventName}</h5>
+                    <small style={{ whiteSpace: 'nowrap' }}>3 days ago</small>
+                  </div>
+                  <p className="mb-1">Some placeholder content in a paragraph.</p>
+                  <small>And some small print.</small>
+                </a>
+              ))}
           </div>
           <div className="tab-pane fade show active" id="pills-up" role="tabpanel" aria-labelledby="pills-up-tab">
             {(!upcomingEvents || !upcomingEvents.length) && <div>No Upcoming Events</div>}

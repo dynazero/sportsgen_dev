@@ -45,6 +45,7 @@ function Index({ id, email, eventData }) {
   const [tournamentStatus, setTournamentStatus] = useState('Check-in');
   const stringToDisplay = 'Do you want to save before leaving the page ?';
 
+
   useEffect(() => {
     // Prevents tab quit / tab refresh
     if (formIsFilled) {
@@ -378,6 +379,7 @@ export async function getServerSideProps(context) {
   const id = context.params.id;
   let eventData = null;
 
+
   async function fetchEventData(id) {
     try {
       // Wait for the event data to be retrieved
@@ -498,6 +500,8 @@ export async function getServerSideProps(context) {
 
       return {
         props: {
+          session,
+          email,
           eventData: checkEventData
         }
       }
