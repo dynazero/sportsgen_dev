@@ -1,14 +1,16 @@
 import React from 'react'
 import axios from 'axios';
-import styles from './tournament.module.css'
+import styles from '../tournament.module.css'
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../api/auth/[...nextauth]'
 import Link from 'next/link'
-import Header from '../../components/Tournament/header'
+import Header from '../../../components/Tournament/header'
 
 
-function Index({ id }) {
+function Index({ id, tournamentData }) {
+
+  console.log(tournamentData)
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
@@ -90,14 +92,71 @@ export async function getServerSideProps(context) {
   const nextAuthSession = await getSession(context);
   const email = session?.user.email;
   const id = context.params.id;
+  let tournamentData = null;
+  const getTournamentEndPoint = "/api/getTournamentById?id=";
 
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/tournament/error',
+        permanent: false,
+      },
+    }
+  }
+
+  async function fetchTournamentData(id) {
+    try {
+      // const tournamentReq = "test"
+      const tournamentReq = await axios.get(`${apiUrl}${getTournamentEndPoint}${id}`)
+
+      if (!tournamentReq.data.data) {
+        console.error("No data was found for the requested event ID");
+        return null;
+      }
+
+      const tournament = tournamentReq.data.data
+
+      if (tournament.organizerEmail != email) {
+        console.error("Unauthorized");
+        return null;
+      }
+
+      return tournament;
+
+    } catch (error) {
+      console.error("An error occurred while fetching the data:", error);
+      // Optionally, return something to indicate an error occurred
+      return null;
+    }
+  }
+
+
+  if (nextAuthSession) {
+    const tournamentDataReq = await fetchTournamentData(id)
+    if (tournamentDataReq === null) {
+      return {
+        redirect: {
+          destination: '/tournament/error',
+          permanent: false,
+        },
+      }
+    }
+
+    return {
+      props: {
+        session,
+        email,
+        tournamentData: tournamentDataReq
+      }
+    }
+  }
 
 
 
   return {
     props: {
       session,
-      // eventData
+      email,
     },
   };
 }

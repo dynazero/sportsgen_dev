@@ -11,7 +11,6 @@ export default function OrgOngoingEvents({
   archivedEvents,
   orgLiveTournaments
 }) {
-console.log(orgLiveTournaments)
   return (
 
     <>
@@ -31,7 +30,7 @@ console.log(orgLiveTournaments)
           <div className="tab-pane fade show active" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab">
             {orgLiveTournaments &&
               orgLiveTournaments.map((item, i) => (
-                <Link href={`/tournament/${item.tournamentId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`}  aria-current="true">
+                <Link href={`/tournament/admin/${item.tournamentId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`}  aria-current="true">
                   <div className="d-flex w-100 justify-content-between">
                     <Image src={item.tournamentLogo} alt='event logo' width={40} height={40} priority />
                     <h5
