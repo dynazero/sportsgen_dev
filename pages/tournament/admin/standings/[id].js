@@ -1,16 +1,13 @@
 import React from 'react'
 import axios from 'axios';
-import styles from '../tournament.module.css'
+import styles from '../../tournament.module.css'
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from '../../api/auth/[...nextauth]'
+import { authOptions } from '../../../api/auth/[...nextauth]'
 import Link from 'next/link'
-import Header from '../../../components/Tournament/header'
+import Header from '../../../../components/Tournament/header'
 
-
-function Index({ id, tournamentData }) {
-
-  console.log(tournamentData)
+function Standings({ id, tournamentData }) {
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
@@ -19,18 +16,18 @@ function Index({ id, tournamentData }) {
       <div className={`${styles.containerform}`}>
         <div className="col-md-7 col-lg-8 mainForm">
           <div className="row g-3">
-            <Header tournamentData={tournamentData} />
+            <Header tournamentData={tournamentData}/>
 
             <div className="container">
               <div className="row">
                 <ul className="nav nav-tabs">
                   <li className="nav-item">
-                    <Link className="nav-link active" aria-current="page" href="#">
+                    <Link className="nav-link " aria-current="page" href={`/tournament/admin/bracket/${tournamentData._id}`} tabIndex="-1">
                       Bracket
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/standings/${tournamentData._id}`} tabIndex="-1">
+                    <Link className="nav-link active" href="#">
                       Standings
                     </Link>
                   </li>
@@ -40,10 +37,10 @@ function Index({ id, tournamentData }) {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href="/tournament/admin/logs/2890121" tabIndex="-1">Log</Link>
+                    <Link className="nav-link" href={`/tournament/admin/logs/${tournamentData._id}`} tabIndex="-1">Log</Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href="/tournament/admin/settings/2890121" tabIndex="-1" aria-disabled="true">
+                    <Link className="nav-link" href={`/tournament/admin/settings/${tournamentData._id}`} tabIndex="-1" aria-disabled="true">
                       Settings
                     </Link>
                   </li>
@@ -54,7 +51,7 @@ function Index({ id, tournamentData }) {
 
           </div>
           <div className="col-sm-6">
-            Index
+            Standings
           </div>
 
           {/* <hr className="my-4" /> */}
@@ -62,11 +59,10 @@ function Index({ id, tournamentData }) {
         </div>
       </div>
     </div >
-
   )
 }
 
-export default Index;
+export default Standings
 
 export async function getServerSideProps(context) {
   const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;

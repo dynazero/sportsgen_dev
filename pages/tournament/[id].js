@@ -3,12 +3,12 @@ import axios from 'axios';
 import styles from './tournament.module.css'
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from '../../api/auth/[...nextauth]'
+import { authOptions } from '../api/auth/[...nextauth]'
 import Link from 'next/link'
-import Header from '../../components/Tournament/header'
+// import Header from '../../components/Tournament/header'
 
 
-function Index({ id }) {
+function Index({ id, tournamentData }) {
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
@@ -17,7 +17,7 @@ function Index({ id }) {
       <div className={`${styles.containerform}`}>
         <div className="col-md-7 col-lg-8 mainForm">
           <div className="row g-3">
-            <Header />
+            {/* <Header /> */}
 
             <div className="container">
               <div className="row">
@@ -35,14 +35,6 @@ function Index({ id }) {
                   <li className="nav-item">
                     <Link className="nav-link" href="/tournament/participants/2890121" tabIndex="-1" aria-disabled="true">
                       Participants
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link disabled" href="/tournament/logs/2890121" tabIndex="-1">Log</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link disabled" href="/tournament/settings/2890121" tabIndex="-1" aria-disabled="true">
-                      Settings
                     </Link>
                   </li>
                 </ul>
@@ -91,8 +83,14 @@ export async function getServerSideProps(context) {
   const email = session?.user.email;
   const id = context.params.id;
 
-
-
+  if(id === 'admin'){
+    return {
+      redirect: {
+        destination: '/tournament/error',
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: {

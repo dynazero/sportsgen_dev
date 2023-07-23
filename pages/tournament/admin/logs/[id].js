@@ -1,72 +1,68 @@
 import React from 'react'
 import axios from 'axios';
-import styles from '../tournament.module.css'
+import styles from '../../tournament.module.css'
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from '../../api/auth/[...nextauth]'
+import { authOptions } from '../../../api/auth/[...nextauth]'
 import Link from 'next/link'
-import Header from '../../../components/Tournament/header'
+import Header from '../../../../components/Tournament/header'
 
-
-function Index({ id, tournamentData }) {
-
-  console.log(tournamentData)
+function Logs({ id, tournamentData }) {
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
-      <div className='headerForm'>
-        <h2 className="mb-3">Tournament</h2>
-      </div>
-      <div className={`${styles.containerform}`}>
-        <div className="col-md-7 col-lg-8 mainForm">
-          <div className="row g-3">
-            <Header tournamentData={tournamentData} />
+    <div className='headerForm'>
+      <h2 className="mb-3">Tournament</h2>
+    </div>
+    <div className={`${styles.containerform}`}>
+      <div className="col-md-7 col-lg-8 mainForm">
+        <div className="row g-3">
+          <Header tournamentData={tournamentData} />
 
-            <div className="container">
-              <div className="row">
-                <ul className="nav nav-tabs">
-                  <li className="nav-item">
-                    <Link className="nav-link active" aria-current="page" href="#">
-                      Bracket
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/standings/${tournamentData._id}`} tabIndex="-1">
-                      Standings
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/participants/${tournamentData._id}`} tabIndex="-1" aria-disabled="true">
-                      Participants
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/tournament/admin/logs/2890121" tabIndex="-1">Log</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/tournament/admin/settings/2890121" tabIndex="-1" aria-disabled="true">
-                      Settings
-                    </Link>
-                  </li>
-                </ul>
+          <div className="container">
+            <div className="row">
+              <ul className="nav nav-tabs">
+                <li className="nav-item">
+                  <Link className="nav-link " aria-current="page" href={`/tournament/admin/bracket/${tournamentData._id}`}  tabIndex="-1">
+                    Bracket
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" href={`/tournament/admin/standings/${tournamentData._id}`}  tabIndex="-1">
+                    Standings
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" href={`/tournament/admin/participants/${tournamentData._id}`} tabIndex="-1" aria-disabled="true">
+                    Participants
+                  </Link>
+                </li>
+                <li className="nav-item">
+                    <Link className="nav-link active" href="#">Log</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" href={`/tournament/admin/settings/${tournamentData._id}`} tabIndex="-1" aria-disabled="true">
+                    Settings
+                  </Link>
+                </li>
+              </ul>
 
-              </div>
             </div>
-
           </div>
-          <div className="col-sm-6">
-            Index
-          </div>
-
-          {/* <hr className="my-4" /> */}
 
         </div>
-      </div>
-    </div >
+        <div className="col-sm-6">
+          Logs
+        </div>
 
+        {/* <hr className="my-4" /> */}
+
+      </div>
+    </div>
+  </div >
   )
 }
 
-export default Index;
+export default Logs;
 
 export async function getServerSideProps(context) {
   const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;

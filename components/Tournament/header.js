@@ -3,17 +3,17 @@ import styles from './header.module.css'
 import ReactCountryFlag from 'react-country-flag';
 
 
-const Header = () => {
+const Header = ({ tournamentData }) => {
     return (
         <div className="row">
             <div className="col">
                 <div className="card-body d-flex flex-column align-items-start">
                     <h3 className="mb-0">
-                        <strong className="d-inline-block mb-2 text-primary">Tournament Name</strong>
+                        <strong className="d-inline-block mb-2 text-primary">{tournamentData.eventName}</strong>
                     </h3>
                     <div className="d-flex align-items-center justify-content-start">
-                        <p className={`card-text mb-2 ${styles.margintextRight}`}>Ynares,Pasig</p>
-                        <div className={`mb-2 text-muted ${styles.margintextRight}`}>Jun 28 2023</div>
+                        <p className={`card-text mb-2 ${styles.margintextRight}`}>{tournamentData.address}, {tournamentData.city}</p>
+                        <div className={`mb-2 text-muted ${styles.margintextRight}`}>{tournamentData.eventStartDate}</div>
                     </div>
                     <div className="d-flex align-items-center justify-content-start">
                         <select
@@ -32,30 +32,15 @@ const Header = () => {
                             {/* {!athleteFill && <option>Please Register an Athlete</option>}
             {athleteFill && ( */}
                             <>
-                                <option value="Event 1"
-                                // {JSON.stringify({
-                                //   index: 'empty',
-                                //   eventName: 'empty',
-                                // })}
-                                >
-                                    Event Number 1 </option>
-                                {/* {athletes.map((athlete, index) => ( */}
-                                <option
-                                    key={1}
-                                    value='Event 2'
-                                // {JSON.stringify({
-                                //   athleteId: athlete._id,
-                                //   athleteName: `${athlete.lname}, ${athlete.fname}`,
-                                // })}
-                                >
-                                    Event Number 2
-                                </option>
-                                {/* ))} */}
+                                {tournamentData.categoryTitles.map((title, index) => (
+                                    <option key={index} value={title}>
+                                        {title} </option>
+                                ))}
                             </>
                             {/* )} */}
                         </select>
-                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>5 Players</span>
-                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>Single Elimination</span>
+                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>*6 Players</span>
+                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>{tournamentData.format}</span>
                     </div>
                 </div>
             </div>
@@ -64,15 +49,15 @@ const Header = () => {
                 <div className={`card-body d-flex flex-column align-items-end ${styles.textRight}`}>
                     <strong className="d-inline-block mb-2 text-primary">Organized by:</strong>
                     <h3 className="mb-0">
-                        <span className="text-dark" href="#">Sportsgenph</span>
+                        <span className="text-dark" href="#">{tournamentData.organizer}</span>
                         <ReactCountryFlag
-                            countryCode='PH'
+                            countryCode={tournamentData.flag}
                             svg
                             style={{
                                 width: '32px',
                                 height: '16px',
                             }}
-                            title='PH'
+                            title={tournamentData.flag}
                         />
                     </h3>
                 </div>
