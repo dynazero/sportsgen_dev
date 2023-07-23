@@ -134,7 +134,6 @@ function Index({ id, email, eventData }) {
 
   const SubmitHandler = async (e) => {
     e.preventDefault();
-    const categoryKeys = eventData.categories.map((category) => category);
 
     const formData = new FormData();
     formData.append('eventId', eventData._id);
@@ -142,7 +141,7 @@ function Index({ id, email, eventData }) {
     formData.append('eventLogo', eventData.logoURL);
     formData.append('organizer', eventData.organizer);
     formData.append('organizerEmail', email);
-    formData.append('categories', categoryKeys);
+    formData.append('categories', JSON.stringify(eventData.categories));
     formData.append('flag', eventData.flag);
     formData.append('address', eventData.address);
     formData.append('city', eventData.city);

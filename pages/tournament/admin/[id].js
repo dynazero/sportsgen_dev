@@ -10,7 +10,6 @@ import Header from '../../../components/Tournament/header'
 
 function Index({ id, tournamentData }) {
 
-  console.log(tournamentData)
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>

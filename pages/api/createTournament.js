@@ -1,6 +1,8 @@
 import connectDB from "../../connectDB";
 import Tournament from "../../model/Tournament";
+import { now } from "mongoose";
 import Event from "../../model/Event";
+import Log from "../../model/Logs";
 import formidable from "formidable";
 
 connectDB();
@@ -15,6 +17,16 @@ export const config = {
 function convertToPST(date) {
   const offset = 8 * 60 * 60 * 1000; // Offset in milliseconds for UTC+8
   return new Date(date.getTime() + offset);
+}
+
+function convertToString(date) {
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Manila',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).format(date);
 }
 
 export default async (req, res) => {
@@ -56,9 +68,9 @@ export default async (req, res) => {
         return;
       }
 
-     
+
       try {
-        
+
         const newTournament = new Tournament({
           eventId,
           eventName,
@@ -81,10 +93,33 @@ export default async (req, res) => {
           status
         });
 
-        const savedTournament =  await newTournament.save();
 
-         // Update the corresponding event's status to 'closed'
-         await Event.findByIdAndUpdate(eventId, { eventStatus: 'closed' });
+        const savedTournament = await newTournament.save();
+
+        const tournamentId = savedTournament._id
+        const logAccount = savedTournament.organizerEmail
+        const message = "Tournament Created"
+                
+        //Log
+        const dateTime = new Date(now());
+        const timeStamp = convertToString(new Date(now())); //"hr:mm:ss" 24-hour time string.
+        
+       
+          categoryKeys.forEach(async (categoryKey) => {
+            const newLog = new Log({
+              tournamentId,
+              categoryKey,
+              logAccount,
+              message,
+              dateTime,
+              timeStamp
+            });
+        
+            const savedLog = await newLog.save();
+          });
+          
+        // Update the corresponding event's status to 'closed'
+        await Event.findByIdAndUpdate(eventId, { eventStatus: 'closed' });
 
         res.status(201).json({ message: "Tournament Initialized", tournamentId: savedTournament._id });
       } catch (error) {

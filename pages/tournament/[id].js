@@ -5,7 +5,7 @@ import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from '../api/auth/[...nextauth]'
 import Link from 'next/link'
-// import Header from '../../components/Tournament/header'
+import Header from '../../components/Tournament/header'
 
 
 function Index({ id, tournamentData }) {
@@ -17,7 +17,7 @@ function Index({ id, tournamentData }) {
       <div className={`${styles.containerform}`}>
         <div className="col-md-7 col-lg-8 mainForm">
           <div className="row g-3">
-            {/* <Header /> */}
+            <Header tournamentData={tournamentData} />
 
             <div className="container">
               <div className="row">
@@ -82,6 +82,9 @@ export async function getServerSideProps(context) {
   const nextAuthSession = await getSession(context);
   const email = session?.user.email;
   const id = context.params.id;
+  let tournamentData = null;
+  const getTournamentEndPoint = "/api/getTournamentById?id=";
+  const getEventCategoryEndPoint = "/api/getEventCategory"
 
   if(id === 'admin'){
     return {
@@ -91,6 +94,89 @@ export async function getServerSideProps(context) {
       },
     }
   }
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/tournament/error',
+        permanent: false,
+      },
+    }
+  }
+
+  async function fetchTournamentData(id) {
+    try {
+      // const tournamentReq = "test"
+      const tournamentReq = await axios.get(`${apiUrl}${getTournamentEndPoint}${id}`)
+
+      if (!tournamentReq.data.data) {
+        console.error("No data was found for the requested event ID");
+        return null;
+      }
+
+      const tournamentReqData = tournamentReq.data.data
+
+      if (tournamentReqData.organizerEmail != email) {
+        console.error("Unauthorized");
+        return null;
+      }
+
+      const eventStart = new Date(tournamentReqData.startDate);
+      const eventStartMonth = eventStart.toLocaleString('default', { month: 'long' });
+      const eventStartDay = eventStart.getDate();
+      const eventStartYear = eventStart.getFullYear();
+      const eventStartDate = `${eventStartMonth.charAt(0).toUpperCase() + eventStartMonth.slice(1)} ${eventStartDay}, ${eventStartYear}`;
+
+      const eventEnd = new Date(tournamentReqData.endDate);
+      const eventEndMonth = eventEnd.toLocaleString('default', { month: 'long' });
+      const eventEndDay = eventEnd.getDate();
+      const eventEndYear = eventEnd.getFullYear();
+      const eventEndDate = `${eventEndMonth.charAt(0).toUpperCase() + eventEndMonth.slice(1)} ${eventEndDay}, ${eventEndYear}`;
+
+      const categoriesRes = await axios.get(`${apiUrl}${getEventCategoryEndPoint}`);
+      const categories = categoriesRes.data.data
+
+      const categoryTitles = tournamentReqData.categories.map(catKey => {
+        const cat = categories.find(category => category.key === catKey);
+        return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
+      });
+
+      const tournament = {
+        ...tournamentReqData,
+        eventStartDate,
+        eventEndDate,
+        categoryTitles
+      }
+
+      return tournament;
+
+    } catch (error) {
+      console.error("An error occurred while fetching the data:", error);
+      // Optionally, return something to indicate an error occurred
+      return null;
+    }
+  }
+
+  if (nextAuthSession) {
+    const tournamentDataReq = await fetchTournamentData(id)
+    if (tournamentDataReq === null) {
+      return {
+        redirect: {
+          destination: '/tournament/error',
+          permanent: false,
+        },
+      }
+    }
+
+    return {
+      props: {
+        session,
+        email,
+        tournamentData: tournamentDataReq
+      }
+    }
+  }
+
 
   return {
     props: {
