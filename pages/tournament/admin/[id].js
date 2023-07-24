@@ -9,17 +9,13 @@ import Header from '../../../components/Tournament/header'
 
 
 function Index({ id, tournamentData }) {
-  const [category, setCategory] = useState(0);
+  const [category, setCategory] = useState(tournamentData.categorySet[0].key);
+
 
   const handleCategoryChange = (event) => {
     setCategory(event);
   }
 
-  useEffect(() => {
-    console.log(category);  // Log the state here, after it updates
-  }, [category]);
-
-  console.log(category)
 
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
@@ -154,11 +150,18 @@ export async function getServerSideProps(context) {
         return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
       });
 
+      const categorySet = tournamentReqData.categories.map(catKey => {
+        const cat = categories.find(category => category.key === catKey);
+        return cat ? {title: cat.title, key: cat.key} : {title: 'Unknown category', key: null};
+      });
+      
+
       const tournament = {
         ...tournamentReqData,
         eventStartDate,
         eventEndDate,
-        categoryTitles
+        categoryTitles,
+        categorySet
       }
 
       return tournament;

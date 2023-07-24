@@ -15,9 +15,6 @@ function Index({ id, categorykey, tournamentData }) {
     setCategory(event);
   }
 
-  useEffect(() => {
-    console.log(category);  // Log the state here, after it updates
-  }, [category]);
 
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
@@ -133,7 +130,7 @@ export async function getServerSideProps(context) {
         return null;
       }
 
-      if (categorykey < 0 || categorykey >= tournamentReqData.categories.length) {
+     if (!tournamentReqData.categories.includes(parseInt(categorykey))) {
         console.error("Unauthorized");
         return null;
       }
@@ -158,11 +155,18 @@ export async function getServerSideProps(context) {
         return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
       });
 
+      const categorySet = tournamentReqData.categories.map(catKey => {
+        const cat = categories.find(category => category.key === catKey);
+        return cat ? {title: cat.title, key: cat.key} : {title: 'Unknown category', key: null};
+      });
+      
+
       const tournament = {
         ...tournamentReqData,
         eventStartDate,
         eventEndDate,
-        categoryTitles
+        categoryTitles,
+        categorySet
       }
 
       return tournament;

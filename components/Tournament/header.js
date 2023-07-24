@@ -21,13 +21,14 @@ const Header = ({ tournamentData, changeCategory, category }) => {
                             className={`form-select mb-3 form-control fontWeight400 ${styles.margintextRight}`}
                             id="NameSelection"
                             aria-label=".form-select-lg example"
-                            onChange={(event => changeCategory(event.target.value))} 
-                            defaultValue={category} 
+                            onChange={(event => changeCategory(event.target.value))}
+                            defaultValue={category}
                         >
                             <>
-                                {tournamentData.categoryTitles.map((title, index) => (
-                                    <option key={index} value={index}>
-                                        {title} </option>
+                                {tournamentData.categorySet.map((category, index) => (
+                                    <option key={index} value={category.key}>
+                                        {category.title}
+                                    </option>
                                 ))}
                             </>
                         </select>

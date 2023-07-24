@@ -7,7 +7,7 @@ import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
 
-function Logs({ id, categorykey, tournamentData }) {
+function Logs({ id, categorykey, tournamentData, logData }) {
   const [category, setCategory] = useState(categorykey);
 
   const handleCategoryChange = (event) => {
@@ -97,6 +97,7 @@ export async function getServerSideProps(context) {
   const categorykey = context.params.categorykey;
   let tournamentData = null;
   let logData = null;
+  let categoryKeys = [];
   const getTournamentEndPoint = "/api/getTournamentById?id=";
   const getEventCategoryEndPoint = "/api/getEventCategory"
   const getLogEndPoint = "/api/getLogsByTournamentId?tournamentId=";
@@ -128,10 +129,12 @@ export async function getServerSideProps(context) {
         return null;
       }
 
-      if (categorykey < 0 || categorykey >= tournamentReqData.categories.length) {
+     if (!tournamentReqData.categories.includes(parseInt(categorykey))) {
         console.error("Unauthorized");
         return null;
       }
+
+      categoryKeys = tournamentReqData.categories;
 
       const eventStart = new Date(tournamentReqData.startDate);
       const eventStartMonth = eventStart.toLocaleString('default', { month: 'long' });
@@ -153,11 +156,18 @@ export async function getServerSideProps(context) {
         return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
       });
 
+      const categorySet = tournamentReqData.categories.map(catKey => {
+        const cat = categories.find(category => category.key === catKey);
+        return cat ? {title: cat.title, key: cat.key} : {title: 'Unknown category', key: null};
+      });
+      
+
       const tournament = {
         ...tournamentReqData,
         eventStartDate,
         eventEndDate,
-        categoryTitles
+        categoryTitles,
+        categorySet
       }
 
       return tournament;
@@ -191,7 +201,21 @@ export async function getServerSideProps(context) {
 
       const logs = logReq.data.data
 
-      return logs;
+      let sortedLogs = logs.sort((a, b) => {
+        return new Date(b.dateTime) - new Date(a.dateTime);
+      });
+
+      function getLogsByCategory(categoryKey) {
+        return sortedLogs.filter(log => log.categoryKey === categoryKey);
+      }
+
+      let categoryLogs = {};
+
+      for(let categoryKey of categoryKeys) {
+        categoryLogs[categoryKey] = getLogsByCategory(categoryKey);
+      }
+
+      return categoryLogs;
 
     } catch (error) {
       console.error("An error occurred while fetching the data:", error);

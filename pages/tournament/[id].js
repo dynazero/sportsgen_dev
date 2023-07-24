@@ -141,11 +141,18 @@ export async function getServerSideProps(context) {
         return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
       });
 
+      const categorySet = tournamentReqData.categories.map(catKey => {
+        const cat = categories.find(category => category.key === catKey);
+        return cat ? {title: cat.title, key: cat.key} : {title: 'Unknown category', key: null};
+      });
+      
+
       const tournament = {
         ...tournamentReqData,
         eventStartDate,
         eventEndDate,
-        categoryTitles
+        categoryTitles,
+        categorySet
       }
 
       return tournament;
