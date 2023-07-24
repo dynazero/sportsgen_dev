@@ -4,6 +4,8 @@ import { now } from "mongoose";
 import Event from "../../model/Event";
 import Log from "../../model/Logs";
 import formidable from "formidable";
+import { getSession } from "next-auth/react";
+
 
 connectDB();
 
@@ -30,6 +32,13 @@ function convertToString(date) {
 }
 
 export default async (req, res) => {
+  const session = await getSession({ req }); // Get the session information
+
+  if (!session) { // If there is no session
+    res.status(401).json({ message: 'Unauthorized' }); // Return 401 status for Unauthorized
+    return; // Stop further execution
+  }
+  
   if (req.method === "POST") {
     const form = new formidable.IncomingForm();
     form.parse(req, async (err, fields, files) => {
