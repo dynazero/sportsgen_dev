@@ -6,10 +6,12 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
+import LogComponent from '../../../../../components/LogComponent'
 
 function Logs({ id, categorykey, tournamentData, logData }) {
   const [category, setCategory] = useState(categorykey);
-
+  const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
+  
   const handleCategoryChange = (event) => {
     setCategory(event);
   }
@@ -56,8 +58,8 @@ function Logs({ id, categorykey, tournamentData, logData }) {
             </div>
 
           </div>
-          <div className="col-sm-6">
-            Logs
+          <div className="col-sm-12">
+            <LogComponent logData={logData} categorykey={category} categorySet={categorySet}/>
           </div>
 
           {/* <hr className="my-4" /> */}
@@ -129,7 +131,7 @@ export async function getServerSideProps(context) {
         return null;
       }
 
-     if (!tournamentReqData.categories.includes(parseInt(categorykey))) {
+      if (!tournamentReqData.categories.includes(parseInt(categorykey))) {
         console.error("Unauthorized");
         return null;
       }
@@ -158,9 +160,9 @@ export async function getServerSideProps(context) {
 
       const categorySet = tournamentReqData.categories.map(catKey => {
         const cat = categories.find(category => category.key === catKey);
-        return cat ? {title: cat.title, key: cat.key} : {title: 'Unknown category', key: null};
+        return cat ? { title: cat.title, key: cat.key } : { title: 'Unknown category', key: null };
       });
-      
+
 
       const tournament = {
         ...tournamentReqData,
@@ -211,7 +213,7 @@ export async function getServerSideProps(context) {
 
       let categoryLogs = {};
 
-      for(let categoryKey of categoryKeys) {
+      for (let categoryKey of categoryKeys) {
         categoryLogs[categoryKey] = getLogsByCategory(categoryKey);
       }
 

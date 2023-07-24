@@ -6,8 +6,8 @@ import ReactCountryFlag from 'react-country-flag';
 const Header = ({ tournamentData, changeCategory, category }) => {
 
     return (
-        <div className="row">
-            <div className="col">
+        <div className={`row ${styles.rowMinWidth}`}>
+            <div className="col ">
                 <div className="card-body d-flex flex-column align-items-start">
                     <h3 className="mb-0">
                         <strong className="d-inline-block mb-2 text-primary">{tournamentData.eventName}</strong>
