@@ -175,7 +175,7 @@ function Index({ id, email, eventData }) {
 
           // Navigate to another page (e.g., the home page)
           setTimeout(() => {
-            router.push(`/tournament/${response.data.tournamentId}`);
+            router.push(`/tournament/admin/${response.data.tournamentId}`);
           }, 2000);
         }
       }

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './header.module.css'
 import ReactCountryFlag from 'react-country-flag';
 
 
-const Header = ({ tournamentData }) => {
+const Header = ({ tournamentData, changeCategory, category }) => {
+
     return (
         <div className="row">
             <div className="col">
@@ -20,24 +21,15 @@ const Header = ({ tournamentData }) => {
                             className={`form-select mb-3 form-control fontWeight400 ${styles.margintextRight}`}
                             id="NameSelection"
                             aria-label=".form-select-lg example"
-                        // onChange={(event) => {
-                        //   // console.log('Value before parsing:', event.target.value); // Log the value before parsing
-                        //   try {
-                        //     setAthlete(JSON.parse(event.target.value));
-                        //   } catch (error) {
-                        //     console.error('Error parsing JSON:', error);
-                        //   }
-                        // }}
+                            onChange={(event => changeCategory(event.target.value))} 
+                            defaultValue={category} 
                         >
-                            {/* {!athleteFill && <option>Please Register an Athlete</option>}
-            {athleteFill && ( */}
                             <>
                                 {tournamentData.categoryTitles.map((title, index) => (
-                                    <option key={index} value={title}>
+                                    <option key={index} value={index}>
                                         {title} </option>
                                 ))}
                             </>
-                            {/* )} */}
                         </select>
                         <span className={`text-dark mb-2 ${styles.margintextRight}`}>*6 Players</span>
                         <span className={`text-dark mb-2 ${styles.margintextRight}`}>{tournamentData.format}</span>

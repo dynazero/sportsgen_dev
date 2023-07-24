@@ -89,8 +89,10 @@ export async function getServerSideProps(context) {
   const email = session?.user.email;
   const id = context.params.id;
   let tournamentData = null;
+  let logData = null;
   const getTournamentEndPoint = "/api/getTournamentById?id=";
   const getEventCategoryEndPoint = "/api/getEventCategory"
+  const getLogEndPoint = "/api/getLogsByTournamentId?tournamentId=";
 
 
   if (!session) {
@@ -155,9 +157,42 @@ export async function getServerSideProps(context) {
     }
   }
 
+  // async function fetchLogData(id) {
+  //   try {
+
+  //   } catch (error) {
+  //     console.error("An error occurred while fetching the data:", error);
+  //     // Optionally, return something to indicate an error occurred
+  //     return null;
+  //   }
+  // }
+
+
+  async function fetchLogData(id) {
+    try {
+      const logReq = await axios.get(`${apiUrl}${getLogEndPoint}${id}`)
+
+      if (!logReq.data.data) {
+        console.error("No data was found for the requested event ID");
+        return null;
+      }
+
+      const logs = logReq.data.data
+
+      return logs;
+      
+    } catch (error) {
+      console.error("An error occurred while fetching the data:", error);
+      // Optionally, return something to indicate an error occurred
+      return null;
+    }
+  }
+  
+
 
   if (nextAuthSession) {
     const tournamentDataReq = await fetchTournamentData(id)
+    const logDataReq = await fetchLogData(id)
     if (tournamentDataReq === null) {
       return {
         redirect: {
@@ -171,7 +206,8 @@ export async function getServerSideProps(context) {
       props: {
         session,
         email,
-        tournamentData: tournamentDataReq
+        tournamentData: tournamentDataReq,
+        logData: logDataReq
       }
     }
   }

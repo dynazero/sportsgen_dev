@@ -1,13 +1,18 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-import styles from '../../tournament.module.css'
+import styles from '../../../tournament.module.css'
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from '../../../api/auth/[...nextauth]'
+import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
-import Header from '../../../../components/Tournament/header'
+import Header from '../../../../../components/Tournament/header'
 
-function Standings({ id, tournamentData }) {
+function Standings({ id, categorykey, tournamentData }) {
+  const [category, setCategory] = useState(categorykey);
+
+  const handleCategoryChange = (event) => {
+    setCategory(event);
+  }
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
@@ -16,13 +21,13 @@ function Standings({ id, tournamentData }) {
       <div className={`${styles.containerform}`}>
         <div className="col-md-7 col-lg-8 mainForm">
           <div className="row g-3">
-            <Header tournamentData={tournamentData}/>
+            <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} />
 
             <div className="container">
               <div className="row">
                 <ul className="nav nav-tabs">
                   <li className="nav-item">
-                    <Link className="nav-link " aria-current="page" href={`/tournament/admin/bracket/${tournamentData._id}`} tabIndex="-1">
+                    <Link className="nav-link " aria-current="page" href={`/tournament/admin/bracket/${tournamentData._id}/${category}`} tabIndex="-1">
                       Bracket
                     </Link>
                   </li>
@@ -32,15 +37,15 @@ function Standings({ id, tournamentData }) {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/participants/${tournamentData._id}`} tabIndex="-1" aria-disabled="true">
+                    <Link className="nav-link" href={`/tournament/admin/participants/${tournamentData._id}/${category}`} tabIndex="-1" aria-disabled="true">
                       Participants
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/logs/${tournamentData._id}`} tabIndex="-1">Log</Link>
+                    <Link className="nav-link" href={`/tournament/admin/logs/${tournamentData._id}/${category}`} tabIndex="-1">Log</Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/settings/${tournamentData._id}`} tabIndex="-1" aria-disabled="true">
+                    <Link className="nav-link" href={`/tournament/admin/settings/${tournamentData._id}/${category}`} tabIndex="-1" aria-disabled="true">
                       Settings
                     </Link>
                   </li>
@@ -120,6 +125,11 @@ export async function getServerSideProps(context) {
         return null;
       }
 
+      if (categorykey < 0 || categorykey >= tournamentReqData.categories.length) {
+        console.error("Unauthorized");
+        return null;
+      }
+
       const eventStart = new Date(tournamentReqData.startDate);
       const eventStartMonth = eventStart.toLocaleString('default', { month: 'long' });
       const eventStartDay = eventStart.getDate();
@@ -170,6 +180,8 @@ export async function getServerSideProps(context) {
 
     return {
       props: {
+        id,
+        categorykey,
         session,
         email,
         tournamentData: tournamentDataReq

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState,useEffect } from 'react'
 import axios from 'axios';
 import styles from '../tournament.module.css'
 import { getSession } from "next-auth/react"
@@ -9,6 +9,17 @@ import Header from '../../../components/Tournament/header'
 
 
 function Index({ id, tournamentData }) {
+  const [category, setCategory] = useState(0);
+
+  const handleCategoryChange = (event) => {
+    setCategory(event);
+  }
+
+  useEffect(() => {
+    console.log(category);  // Log the state here, after it updates
+  }, [category]);
+
+  console.log(category)
 
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
@@ -18,7 +29,7 @@ function Index({ id, tournamentData }) {
       <div className={`${styles.containerform}`}>
         <div className="col-md-7 col-lg-8 mainForm">
           <div className="row g-3">
-            <Header tournamentData={tournamentData} />
+            <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category}/>
 
             <div className="container">
               <div className="row">
@@ -29,20 +40,20 @@ function Index({ id, tournamentData }) {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/standings/${tournamentData._id}`} tabIndex="-1">
+                    <Link className="nav-link" href={`/tournament/admin/standings/${tournamentData._id}/${category}`} tabIndex="-1">
                       Standings
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/participants/${tournamentData._id}`} tabIndex="-1" aria-disabled="true">
+                    <Link className="nav-link" href={`/tournament/admin/participants/${tournamentData._id}/${category}`} tabIndex="-1" aria-disabled="true">
                       Participants
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href="/tournament/admin/logs/2890121" tabIndex="-1">Log</Link>
+                    <Link className="nav-link" href={`/tournament/admin/logs/${tournamentData._id}/${category}`} tabIndex="-1">Log</Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" href="/tournament/admin/settings/2890121" tabIndex="-1" aria-disabled="true">
+                    <Link className="nav-link" href={`/tournament/admin/settings/${tournamentData._id}/${category}`} tabIndex="-1" aria-disabled="true">
                       Settings
                     </Link>
                   </li>
@@ -91,6 +102,7 @@ export async function getServerSideProps(context) {
   const nextAuthSession = await getSession(context);
   const email = session?.user.email;
   const id = context.params.id;
+  const categorykey = context.params.categorykey;
   let tournamentData = null;
   const getTournamentEndPoint = "/api/getTournamentById?id=";
   const getEventCategoryEndPoint = "/api/getEventCategory"
