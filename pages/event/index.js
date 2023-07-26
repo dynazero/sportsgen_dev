@@ -15,16 +15,20 @@ export default function events({ eventItem }) {
   const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
 
   let NEXT_PUBLIC_API_URL;
+  // let NEXT_PUBLIC_DO_SPACES_BUCKET;
 
   switch (NEXT_PUBLIC_APP_ENV) {
     case 'dev':
       NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
+      // NEXT_PUBLIC_DO_SPACES_BUCKET = process.env.NEXT_PUBLIC_DEV_DO_SPACES_BUCKET;
       break;
     case 'test':
       NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_NGROK_API_URL;
+      // NEXT_PUBLIC_DO_SPACES_BUCKET = process.env.NEXT_PUBLIC_NGROK_DO_SPACES_BUCKET;
       break;
     case 'production':
       NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
+      // NEXT_PUBLIC_DO_SPACES_BUCKET = process.env.NEXT_PUBLIC_DO_SPACES_BUCKET;
       break;
     default:
       console.error('Invalid environment specified in NEXT_PUBLIC_APP_ENV');
@@ -46,7 +50,7 @@ export default function events({ eventItem }) {
       setGetTeamId(teamIdWithoutQuotes);
     }
   }, [])
-  
+
   useEffect(() => {
     if (eventItem.length !== 0) {
       setEvents(true);
@@ -55,10 +59,10 @@ export default function events({ eventItem }) {
   }, [eventItem]);
 
   const fetchData = async (url, params) =>
-    axios.get(url+params.team ).then(response => response.data.data || []);
+    axios.get(url + params.team).then(response => response.data.data || []);
 
-  // const constructImageUrl = (bucket, region, path, fileName) =>
-  //   `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
+  const constructImageUrl = (bucket, region, path, fileName) =>
+    `https://${bucket}.${region}.digitaloceanspaces.com/${path}/${fileName}`;
 
 
 
@@ -69,16 +73,17 @@ export default function events({ eventItem }) {
       const teamId = getTeamId
       const region = 'sgp1';
       const fetchAthletes = async () => {
-        let athletes = await fetchData(`${apiUrl}${getAthleteEndPoint}`,{ team:teamId });
+        let athletes = await fetchData(`${apiUrl}${getAthleteEndPoint}`, { team: teamId });
         athletes = athletes.map((athlete, index) => ({
           ...athlete,
           type: 'athlete',
-          // imageURL: constructImageUrl(
-          //   process.env.DO_SPACES_BUCKET,
-          //   region,
-          //   'uploads/athletes/profile',
-          //   athlete.profilePicture
-          // ),
+          imageURL: constructImageUrl(
+            // process.env.NEXT_PUBLIC_DO_SPACES_BUCKET,
+            'sportsgenph',
+            region,
+            'uploads/athletes/profile',
+            athlete.profilePicture
+          ),
           sequence: index + 1,
           identifier: 'Athlete',
         }));
@@ -86,12 +91,10 @@ export default function events({ eventItem }) {
       };
 
       fetchAthletes();
-      
+
     }
   }, [session, getTeamId]);
 
-
-  // console.log(eventItem)
   return (
     <>
       <div className='picClass mx-auto minWidth caret'>
@@ -212,9 +215,12 @@ export default function events({ eventItem }) {
                                 <div className="col-sm-4">
                                   <h6>Events</h6>
 
-                                  <ul>{item.categoryTitles.map((title, index) => (
-                                    <li key={index}>{title}</li>
-                                  ))}</ul>
+                                  <ul>
+                                    {item.categoryTitles.map((category, index) => (
+                                      <li className='text-nowrap' key={index}>{category.title}</li>
+                                    ))}
+                                  </ul>
+
 
                                 </div>
                               </div>
@@ -303,7 +309,7 @@ export async function getServerSideProps(context) {
   const getLaterEventsEndPoint = "/api/getLaterEvents"
   const getEventCategoryEndPoint = "/api/getEventCategory"
   const res = await fetchData(`${apiUrl}${getLaterEventsEndPoint}`);
-  const resCategories = await fetchData(`${apiUrl}${getEventCategoryEndPoint}`); // Using your provided API endpoint for categories
+  const resCategories = await fetchData(`${apiUrl}${getEventCategoryEndPoint}`); 
 
   const categories = resCategories;
   const eventItem = res.map(event => {
@@ -317,11 +323,15 @@ export async function getServerSideProps(context) {
     const formattedStartDate = formatDate(eventStartDate);
     const formattedEndDate = formatDate(eventEndDate);
 
+    
     // Map the category keys to their titles
     const categoryTitles = event.categories.map(catKey => {
       const cat = categories.find(category => category.key === catKey);
-      return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
+      return cat
+        ? { key: cat.key, title: cat.title }
+        : { key: 'unknown', title: 'Unknown category test' };  // return 'Unknown category' if the category key was not found
     });
+
 
     return {
       ...event,

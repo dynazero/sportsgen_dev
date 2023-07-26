@@ -15,6 +15,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
     const [paymentInfo, setPaymentInfo] = useState([])
     const [cartEvents, setCartEvents] = useState([])
 
+
     useEffect(() => {
         if (athletelist.length !== 0) {
             setAthleteFill(true)
@@ -27,8 +28,9 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
             try {
                 const participantId = athlete.athleteId;
                 const participantName = athlete.athleteName;
-                const categoryName = event.eventName;
-                const categoryId = event.index;
+                const participantImageURL = athlete.athleteImageURL;
+                const categoryId = event.key;
+                const categoryName = event.title;
 
                 if (participantId == 'empty' || participantId == undefined) {
                     toast.warning('Please choose a participant');
@@ -55,8 +57,9 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                         tournamentId: eventId,
                         categoryId: categoryId,
                         categoryName: categoryName,
-                        participantName: participantName,
                         participantId: participantId,
+                        participantName: participantName,
+                        participantImageURL: participantImageURL,
                         entryFee: entryFee
                     };
                     return [...prevCartEvents, newObject]; // Add the new object to the array
@@ -67,7 +70,6 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
             }
         });
     };
-
     return (
         <>
             <div className="row g-5">
@@ -80,7 +82,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                         paymentInfo={paymentInfo}
                         athleteFill={athleteFill}
                         cartUpdate={setCartEvents}
-                        
+
                     />
 
                 </div>
@@ -117,6 +119,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                                                     value={JSON.stringify({
                                                         athleteId: athlete._id,
                                                         athleteName: `${athlete.lname}, ${athlete.fname}`,
+                                                        athleteImageURL: athlete.imageURL,
                                                     })}
                                                 >
                                                     {athlete.lname}, {athlete.fname}
@@ -151,19 +154,19 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                                     {events && (
                                         <>
                                             <option value={JSON.stringify({
-                                                index: 'empty',
-                                                eventName: 'empty',
+                                                key: 'empty',
+                                                title: 'empty',
                                             })}>
                                                 Choose Category..</option>
                                             {events.map((event, index) => (
                                                 <option
                                                     key={index}
                                                     value={JSON.stringify({
-                                                        index: index,
-                                                        eventName: event,
+                                                        key: event.key,
+                                                        title: event.title,
                                                     })}
                                                 >
-                                                    {event}
+                                                    {event.title}
                                                 </option>
                                             ))}
                                         </>
@@ -188,7 +191,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                         </div>
                     </div>
                     <hr className="my-4" />
-                    <PaymentMethods paymentInfo={setPaymentInfo}/>
+                    <PaymentMethods paymentInfo={setPaymentInfo} />
 
                 </div>
             </div>

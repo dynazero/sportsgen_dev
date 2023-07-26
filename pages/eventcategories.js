@@ -55,7 +55,7 @@ export default function eventcategories() {
                 <div className='containerCategoryForm'>
                     <form onSubmit={SubmitHandler} className="needs-validation mainCategoryForm" noValidate="" >
                         <div className="row g-3">
-                            <div className="col-sm-6">
+                            <div className="col-sm-12">
                                 <label htmlFor="firstName" className="form-label">Category</label>
                                 <input type="text" className="form-control" id="category" placeholder="Category" defaultValue={categoryName} onChange={(e) => setCategoryName(e.target.value)} required="" />
                                 <div className="invalid-feedback">

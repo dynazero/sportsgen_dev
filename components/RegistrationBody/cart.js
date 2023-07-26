@@ -45,7 +45,6 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
         }
     }, [cartEvents]);
 
-
     const SubmitHandler = async (e) => {
         e.preventDefault();
 
@@ -85,15 +84,18 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
             }
         ).then(
             (response) => {
-                if (response.status === 201) { // Check if the profile was created successfully
-                    // navigate to the checkout page using the received id
+                if (response.status === 201) { // If the checkout was created successfully
+                    // Navigate to the checkout page using the received id after 3 seconds
                     setTimeout(() => {
                         router.push(`/checkout/${response.data.id}`);
                     }, 3000);
+                    console.log("registered successfully");
                 }
-                console.log("registered successfully")
             }
         ).catch((error) => {
+                if (error.response.status === 422) { 
+                    return toast.warning(error.response.data.message); // Show warning if team is already registered
+                }
             console.error('Error submission on checkout:', error);
         });
 
@@ -104,7 +106,7 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
 
     }
 
-
+// console.log(cartEvents,'cartEvents')
     return (
         <>
             <form
@@ -149,4 +151,4 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
     )
 }
 
-export default Cart
+export default Cart;

@@ -36,7 +36,7 @@ export default async (req, res) => {
       }
 
       const {
-        tournamentId,        
+        tournamentId,
         team,
         registration,
         paymentmethod,
@@ -44,6 +44,13 @@ export default async (req, res) => {
       } = fields;
 
       let parsedRegistration;
+
+      const checkoutVerify = await Checkout.findOne({ tournamentId: tournamentId,team: team });
+      if (checkoutVerify) {
+        res.status(422).json({ message: "Team Already Registered" });
+        return;
+      }
+
 
       try {
         parsedRegistration = JSON.parse(registration); // Deserialize from JSON
@@ -64,72 +71,73 @@ export default async (req, res) => {
             team,
             athleteId: reg.participantId,
             athlete: reg.participantName,
-            categoryId: reg.categoryId,
+            imageURL: reg.participantImageURL,
             event: reg.categoryName,
+            eventKey: reg.categoryId,
             status,
           });
 
-         // Save the participant and get the saved document
-        const savedParticipant = await newParticipant.save();
+          // Save the participant and get the saved document
+          const savedParticipant = await newParticipant.save();
 
-        // Push the ID of the saved document to the participantIds array
-        participantIds.push(savedParticipant._id);
+          // Push the ID of the saved document to the participantIds array
+          participantIds.push(savedParticipant._id);
 
-        // console.log("Saving registration:", reg);
+          // console.log("Saving registration:", reg);
 
-     } catch (error) {
-        console.error("Error saving registration to database:", error);
-    }
-}
+        } catch (error) {
+          console.error("Error saving registration to database:", error);
+        }
+      }
 
 
-// console.log(participantIds, 'participantIds')
+      // console.log(participantIds, 'participantIds')
 
-    // const checkout Verify = await Checkout.findOne({ eventName: eventName });
-    // if (eventVerify) {
-    //   res.status(422).json({ message: "Checkout already exists" });
-    //   return;
-    // }
+      // const checkout Verify = await Checkout.findOne({ eventName: eventName });
+      // if (eventVerify) {
+      //   res.status(422).json({ message: "Checkout already exists" });
+      //   return;
+      // }
 
-    if (!files.paymentproof) {
-      res.status(400).json({ message: "No proof of payment uploaded" });
-      return;
-    }
+      if (!files.paymentproof) {
+        res.status(400).json({ message: "No proof of payment uploaded" });
+        return;
+      }
 
-    const file = files.paymentproof
-    const originalFileName = file.originalFilename
-    const fileExtension = path.extname(originalFileName);
-    const uniqueFileName = `${uuidv4()}${fileExtension}`;
+      const file = files.paymentproof
+      const originalFileName = file.originalFilename
+      const fileExtension = path.extname(originalFileName);
+      const uniqueFileName = `${uuidv4()}${fileExtension}`;
 
-    const params = {
-      Bucket: process.env.DO_SPACES_BUCKET,
-      Key: `payment/${uniqueFileName}`,
-      Body: createReadStream(file._writeStream.path),
-      ACL: "public-read",
-    };
+      const params = {
+        Bucket: process.env.DO_SPACES_BUCKET,
+        Key: `payment/${uniqueFileName}`,
+        Body: createReadStream(file._writeStream.path),
+        ACL: "public-read",
+      };
 
-    try {
-      // console.log("Uploading file:", uniqueFileName);
-      await s3Client.send(new PutObjectCommand(params));
+      try {
+        // console.log("Uploading file:", uniqueFileName);
+        await s3Client.send(new PutObjectCommand(params));
 
-      const newCheckout = new Checkout({
-        tournamentId,
-        team,
-        registration : participantIds,
-        paymentMethod : paymentmethod,
-        paymentProof: uniqueFileName,
-        status,
-      });
+        const newCheckout = new Checkout({
+          tournamentId,
+          team,
+          registration: participantIds,
+          paymentMethod: paymentmethod,
+          paymentProof: uniqueFileName,
+          status,
+        });
 
-      const savedCheckoutId = await newCheckout.save();
-      res.status(201).json({ message: "Checkout created successfully", id: savedCheckoutId._id  });
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      res.status(500).json({ message: "Error uploading file", error: error.message });
-    }
-  });
-} else {
-  // Handle non-POST requests
-  res.status(405).json({ message: "Method Not Allowed" });
-}
+        const savedCheckoutId = await newCheckout.save();
+        res.status(201).json({ message: "Checkout created successfully", id: savedCheckoutId._id });
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        res.status(500).json({ message: "Error uploading file", error: error.message });
+      }
+    });
+  } else {
+    // Handle non-POST requests
+    res.status(405).json({ message: "Method Not Allowed" });
+  }
 };

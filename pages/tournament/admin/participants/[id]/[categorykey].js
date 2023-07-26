@@ -6,9 +6,11 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
+import ParticiapantsComponent from '../../../../../components/ParticipantsComponent';
 
-function Participants({ id, categorykey, tournamentData }) {
+function Participants({ id, categorykey, tournamentData, participantsData }) {
   const [category, setCategory] = useState(categorykey);
+  const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
 
   const handleCategoryChange = (event) => {
     setCategory(event);
@@ -56,8 +58,8 @@ function Participants({ id, categorykey, tournamentData }) {
             </div>
 
           </div>
-          <div className="col-sm-6">
-            Participants
+          <div className="col-sm-12">
+            <ParticiapantsComponent participantsData={participantsData} categorykey={category} categorySet={categorySet} />
           </div>
 
           {/* <hr className="my-4" /> */}
@@ -97,6 +99,7 @@ export async function getServerSideProps(context) {
   const categorykey = context.params.categorykey;
   let tournamentData = null;
   const getTournamentEndPoint = "/api/getTournamentById?id=";
+  const getParticipantsEndPoint = "/api/getParticipantsByEventId?tournamentId=";
   const getEventCategoryEndPoint = "/api/getEventCategory"
 
 
@@ -113,50 +116,50 @@ export async function getServerSideProps(context) {
     try {
       // const tournamentReq = "test"
       const tournamentReq = await axios.get(`${apiUrl}${getTournamentEndPoint}${id}`)
-
+      
       if (!tournamentReq.data.data) {
         console.error("No data was found for the requested event ID");
         return null;
       }
-
-      const tournamentReqData = tournamentReq.data.data
-
+      
+      const tournamentReqData = tournamentReq.data.data;
+      
       if (tournamentReqData.organizerEmail != email) {
         console.error("Unauthorized");
         return null;
       }
-
-     if (!tournamentReqData.categories.includes(parseInt(categorykey))) {
+      
+      if (!tournamentReqData.categories.includes(parseInt(categorykey))) {
         console.error("Unauthorized");
         return null;
       }
-
+      
       const eventStart = new Date(tournamentReqData.startDate);
       const eventStartMonth = eventStart.toLocaleString('default', { month: 'long' });
       const eventStartDay = eventStart.getDate();
       const eventStartYear = eventStart.getFullYear();
       const eventStartDate = `${eventStartMonth.charAt(0).toUpperCase() + eventStartMonth.slice(1)} ${eventStartDay}, ${eventStartYear}`;
-
+      
       const eventEnd = new Date(tournamentReqData.endDate);
       const eventEndMonth = eventEnd.toLocaleString('default', { month: 'long' });
       const eventEndDay = eventEnd.getDate();
       const eventEndYear = eventEnd.getFullYear();
       const eventEndDate = `${eventEndMonth.charAt(0).toUpperCase() + eventEndMonth.slice(1)} ${eventEndDay}, ${eventEndYear}`;
-
+      
       const categoriesRes = await axios.get(`${apiUrl}${getEventCategoryEndPoint}`);
       const categories = categoriesRes.data.data
-
+      
       const categoryTitles = tournamentReqData.categories.map(catKey => {
         const cat = categories.find(category => category.key === catKey);
         return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
       });
-
+      
       const categorySet = tournamentReqData.categories.map(catKey => {
         const cat = categories.find(category => category.key === catKey);
         return cat ? {title: cat.title, key: cat.key} : {title: 'Unknown category', key: null};
       });
       
-
+      
       const tournament = {
         ...tournamentReqData,
         eventStartDate,
@@ -164,8 +167,28 @@ export async function getServerSideProps(context) {
         categoryTitles,
         categorySet
       }
-
+      
       return tournament;
+      
+    } catch (error) {
+      console.error("An error occurred while fetching the data:", error);
+      // Optionally, return something to indicate an error occurred
+      return null;
+    }
+  }
+  async function fetchParticipantsData(id) {
+    try{
+      const participantsReq = await axios.get(`${apiUrl}${getParticipantsEndPoint}${id}`)
+      
+      if (!participantsReq.data.data) {
+        console.error("No data was found for the requested event ID");
+        return null;
+      }
+      
+      const participantsReqData = participantsReq.data.data;
+
+      return participantsReqData;
+      
 
     } catch (error) {
       console.error("An error occurred while fetching the data:", error);
@@ -173,10 +196,11 @@ export async function getServerSideProps(context) {
       return null;
     }
   }
-
-
+  
+  
   if (nextAuthSession) {
     const tournamentDataReq = await fetchTournamentData(id)
+    const participantsDataReq = await fetchParticipantsData(tournamentDataReq.eventId)
     if (tournamentDataReq === null) {
       return {
         redirect: {
@@ -185,14 +209,15 @@ export async function getServerSideProps(context) {
         },
       }
     }
-
+    
     return {
       props: {
         id,
         categorykey,
         session,
         email,
-        tournamentData: tournamentDataReq
+        tournamentData: tournamentDataReq,
+        participantsData: participantsDataReq
       }
     }
   }

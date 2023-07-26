@@ -16,6 +16,11 @@ const participantSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  imageURL: {
+      type:String,
+      required: true,
+      trim: true,
+    },
   athleteId: {
     type: mongoose.Types.ObjectId,
     required: true,
@@ -26,7 +31,7 @@ const participantSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  eventId: {
+  eventKey: {
     type: String,
     required: true,
     trim: true,
