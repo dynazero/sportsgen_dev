@@ -3,7 +3,7 @@ import styles from './participantscomponent.module.css'
 import Image from 'next/image'
 
 
-const ParticiapantsComponent = ({ participantsData, categorykey, categorySet }) => {
+const ParticipantsComponent = ({ participantsData, categorykey, categorySet }) => {
 
   const [selectedCategory, setSelectedCategory] = useState(parseInt(categorykey))
 
@@ -27,6 +27,7 @@ const ParticiapantsComponent = ({ participantsData, categorykey, categorySet }) 
                     <thead>
                       <tr>
                         <th></th>
+                        <th></th>
                         <th>Athlete</th>
                         <th>Event</th>
                       </tr>
@@ -42,7 +43,8 @@ const ParticiapantsComponent = ({ participantsData, categorykey, categorySet }) 
                         </tr>
                       ) : (
                         filteredParticipants.map((participant, index) => (
-                          <tr key={index}>
+                          <tr key={index} >
+                            <td>{index + 1}.</td>
                             <td>
                               <Image src={participant.imageURL} alt='athlete picture' width={25} height={25} priority />
                             </td>
@@ -72,4 +74,4 @@ const ParticiapantsComponent = ({ participantsData, categorykey, categorySet }) 
   )
 }
 
-export default ParticiapantsComponent;
+export default ParticipantsComponent;

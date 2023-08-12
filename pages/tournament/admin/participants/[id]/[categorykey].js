@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
-import ParticiapantsComponent from '../../../../../components/ParticipantsComponent';
+import ParticipantsComponent from '../../../../../components/ParticipantsComponent';
 
 function Participants({ id, categorykey, tournamentData, participantsData }) {
   const [category, setCategory] = useState(categorykey);
@@ -59,7 +59,7 @@ function Participants({ id, categorykey, tournamentData, participantsData }) {
 
           </div>
           <div className="col-sm-12">
-            <ParticiapantsComponent participantsData={participantsData} categorykey={category} categorySet={categorySet} />
+            <ParticipantsComponent participantsData={participantsData} categorykey={category} categorySet={categorySet} />
           </div>
 
           {/* <hr className="my-4" /> */}

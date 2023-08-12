@@ -6,9 +6,11 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
+import BracketComponent from '../../../../../components/BracketComponent';
 
 function Bracket({ id, categorykey, tournamentData }) {
   const [category, setCategory] = useState(categorykey);
+  const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
 
   const handleCategoryChange = (event) => {
     setCategory(event);
@@ -56,8 +58,8 @@ function Bracket({ id, categorykey, tournamentData }) {
             </div>
 
           </div>
-          <div className="col-sm-6">
-            Bracket
+          <div className={`col-sm-12 ${styles.bracketContainer}`}>
+            <BracketComponent  categorykey={categorykey} categorySet={categorySet}  />
           </div>
 
           {/* <hr className="my-4" /> */}

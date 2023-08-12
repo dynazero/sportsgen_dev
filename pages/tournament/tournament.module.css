@@ -5,13 +5,26 @@
     width: 100%;
     margin-right: 16px;
     margin-bottom: 16px;
-    
+
 }
 
 .custom-time-picker div,
 .custom-time-picker input {
     border: none !important;
     /* The `!important` flag can be used to override the existing styles, but use it sparingly. */
+}
+
+
+.bracketContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: .5rem;
+    background-color: #212529;
+    min-height: 60dvh;
+    overflow: overlay;
+    padding: 8px;
+
 }
 
 .details {
@@ -41,5 +54,5 @@
     width: 55dvw;
     border-radius: 32px;
     overflow: hidden;
-    min-width: 596px;  
+    min-width: 596px;
 }
