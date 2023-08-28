@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import styles from '../../../tournament.module.css'
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
@@ -7,15 +8,29 @@ import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
 import BracketComponent from '../../../../../components/BracketComponent';
+import { parse } from 'date-fns';
 
 function Bracket({ id, categorykey, tournamentData }) {
+  const router = useRouter();
   const [category, setCategory] = useState(categorykey);
   const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
+  const [bracketFS, setBracketFS] = useState(false)
+  
+
+  const categorySelection = tournamentData.categorySet
+
+  const selectedCategory = categorySelection.find((category) => category.key === parseInt(categorykey));
+
 
   const handleCategoryChange = (event) => {
     setCategory(event);
+    const href = `/tournament/admin/bracket/${id}/${event}`;
+    router.push(href);
   }
 
+  const handleFullScreen = () => {
+    setBracketFS(true)
+  }
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
@@ -25,9 +40,8 @@ function Bracket({ id, categorykey, tournamentData }) {
         <div className="col-md-7 col-lg-8 mainForm">
           <div className="row g-3">
             <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} />
-
             <div className="container">
-              <div className="row">
+              <div className={`row ${styles.posRel}`}>
                 <ul className="nav nav-tabs">
                   <li className="nav-item">
                     <Link className="nav-link active" aria-current="page" href="#">
@@ -53,13 +67,36 @@ function Bracket({ id, categorykey, tournamentData }) {
                     </Link>
                   </li>
                 </ul>
+                <p className={`${styles.fsLink}`}
+                  onClick={handleFullScreen}
+                >
+                  Maximize <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-fullscreen" viewBox="0 0 16 16">
+                    <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"></path>
+                  </svg>
+                </p>
 
               </div>
             </div>
 
           </div>
-          <div className={`col-sm-12 ${styles.bracketContainer}`}>
-            <BracketComponent  categorykey={categorykey} categorySet={categorySet}  />
+          <div className={`col-sm-12 ${!bracketFS ? styles.bracketContainer : styles.bracketContainerFS} ${bracketFS ? 'animate-bracket-container' : ''
+            }`}>
+            <>
+              {bracketFS &&
+                <div className={`${!bracketFS ? styles.hiddenBracketInfo : styles.bracketInfo}`}>
+                    <h3>
+                      {`${tournamentData.eventName}`}
+                    </h3>
+                  <strong>
+                    {`${selectedCategory.title}`}
+                  </strong>
+                  <strong>
+                    {`${tournamentData.format}`}
+                  </strong>
+                </div>
+              }
+              <BracketComponent categorykey={categorykey} categorySet={categorySet} setBracketFS={setBracketFS} bracketFS={bracketFS} />
+            </>
           </div>
 
           {/* <hr className="my-4" /> */}
@@ -128,7 +165,7 @@ export async function getServerSideProps(context) {
         return null;
       }
 
-     if (!tournamentReqData.categories.includes(parseInt(categorykey))) {
+      if (!tournamentReqData.categories.includes(parseInt(categorykey))) {
         console.error("Unauthorized");
         return null;
       }
@@ -155,9 +192,9 @@ export async function getServerSideProps(context) {
 
       const categorySet = tournamentReqData.categories.map(catKey => {
         const cat = categories.find(category => category.key === catKey);
-        return cat ? {title: cat.title, key: cat.key} : {title: 'Unknown category', key: null};
+        return cat ? { title: cat.title, key: cat.key } : { title: 'Unknown category', key: null };
       });
-      
+
 
       const tournament = {
         ...tournamentReqData,

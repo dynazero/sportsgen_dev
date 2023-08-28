@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styles from './sete.module.css'
+import { bottom } from '@popperjs/core';
 
-const SetA = ({ categorykey, categorySet }) => {
+const SetE = ({ categorykey, categorySet, bracketFS }) => {
 
 
   const [matchA, setMatchA] = useState();
@@ -16,7 +17,7 @@ const SetA = ({ categorykey, categorySet }) => {
   return (
     <div className={`${styles.rowWidth}`}>
 
-      <table className={`table table-dark ${styles.table}`}>
+      <table className={`table table-dark ${!bracketFS ? styles.table : styles.tableFS}`}>
         <thead>
           <tr>
             <th className={`${styles.thead}`}>Round 1</th>
@@ -80,8 +81,10 @@ const SetA = ({ categorykey, categorySet }) => {
               </div>
             </td>
             <td className={`${styles.matchtoF}`}>
-              <svg height="78" width="50">
-                <path strokeWidth="1" stroke="rgb(233, 236, 239)" fill="transparent" id="" d="M100 80 H30 V24.5 H0"></path>
+              <svg height={`${!bracketFS ? "78": "165"}`} width="50" style={{
+                position: `${!bracketFS ? "relative": "absolute"}`
+                }} >
+                <path strokeWidth="1" stroke="rgb(233, 236, 239)" fill="transparent" id="" d={`${!bracketFS ? "M100 80 H30 V24.5 H0" : "M110 165 H30 V24.5 H0"}`}></path>
               </svg>
             </td>
           </tr>
@@ -261,8 +264,14 @@ const SetA = ({ categorykey, categorySet }) => {
               </div>
             </td>
             <td className={`${styles.matchBelowBracketB}`}>
-              <svg height="110" width="50">
-                <path d="M50.5 0 H30 V110 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
+              <svg height={`${!bracketFS ? "110": "210"}`} width="50" style={{
+                position: `${!bracketFS ? "relative": "absolute"}`,
+                bottom: `${!bracketFS? "0" : "79"}`,
+                zIndex: `${!bracketFS? "0" : "5"}`
+                }} >
+                <path 
+                d={`${!bracketFS ? "M50.5 0 H30 V110 H0"  : "M110 0 H30 V210 H0"}`}
+                id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
               </svg>
             </td>
           </tr>
@@ -292,8 +301,14 @@ const SetA = ({ categorykey, categorySet }) => {
               </div>
             </td>
             <td className={`${styles.matchBelowBracketC}`}>
-              <svg height="70" width="110">
-                <path d="M110 0 H30 V53.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
+                 <svg height={`${!bracketFS ? "70": "150"}`} width="110" style={{
+                  position: `${!bracketFS ? "relative": "absolute"}`,
+                  bottom: `${!bracketFS? "0" : "21"}`
+                  }} >
+                  <path 
+                  d={`${!bracketFS ? "M110 0 H30 V53.5 H0" : "M110 0 H30 V133 H0"}`}
+
+                  id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
               </svg>
             </td>
           </tr>
@@ -304,4 +319,4 @@ const SetA = ({ categorykey, categorySet }) => {
   )
 }
 
-export default SetA;
+export default SetE;

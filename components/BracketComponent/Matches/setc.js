@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './setc.module.css'
 
-const SetA = ({ categorykey, categorySet }) => {
+const SetC = ({ categorykey, categorySet }) => {
   return (
     <div className={`${styles.rowWidth}`}>
       <table className={`table table-dark ${styles.table}`}>
@@ -130,4 +130,4 @@ const SetA = ({ categorykey, categorySet }) => {
   )
 }
 
-export default SetA;
+export default SetC;

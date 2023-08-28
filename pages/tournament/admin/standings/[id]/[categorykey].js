@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import styles from '../../../tournament.module.css'
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
@@ -8,10 +9,13 @@ import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
 
 function Standings({ id, categorykey, tournamentData }) {
+  const router = useRouter();
   const [category, setCategory] = useState(categorykey);
 
   const handleCategoryChange = (event) => {
     setCategory(event);
+    const href = `/tournament/admin/standings/${id}/${event}`;
+    router.push(href);
   }
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>

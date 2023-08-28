@@ -9,8 +9,8 @@ const componentImports = {
   // Continue with the rest of your components
 };
 
-const SetComponent = ({ participantsCount }) => {
-    console.log(participantsCount, 'participantsCount')
+const SetComponent = ({ participantsCount, bracketFS }) => {
+    // console.log(participantsCount, 'participantsCount')
     const Component = componentImports[participantsCount];
 
     // This will provide a fallback in case the participantsCount doesn't match any key in componentImports
@@ -20,7 +20,7 @@ const SetComponent = ({ participantsCount }) => {
 
     return (
       <Suspense fallback={<div>Loading...</div>}>
-        <Component />
+        <Component bracketFS={bracketFS} />
       </Suspense>
     );
 }

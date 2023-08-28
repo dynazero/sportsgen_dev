@@ -1,0 +1,34 @@
+.checkinTournamentButtons {
+    display: inline-flex;
+    margin-left: 130px;
+}
+
+.checkinTournamentButtons button {
+    margin: 8px;
+    white-space: nowrap;
+}
+
+.checkinTournamentButtons div {
+    margin-top: 16px;
+    white-space: nowrap;
+}
+
+.checkinTournamentButtons a {
+    margin: 8px;
+    white-space: nowrap;
+}
+
+.liveTournamentButtons {
+    display: inline-flex;
+    margin-left: 130px;
+}
+
+.liveTournamentButtons a {
+    margin: 8px;
+    white-space: nowrap;
+}
+
+.liveTournamentButtons div {
+    margin-top: 16px;
+    white-space: nowrap;
+}

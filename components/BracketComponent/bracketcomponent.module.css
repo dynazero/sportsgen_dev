@@ -1,3 +1,56 @@
 .bracketWrapper {
     padding: .5rem 4rem;
+    position: relative;
+    background-color: #212529;
+    width: 95%;
+    height: 95%;
+    z-index: 50;
+    margin: auto;
+    padding: 8px;
+}
+
+.bracketWrapperFS {
+    top: 120px;
+    background-color: #212529;
+    padding: .5rem 4rem;
+    position: relative;
+    overflow: visible;
+    width: 90%;
+    height: 80%;
+    z-index: 60;
+    animation : table 2s forwards;
+}
+
+@keyframes table {
+    0%{
+        overflow: hidden;
+    }
+    25%{
+        overflow: hidden;
+    }
+    50%{
+        overflow: hidden;
+    }
+    75%{
+        overflow: hidden;
+    }
+    100%{
+        overflow: visible;
+    }
+    
+}
+
+
+.minimizeLink {
+    color: white;
+    width: 115px;
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    cursor: zoom-out;
+    opacity: 80%;
+}
+
+.hidemnmLink {
+    display: none;
 }

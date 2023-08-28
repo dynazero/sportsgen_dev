@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import styles from './header.module.css'
+import Image from 'next/image'
 import ReactCountryFlag from 'react-country-flag';
 
 
@@ -40,8 +41,9 @@ const Header = ({ tournamentData, changeCategory, category }) => {
 
             <div className="col">
                 <div className={`card-body d-flex flex-column align-items-end ${styles.textRight}`}>
+                <Image src={tournamentData.eventLogo} alt='event logo' width={80} height={80} priority />
                     <strong className="d-inline-block mb-2 text-primary">Organized by:</strong>
-                    <h3 className="mb-0">
+                    <h5 className="mb-0">
                         <span className="text-dark" href="#">{tournamentData.organizer}</span>
                         <ReactCountryFlag
                             countryCode={tournamentData.flag}
@@ -52,7 +54,7 @@ const Header = ({ tournamentData, changeCategory, category }) => {
                             }}
                             title={tournamentData.flag}
                         />
-                    </h3>
+                    </h5>
                 </div>
             </div>
         </div>

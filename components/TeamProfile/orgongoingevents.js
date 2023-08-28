@@ -16,10 +16,13 @@ export default function OrgOngoingEvents({
     <>
 
       <div className='p-2'>
-        <div className={`btn-group  btn-group-sm ${styles.zIndexZero}`} id="pills-tab-org" role="tablist" aria-label="Basic mixed styles example">
-          <button  className={`btn btn-danger active ${styles.zIndexZero}`} id="pills-ongoing-tab" data-bs-toggle="pill" data-bs-target="#pills-ongoing" type="button" role="tab" aria-controls="pills-ongoing" aria-selected="true">Live</button>
-          <button  className={`btn btn-success ${styles.zIndexZero}`} id="pills-posted-tab" data-bs-toggle="pill" data-bs-target="#pills-posted" type="button" role="tab" aria-controls="pills-posted" aria-selected="false">Posted</button>
-          <button  className={`btn btn-warning ${styles.zIndexZero}`} id="pills-archived-tab" data-bs-toggle="pill" data-bs-target="#pills-archived" type="button" role="tab" aria-controls="pills-archived" aria-selected="false">Archived</button>
+        <div>
+        </div>
+        <div className={`btn-group  btn-group-sm ${styles.zIndexZero} ${styles.width100}`} id="pills-tab-org" role="tablist" aria-label="Basic mixed styles example">
+          <button className={`btn btn-primary disabled ${styles.headerNav}`} id="pills-live-tab" data-bs-toggle="pill" data-bs-target="#pills-live" type="button" role="tab" aria-controls="pills-live" aria-selected="false">My Events:</button>
+          <button className={`btn btn-danger active ${styles.zIndexZero}`} id="pills-ongoing-tab" data-bs-toggle="pill" data-bs-target="#pills-ongoing" type="button" role="tab" aria-controls="pills-ongoing" aria-selected="true">Live</button>
+          <button className={`btn btn-success ${styles.zIndexZero}`} id="pills-posted-tab" data-bs-toggle="pill" data-bs-target="#pills-posted" type="button" role="tab" aria-controls="pills-posted" aria-selected="false">Posted</button>
+          <button className={`btn btn-warning ${styles.zIndexZero}`} id="pills-archived-tab" data-bs-toggle="pill" data-bs-target="#pills-archived" type="button" role="tab" aria-controls="pills-archived" aria-selected="false">Archived</button>
 
         </div>
       </div>
@@ -28,9 +31,11 @@ export default function OrgOngoingEvents({
       <div className="p-2 list-group">
         <div className="tab-content" id="pills-tabContent-org">
           <div className="tab-pane fade show active" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab">
+          {(!organizedOngoingEvents && !orgLiveTournaments  || !organizedOngoingEvents.length && !orgLiveTournaments.length) && <div>No Ongoing Events</div>}
+           
             {orgLiveTournaments &&
               orgLiveTournaments.map((item, i) => (
-                <Link href={`/tournament/admin/${item.tournamentId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`}  aria-current="true">
+                <Link href={`/tournament/admin/${item.tournamentId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`} aria-current="true">
                   <div className="d-flex w-100 justify-content-between">
                     <Image src={item.tournamentLogo} alt='event logo' width={40} height={40} priority />
                     <h5
@@ -41,18 +46,17 @@ export default function OrgOngoingEvents({
                     <small style={{ whiteSpace: 'nowrap' }}>{item.tournamentStatus}</small>
                   </div>
                   <div>
-                  {/* <small>Event Settings  »</small> */}
+                    {/* <small>Event Settings  »</small> */}
                   </div>
                   {/* <p className="mb-1">Live</p> */}
                 </Link>
               ))}
-            
-            {(!organizedOngoingEvents || !organizedOngoingEvents.length) && <div>No Ongoing Events</div>}
+
             {organizedOngoingEvents &&
               organizedOngoingEvents.map((item, i) => (
 
 
-                <Link href={`/tournament/create/${item.eventId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`}  aria-current="true">
+                <Link href={`/tournament/create/${item.eventId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`} aria-current="true">
                   <div className="d-flex w-100 justify-content-between">
                     <Image src={item.logoURL} alt='event logo' width={40} height={40} priority />
                     <h5
@@ -63,7 +67,7 @@ export default function OrgOngoingEvents({
                     <small style={{ whiteSpace: 'nowrap' }}>{item.eventStatus}</small>
                   </div>
                   <div>
-                  {/* <small>Event Settings  »</small> */}
+                    {/* <small>Event Settings  »</small> */}
                   </div>
                   {/* <p className="mb-1">Live</p> */}
                 </Link>

@@ -1,12 +1,12 @@
 import connectDB from "../../connectDB"
-import Event from "../../model/Event"
+import Tournament from "../../model/Tournament"
 
 connectDB()
 
 export default async (req, res) => {
   try {
     if (req.method === "GET") {
-      const categories = await Event.find({ "startDate": { $gt: new Date() }, "eventStatus": "active" });
+      const categories = await Tournament.find({ status: { $ne: 'Closed' } });
 
       res.status(200).json({ data: categories })
     }

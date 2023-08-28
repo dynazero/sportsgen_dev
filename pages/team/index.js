@@ -314,13 +314,13 @@ export default function events() {
                                   {/* <input type="text" className="form-control" id="firstName" placeholder="" defaultValue="" required="" /> */}
                                   <div>
                                     {/* dropdown options */}
-                                    {/* <button class="btn btn-secondary dropdown-toggle form-control" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {/* <button className="btn btn-secondary dropdown-toggle form-control" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                       Choose a participant
                                     </button>
-                                    <ul class="dropdown-menu">
-                                      <li><h6 class="dropdown-header">Athletes:</h6></li>
-                                      <li><a class="dropdown-item" href="#">Kyle</a></li>
-                                      <li><a class="dropdown-item" href="#">Chris</a></li>
+                                    <ul className="dropdown-menu">
+                                      <li><h6 className="dropdown-header">Athletes:</h6></li>
+                                      <li><a className="dropdown-item" href="#">Kyle</a></li>
+                                      <li><a className="dropdown-item" href="#">Chris</a></li>
                                     </ul> */}
                                     <select className="form-select mb-3 form-control fontWeight400" id="NameSelection" aria-label=".form-select-lg example">
                                       <option>Choose Name..</option>

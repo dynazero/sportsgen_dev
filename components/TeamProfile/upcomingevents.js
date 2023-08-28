@@ -1,4 +1,5 @@
 import React from 'react'
+import styles from './org.module.css'
 
 export default function UpComingEvents({ upcomingEvents, liveTournaments }) {
 
@@ -6,9 +7,11 @@ export default function UpComingEvents({ upcomingEvents, liveTournaments }) {
   return (
     <>
       <div className='p-2'>
-        <div className="btn-group  btn-group-sm" id="pills-tab" role="tablist" aria-label="Basic mixed styles example">
-          <button className="btn btn-danger" id="pills-live-tab" data-bs-toggle="pill" data-bs-target="#pills-live" type="button" role="tab" aria-controls="pills-live" aria-selected="false">Live</button>
-          <button className="btn btn-warning" id="pills-up-tab" data-bs-toggle="pill" data-bs-target="#pills-up" type="button" role="tab" aria-controls="pills-up" aria-selected="true">Upcoming Events</button>
+        {/* <strong className="mb-2 text-primary">Posted Events:</strong> */}
+        <div className={`btn-group  btn-group-sm ${styles.width100}`} id="pills-tab" role="tablist" aria-label="Basic mixed styles example">
+          <button className={`btn btn-primary disabled ${styles.headerNav}`} id="pills-live-tab" data-bs-toggle="pill" data-bs-target="#pills-live" type="button" role="tab" aria-controls="pills-live" aria-selected="false">Posted Events:</button>
+          <button className="btn btn-warning active" id="pills-up-tab" data-bs-toggle="pill" data-bs-target="#pills-up" type="button" role="tab" aria-controls="pills-up" aria-selected="true">Upcoming Events</button>
+          <button className="btn btn-danger " id="pills-live-tab" data-bs-toggle="pill" data-bs-target="#pills-live" type="button" role="tab" aria-controls="pills-live" aria-selected="false">Live</button>
           <button className="btn btn-success" id="pills-joined-tab" data-bs-toggle="pill" data-bs-target="#pills-joined" type="button" role="tab" aria-controls="pills-joined" aria-selected="false">Joined Events</button>
 
         </div>

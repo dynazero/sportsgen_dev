@@ -5,7 +5,20 @@
     padding: 0px 50px;
 }
 
+.tableFS {
+    border-bottom-width: 0px !important;
+    background-color: #212529;
+    padding: 0px 50px;
+    height:70dvh;
+    min-height: 703px;
+}
+
 .table> :not(caption)>*>* {
+    border-bottom-width: 0px !important;
+    padding: 0rem 0rem;
+}
+
+.tableFS> :not(caption)>*>* {
     border-bottom-width: 0px !important;
     padding: 0rem 0rem;
 }
@@ -108,7 +121,7 @@
 
 .matchtoH {
     position: relative;
-    z-index: 4;
+    /* z-index: 4; */
     top: -30px;
 }
 

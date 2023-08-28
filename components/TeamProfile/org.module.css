@@ -17,3 +17,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.width100 {
+    width: 100%;
+}   
+
+.headerNav{
+    font-weight: bold;
+    background-color: #0b5ed7 !important;
+    opacity: 100 !important;
+    border-color: #0b5ed7 !important;
+}

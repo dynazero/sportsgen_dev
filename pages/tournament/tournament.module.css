@@ -14,6 +14,64 @@
     /* The `!important` flag can be used to override the existing styles, but use it sparingly. */
 }
 
+.hiddenBracketInfo{
+    width: 0%;
+    height: 20px;
+    position: absolute;
+    overflow: hidden;
+    display: none;
+}
+
+.bracketInfo {
+    top:20px;
+    left:40px;
+    width: 100%;
+    height: 20px;
+    position: absolute;
+    color:white;
+    padding:16px;
+    white-space: nowrap;
+    display: inline-flex;
+    animation: toDisplay 2s forwards;
+}
+
+.bracketInfo strong{
+    margin-left: 16px;
+    padding-top: 8px;
+}
+
+@keyframes toDisplay {
+    0% {
+        width:0%;
+        height: 0px;
+        padding:0px;
+        overflow: hidden;
+    }
+    25% {
+        width: 0%;
+        height: 0px;
+        padding:0px;
+        overflow: hidden;
+    }
+    50% {
+        width: 0%;
+        height: 0px;
+        padding:0px;
+        overflow: hidden;
+    }
+    75% {
+        width: 0%;
+        height: 0px;
+        padding:0px;
+        overflow: hidden;
+    }
+    100% {
+        width: 100%;
+        height: 20px;
+        padding:16px;
+    }
+
+}
 
 .bracketContainer {
     display: flex;
@@ -23,8 +81,100 @@
     background-color: #212529;
     min-height: 60dvh;
     overflow: overlay;
-    padding: 8px;
+}
 
+
+.bracketContainerFS {
+    background-color: #212529;
+    top: 12%;
+    z-index: 20 !important;
+    left: 6%;
+    width: 88dvw;
+    min-width: 1140px;
+    height: 84dvh;
+    min-height: 844px;
+    position: absolute;
+    animation: maximize 2s forwards;
+}
+
+@keyframes maximize {
+    from {
+        top: 30%;
+        left: 25%;
+        min-width: 596px;
+        height: 605px;
+        width: 940px;
+        z-index: 50;
+        background-color: #212529;
+    }
+
+    to {
+        top: 12%;
+        z-index: 50 !important;
+        left: 6%;
+        width: 88dvw;
+        height: 84dvh;
+        background-color: #212529;
+        position: absolute;
+    }
+}
+
+
+.test {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    position: relative;
+    animation-name: example;
+    animation-duration: 2s;
+}
+
+@keyframes example {
+    0% {
+        background-color: red;
+        left: 0px;
+        top: 0px;
+    }
+
+    25% {
+        background-color: yellow;
+        left: 200px;
+        top: 0px;
+    }
+
+    50% {
+        background-color: blue;
+        left: 200px;
+        top: 200px;
+    }
+
+    75% {
+        background-color: green;
+        left: 0px;
+        top: 200px;
+    }
+
+    100% {
+        background-color: red;
+        left: 0px;
+        top: 0px;
+    }
+}
+
+.animate-bracket-container {
+    transform: scale(1.2, 1.2);
+}
+
+.fsLink {
+    width: 115px;
+    position: absolute;
+    top: 13px;
+    right: 24px;
+    cursor: zoom-in;
+}
+
+.posRel {
+    position: relative;
 }
 
 .details {

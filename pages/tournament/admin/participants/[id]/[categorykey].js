@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import styles from '../../../tournament.module.css'
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
@@ -9,11 +10,14 @@ import Header from '../../../../../components/Tournament/header'
 import ParticipantsComponent from '../../../../../components/ParticipantsComponent';
 
 function Participants({ id, categorykey, tournamentData, participantsData }) {
+  const router = useRouter();
   const [category, setCategory] = useState(categorykey);
   const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
 
   const handleCategoryChange = (event) => {
     setCategory(event);
+    const href = `/tournament/admin/participants/${id}/${event}`;
+    router.push(href);
   }
 
   return (

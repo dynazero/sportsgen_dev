@@ -9,58 +9,9 @@ import Header from '../../../../components/Tournament/header'
 
 function Logs({ id, tournamentData }) {
   return (
-    <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
-    <div className='headerForm'>
-      <h2 className="mb-3">Tournament</h2>
-    </div>
-    <div className={`${styles.containerform}`}>
-      <div className="col-md-7 col-lg-8 mainForm">
-        <div className="row g-3">
-          <Header tournamentData={tournamentData} />
-
-          <div className="container">
-            <div className="row">
-              <ul className="nav nav-tabs">
-                <li className="nav-item">
-                  <Link className="nav-link " aria-current="page" href={`/tournament/admin/bracket/${tournamentData._id}`}  tabIndex="-1">
-                    Bracket
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" href={`/tournament/admin/standings/${tournamentData._id}`}  tabIndex="-1">
-                    Standings
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" href={`/tournament/admin/participants/${tournamentData._id}`} tabIndex="-1" aria-disabled="true">
-                    Participants
-                  </Link>
-                </li>
-                <li className="nav-item">
-                    <Link className="nav-link active" href="#">Log</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" href={`/tournament/admin/settings/${tournamentData._id}`} tabIndex="-1" aria-disabled="true">
-                    Settings
-                  </Link>
-                </li>
-              </ul>
-
-            </div>
-          </div>
-
-        </div>
-        <div className="col-sm-6">
-          Logs
-        </div>
-
-        {/* <hr className="my-4" /> */}
-
-      </div>
-    </div>
-  </div >
-  )
-}
+    <div>Loading...</div>
+   )
+ }
 
 export default Logs;
 
@@ -89,10 +40,7 @@ export async function getServerSideProps(context) {
   const email = session?.user.email;
   const id = context.params.id;
   let tournamentData = null;
-  let logData = null;
   const getTournamentEndPoint = "/api/getTournamentById?id=";
-  const getEventCategoryEndPoint = "/api/getEventCategory"
-  const getLogEndPoint = "/api/getLogsByTournamentId?tournamentId=";
 
 
   if (!session) {
@@ -121,39 +69,7 @@ export async function getServerSideProps(context) {
         return null;
       }
 
-      const eventStart = new Date(tournamentReqData.startDate);
-      const eventStartMonth = eventStart.toLocaleString('default', { month: 'long' });
-      const eventStartDay = eventStart.getDate();
-      const eventStartYear = eventStart.getFullYear();
-      const eventStartDate = `${eventStartMonth.charAt(0).toUpperCase() + eventStartMonth.slice(1)} ${eventStartDay}, ${eventStartYear}`;
-
-      const eventEnd = new Date(tournamentReqData.endDate);
-      const eventEndMonth = eventEnd.toLocaleString('default', { month: 'long' });
-      const eventEndDay = eventEnd.getDate();
-      const eventEndYear = eventEnd.getFullYear();
-      const eventEndDate = `${eventEndMonth.charAt(0).toUpperCase() + eventEndMonth.slice(1)} ${eventEndDay}, ${eventEndYear}`;
-
-      const categoriesRes = await axios.get(`${apiUrl}${getEventCategoryEndPoint}`);
-      const categories = categoriesRes.data.data
-
-      const categoryTitles = tournamentReqData.categories.map(catKey => {
-        const cat = categories.find(category => category.key === catKey);
-        return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
-      });
-
-      const categorySet = tournamentReqData.categories.map(catKey => {
-        const cat = categories.find(category => category.key === catKey);
-        return cat ? {title: cat.title, key: cat.key} : {title: 'Unknown category', key: null};
-      });
-      
-
-      const tournament = {
-        ...tournamentReqData,
-        eventStartDate,
-        eventEndDate,
-        categoryTitles,
-        categorySet
-      }
+      const tournament = tournamentReqData.categories[0];
 
       return tournament;
 
@@ -164,42 +80,9 @@ export async function getServerSideProps(context) {
     }
   }
 
-  // async function fetchLogData(id) {
-  //   try {
-
-  //   } catch (error) {
-  //     console.error("An error occurred while fetching the data:", error);
-  //     // Optionally, return something to indicate an error occurred
-  //     return null;
-  //   }
-  // }
-
-
-  async function fetchLogData(id) {
-    try {
-      const logReq = await axios.get(`${apiUrl}${getLogEndPoint}${id}`)
-
-      if (!logReq.data.data) {
-        console.error("No data was found for the requested event ID");
-        return null;
-      }
-
-      const logs = logReq.data.data
-
-      return logs;
-      
-    } catch (error) {
-      console.error("An error occurred while fetching the data:", error);
-      // Optionally, return something to indicate an error occurred
-      return null;
-    }
-  }
-  
-
 
   if (nextAuthSession) {
     const tournamentDataReq = await fetchTournamentData(id)
-    const logDataReq = await fetchLogData(id)
     if (tournamentDataReq === null) {
       return {
         redirect: {
@@ -207,24 +90,22 @@ export async function getServerSideProps(context) {
           permanent: false,
         },
       }
-    }
+    }   
 
-    return {
-      props: {
-        session,
-        email,
-        tournamentData: tournamentDataReq,
-        logData: logDataReq
-      }
-    }
+     return {
+      redirect: {
+        destination: `/tournament/admin/logs/${id}/${tournamentDataReq}`,
+        permanent: false,
+      },
+    };
   }
 
 
 
   return {
-    props: {
-      session,
-      email,
+    redirect: {
+      destination: `/tournament/admin/logs/${id}`,
+      permanent: false,
     },
   };
 }
