@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styles from '../../../tournament.module.css'
+import { toast } from "react-toastify";
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../../../api/auth/[...nextauth]'
@@ -74,10 +75,52 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
     });
   };
 
-  const startTournament = () => {
-    console.log('start Tournament')
-  }
+  // const startTournament = () => {
+  //   console.log('start Tournament')
+  // }
 
+  const startTournament = async () => {
+
+    const formData = new FormData();
+    formData.append('tournamentId', tournamentData._id);
+    formData.append('categoryName', selectedCategory.title);
+    formData.append('categoryKey', selectedCategory.key);
+    formData.append('status', 'Live');
+
+    const functionThatReturnPromise = axios.post(`../../../../api/createTournamentEvent`, formData);
+    toast.promise(
+      functionThatReturnPromise,
+      {
+        pending: 'Initializing Event',
+        success: 'Event Initialized! 👌',
+        error: 'Error starting up Event 🤯'
+      }
+    ).then(
+      (response) => {
+        if (response.status === 201) { // Check if the profile was created successfully
+          // Navigate to another page (e.g., the home page)
+          setTimeout(() => {
+            router.push(`/tournament/admin/${tournamentData._id}`);
+          }, 2000);
+        }
+        if (response.status === 500){
+          console.log(response)
+        }
+      }
+    ).catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error('Error submitting form:', error.response.data.message);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error', error.message);
+      }
+    });
+
+  }
   // console.log('participantsData', participantsData);
   // console.log('categorykey', categorykey);
   console.log('selectedCategory', selectedCategory);
