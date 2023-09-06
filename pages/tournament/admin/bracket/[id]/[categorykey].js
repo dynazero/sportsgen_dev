@@ -8,19 +8,20 @@ import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
 import BracketComponent from '../../../../../components/BracketComponent';
+import ShuffleComponent from '../../../../../components/ShuffleComponent';
 import { parse } from 'date-fns';
 
-function Bracket({ id, categorykey, tournamentData }) {
+function Bracket({ id, categorykey, tournamentData, participantsData }) {
   const router = useRouter();
   const [category, setCategory] = useState(categorykey);
   const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
   const [bracketFS, setBracketFS] = useState(false)
-  
 
   const categorySelection = tournamentData.categorySet
 
   const selectedCategory = categorySelection.find((category) => category.key === parseInt(categorykey));
 
+  const [bracketList, setBracketList] = useState(participantsData);
 
   const handleCategoryChange = (event) => {
     setCategory(event);
@@ -31,6 +32,56 @@ function Bracket({ id, categorykey, tournamentData }) {
   const handleFullScreen = () => {
     setBracketFS(true)
   }
+
+  function shuffleByEventKey(participants, eventKeyToShuffle) {
+    // Group participants by eventKey
+    const groupedParticipants = participants.reduce((acc, participant) => {
+      if (!acc[participant.eventKey]) acc[participant.eventKey] = [];
+      acc[participant.eventKey].push(participant);
+      return acc;
+    }, {});
+
+    // Shuffle the specified group
+    const shuffledGroup = groupedParticipants[eventKeyToShuffle].sort(() => Math.random() - 0.5);
+
+    // Replace the original group with the shuffled group
+    groupedParticipants[eventKeyToShuffle] = shuffledGroup;
+
+    // Merge all groups back together
+    const result = [];
+    for (const key in groupedParticipants) {
+      result.push(...groupedParticipants[key]);
+    }
+
+    return result;
+  }
+
+  // const onShuffle = (shuffleCategory) => {
+  //   console.log('shuffleCategory', shuffleCategory);
+  // }
+
+  const onShuffle = (shuffleCategory) => {
+    const shuffledList = shuffleByEventKey(bracketList, shuffleCategory);
+    setBracketList(shuffledList);
+    console.log('shuffleCategory', shuffleCategory);
+  };
+
+  const shuffleAthletes = () => {
+    setBracketList((prevAthletes) => {
+      const newAthletes = [...prevAthletes];
+      newAthletes.sort(() => Math.random() - 0.5);
+      return newAthletes;
+    });
+  };
+
+  const startTournament = () => {
+    console.log('start Tournament')
+  }
+
+  // console.log('participantsData', participantsData);
+  // console.log('categorykey', categorykey);
+  console.log('selectedCategory', selectedCategory);
+  console.log('tournamentData', tournamentData);
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
@@ -39,7 +90,7 @@ function Bracket({ id, categorykey, tournamentData }) {
       <div className={`${styles.containerform}`}>
         <div className="col-md-7 col-lg-8 mainForm">
           <div className="row g-3">
-            <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} />
+            <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} participantscount={bracketList.length} />
             <div className="container">
               <div className={`row ${styles.posRel}`}>
                 <ul className="nav nav-tabs">
@@ -67,37 +118,69 @@ function Bracket({ id, categorykey, tournamentData }) {
                     </Link>
                   </li>
                 </ul>
-                <p className={`${styles.fsLink}`}
-                  onClick={handleFullScreen}
-                >
-                  Maximize <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-fullscreen" viewBox="0 0 16 16">
-                    <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"></path>
-                  </svg>
-                </p>
-
+                {tournamentData.status === 'Live' && (
+                  <p className={`${styles.fsLink}`}
+                    onClick={handleFullScreen}
+                  >
+                    Maximize <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-fullscreen" viewBox="0 0 16 16">
+                      <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"></path>
+                    </svg>
+                  </p>
+                )}
               </div>
             </div>
 
           </div>
-          <div className={`col-sm-12 ${!bracketFS ? styles.bracketContainer : styles.bracketContainerFS} ${bracketFS ? 'animate-bracket-container' : ''
-            }`}>
+          {tournamentData.status === 'Check-in' && (
             <>
-              {bracketFS &&
-                <div className={`${!bracketFS ? styles.hiddenBracketInfo : styles.bracketInfo}`}>
+              <div className={`${styles.shuffleComponentWrapper}`}>
+                <ShuffleComponent categorykey={categorykey} categorySet={categorySet} bracketList={bracketList} startTournament={() => startTournament(selectedCategory.key)} shuffle={() => onShuffle(selectedCategory.key)} />
+              </div>
+
+            </>
+
+          )}
+          {/* {
+            tournamentData.status === 'Check-in' &&
+            tournamentData.categorySet.map((item, i) => (
+              item.start = == 0 ? (
+                <div className={`${styles.shuffleComponentWrapper}`} key={i}>
+                  <ShuffleComponent
+                    categorykey={categorykey}
+                    categorySet={categorySet}
+                    bracketList={bracketList}
+                    startTournament={() => startTournament(selectedCategory.key)}
+                    shuffle={() => onShuffle(selectedCategory.key)}
+                  />
+                </div>
+              ) : null
+            ))
+          } */}
+
+
+          {tournamentData.status === 'Live' && (
+            <div className={`col-sm-12 ${!bracketFS ? styles.bracketContainer : styles.bracketContainerFS} ${bracketFS ? 'animate-bracket-container' : ''
+              }`}>
+              <>
+                {bracketFS &&
+                  <div className={`${!bracketFS ? styles.hiddenBracketInfo : styles.bracketInfo}`}>
                     <h3>
                       {`${tournamentData.eventName}`}
                     </h3>
-                  <strong>
-                    {`${selectedCategory.title}`}
-                  </strong>
-                  <strong>
-                    {`${tournamentData.format}`}
-                  </strong>
-                </div>
-              }
-              <BracketComponent categorykey={categorykey} categorySet={categorySet} setBracketFS={setBracketFS} bracketFS={bracketFS} />
-            </>
-          </div>
+                    <strong>
+                      {`${selectedCategory.title}`}
+                    </strong>
+                    <strong>
+                      {`${tournamentData.format}`}
+                    </strong>
+                  </div>
+                }
+                <BracketComponent categorykey={categorykey} categorySet={categorySet} setBracketFS={setBracketFS} bracketFS={bracketFS} bracketList={bracketList} />
+              </>
+            </div>
+
+          )}
+
 
           {/* <hr className="my-4" /> */}
 
@@ -136,6 +219,7 @@ export async function getServerSideProps(context) {
   const categorykey = context.params.categorykey;
   let tournamentData = null;
   const getTournamentEndPoint = "/api/getTournamentById?id=";
+  const getParticipantsEndPoint = "/api/getParticipantsByEventId?tournamentId=";
   const getEventCategoryEndPoint = "/api/getEventCategory"
 
 
@@ -192,7 +276,7 @@ export async function getServerSideProps(context) {
 
       const categorySet = tournamentReqData.categories.map(catKey => {
         const cat = categories.find(category => category.key === catKey);
-        return cat ? { title: cat.title, key: cat.key } : { title: 'Unknown category', key: null };
+        return cat ? { title: cat.title, key: cat.key, start: 0 } : { title: 'Unknown category', key: null };
       });
 
 
@@ -213,9 +297,30 @@ export async function getServerSideProps(context) {
     }
   }
 
+  async function fetchParticipantsData(id) {
+    try {
+      const participantsReq = await axios.get(`${apiUrl}${getParticipantsEndPoint}${id}`)
+
+      if (!participantsReq.data.data) {
+        console.error("No data was found for the requested event ID");
+        return null;
+      }
+
+      const participantsReqData = participantsReq.data.data;
+
+      return participantsReqData;
+
+
+    } catch (error) {
+      console.error("An error occurred while fetching the data:", error);
+      // Optionally, return something to indicate an error occurred
+      return null;
+    }
+  }
 
   if (nextAuthSession) {
     const tournamentDataReq = await fetchTournamentData(id)
+    const participantsDataReq = await fetchParticipantsData(tournamentDataReq.eventId)
     if (tournamentDataReq === null) {
       return {
         redirect: {
@@ -231,7 +336,8 @@ export async function getServerSideProps(context) {
         categorykey,
         session,
         email,
-        tournamentData: tournamentDataReq
+        tournamentData: tournamentDataReq,
+        participantsData: participantsDataReq
       }
     }
   }

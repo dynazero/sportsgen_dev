@@ -1,0 +1,22 @@
+.buttonToggleWrapper{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.buttonToggleWrapper > .toggle{
+    width:40px;
+    margin: 8px 4px;
+    white-space: nowrap;
+}
+
+.buttonToggleWrapper > .start{
+    width:180px;
+    margin: 8px 4px;
+    white-space: nowrap;
+}
+
+.buttonToggleWrapper > .shuffle{
+    width:100px;
+    margin: 8px 4px;
+    white-space: nowrap;
+}

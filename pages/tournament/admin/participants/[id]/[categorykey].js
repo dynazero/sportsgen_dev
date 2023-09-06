@@ -14,6 +14,9 @@ function Participants({ id, categorykey, tournamentData, participantsData }) {
   const [category, setCategory] = useState(categorykey);
   const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
 
+  const [bracketList, setBracketList] = useState(participantsData);
+
+
   const handleCategoryChange = (event) => {
     setCategory(event);
     const href = `/tournament/admin/participants/${id}/${event}`;
@@ -28,7 +31,7 @@ function Participants({ id, categorykey, tournamentData, participantsData }) {
       <div className={`${styles.containerform}`}>
         <div className="col-md-7 col-lg-8 mainForm">
           <div className="row g-3">
-            <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} />
+            <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} participantscount={bracketList.length}/>
 
             <div className="container">
               <div className="row">
@@ -200,7 +203,6 @@ export async function getServerSideProps(context) {
       return null;
     }
   }
-  
   
   if (nextAuthSession) {
     const tournamentDataReq = await fetchTournamentData(id)

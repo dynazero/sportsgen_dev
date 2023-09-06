@@ -1,0 +1,97 @@
+.table {
+    border-bottom-width: 0px !important;
+    background-color: #212529;
+}
+
+.table> :not(caption)>*>* {
+    border-bottom-width: 0px !important;
+    padding: 0rem 0rem;
+}
+
+.rowWidth {
+    width: 100%;
+}
+
+.headerChamp{
+    padding-left: 26px !important;
+}
+
+.champion {
+    position: relative;
+    top: 56px;
+}
+
+.grandFinals {
+    position: relative;
+    top: 44px;
+}
+
+.participants {
+    margin-left: 24px;
+}
+
+.matchF {
+    position: relative;
+    top: -54px;
+}
+.matchG {
+    position: relative;
+    top: 47px;
+}
+
+.matchtoF {
+    position: relative;
+    z-index: 3;
+}
+
+.matchtoH {
+    position: relative;
+    z-index: 4;
+    top:-30px;
+}
+
+.matchBelowLine {
+    /* position: relative; */
+    /* top: -29px; */
+    width: 100%;
+}
+
+.matchBelowBracket {
+    position: relative;
+    top: -29px;
+}
+
+.matchBelowBracketA {
+    position: relative;
+    top: -29px;
+    z-index: 3;
+}
+
+.matchBelowBracketB {
+    position: relative;
+    top: -32px;
+    z-index: 3;
+}
+
+.standByText {
+    padding-left: 20px;
+    opacity: 60%;
+    font-style: italic;
+}
+
+.matchIndicator {
+    opacity: 60%;
+    position: relative;
+    left: -16px;
+    top: -13px;
+    font-family: monospace;
+}
+
+.matchesBorder {
+    margin-left: 16px;
+    height: 1px;
+    transition: border-color 0.5s ease 0s;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #e9ecef94;
+}

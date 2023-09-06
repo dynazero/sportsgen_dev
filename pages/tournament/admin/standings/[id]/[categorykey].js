@@ -100,6 +100,7 @@ export async function getServerSideProps(context) {
   const categorykey = context.params.categorykey;
   let tournamentData = null;
   const getTournamentEndPoint = "/api/getTournamentById?id=";
+  const getParticipantsEndPoint = "/api/getParticipantsByEventId?tournamentId=";
   const getEventCategoryEndPoint = "/api/getEventCategory"
 
 
@@ -176,10 +177,30 @@ export async function getServerSideProps(context) {
       return null;
     }
   }
+  async function fetchParticipantsData(id) {
+    try{
+      const participantsReq = await axios.get(`${apiUrl}${getParticipantsEndPoint}${id}`)
+      
+      if (!participantsReq.data.data) {
+        console.error("No data was found for the requested event ID");
+        return null;
+      }
+      
+      const participantsReqData = participantsReq.data.data;
 
+      return participantsReqData;
+      
+
+    } catch (error) {
+      console.error("An error occurred while fetching the data:", error);
+      // Optionally, return something to indicate an error occurred
+      return null;
+    }
+  }
 
   if (nextAuthSession) {
     const tournamentDataReq = await fetchTournamentData(id)
+    const participantsDataReq = await fetchParticipantsData(tournamentDataReq.eventId)
     if (tournamentDataReq === null) {
       return {
         redirect: {
@@ -195,7 +216,8 @@ export async function getServerSideProps(context) {
         categorykey,
         session,
         email,
-        tournamentData: tournamentDataReq
+        tournamentData: tournamentDataReq,
+        participantsData: participantsDataReq
       }
     }
   }

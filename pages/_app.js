@@ -12,11 +12,6 @@ import 'react-toastify/dist/ReactToastify.css';
 // import 'bootstrap/dist/js/bootstrap';
 
 
-
-
-
-
-
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 
   const [modalOpen, setModalOpen] = useState(false);

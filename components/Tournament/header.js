@@ -4,7 +4,7 @@ import Image from 'next/image'
 import ReactCountryFlag from 'react-country-flag';
 
 
-const Header = ({ tournamentData, changeCategory, category }) => {
+const Header = ({ tournamentData, changeCategory, category, participantscount }) => {
 
     return (
         <div className={`row ${styles.rowMinWidth}`}>
@@ -33,7 +33,7 @@ const Header = ({ tournamentData, changeCategory, category }) => {
                                 ))}
                             </>
                         </select>
-                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>*6 Players</span>
+                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>{participantscount} Players</span>
                         <span className={`text-dark mb-2 ${styles.margintextRight}`}>{tournamentData.format}</span>
                     </div>
                 </div>

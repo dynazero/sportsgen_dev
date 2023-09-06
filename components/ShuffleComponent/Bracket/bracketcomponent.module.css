@@ -1,0 +1,26 @@
+.bracketWrapper {
+    padding: .5rem 4rem;
+    position: relative;
+    background-color: #212529;
+    width: 95%;
+    z-index: 10;
+    margin: auto;
+    padding: 8px;
+    height: 527px;
+    border-radius: 0px 0px 24px 24px;
+    overflow: overlay;
+}
+
+.minimizeLink {
+    color: white;
+    width: 115px;
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    cursor: zoom-out;
+    opacity: 80%;
+}
+
+.hidemnmLink {
+    display: none;
+}

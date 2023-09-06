@@ -218,13 +218,21 @@ export async function getServerSideProps(context) {
   const getParticipantsEndPoint = "/api/getParticipantsById?id="
   const session = await getServerSession(context.req, context.res, authOptions)
   const nextAuthSession = await getSession(context);
-  const email = session.user.email
+  const email = session.user?.email
   let checkoutItem = null;
   let teamItem = null;
   // Accessing dynamic route parameter 'id'
   const id = context.params.id;
 
-
+  if (email) {
+    return {
+      redirect: {
+        destination: '/checkout/error',
+        permanent: false,
+      },
+    }
+  }
+  
   async function fetchUserTeam(email) {
     try {
 
