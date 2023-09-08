@@ -25,7 +25,6 @@ const BracketComponent = ({ categorykey, categorySet, tournamentInfo, handleFull
     setBracketFS(false)
   }
 
-
   return (
     <>
       <div className={`${styles.relativeDiv}`}>

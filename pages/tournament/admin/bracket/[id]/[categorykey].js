@@ -26,24 +26,22 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   const [category, setCategory] = useState(categorykey);
   const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
   const [bracketFS, setBracketFS] = useState(false)
-  
+
   const categorySelection = tournamentData.categorySet
-  
+
   const selectedCategory = categorySelection.find((category) => category.key === parseInt(categorykey));
-  
+
   const [bracketList, setBracketList] = useState(participantsData);
-  
+
   const BracketHandler = bracketImports[selectedCategory.start];
-  
+
   const [tournamentInfo, setTournamentInfo] = useState({
     eventName: tournamentData.eventName,
     title: selectedCategory.title,
     format: tournamentData.format
   })
 
-  // if (!BracketHandler) {
-    //   return <div>Bracket is not properly loaded </div>;
-  // }
+  
 
   const handleCategoryChange = (event) => {
     setCategory(event);
@@ -96,6 +94,25 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
     });
   };
 
+  const genProps = {
+    categorykey: categorykey,
+    categorySet: categorySet
+  }
+
+  const shuffleProps = {
+    ...genProps,
+    bracketList: bracketList,
+    startTournament: () => startTournament(selectedCategory.key),
+    shuffle: () => onShuffle(selectedCategory.key)
+  }
+
+  const bracketProps = {
+    ...genProps,
+    tournamentInfo: tournamentInfo,
+    handleFullScreen: () => handleFullScreen(),
+    setBracketFS: setBracketFS,
+    bracketFS: bracketFS
+  }
   // const startTournament = () => {
   //   console.log('start Tournament')
   // }
@@ -182,23 +199,15 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
                     </Link>
                   </li>
                 </ul>
-                
+
               </div>
             </div>
 
           </div>
           <Suspense fallback={<div>Loading...</div>}>
-            <BracketHandler 
-            tournamentInfo={tournamentInfo} 
-            categorykey={categorykey} 
-            categorySet={categorySet} 
-            setBracketFS={setBracketFS} 
-            handleFullScreen={handleFullScreen} 
-            bracketFS={bracketFS} 
-            bracketList={bracketList} 
-            startTournament={() => startTournament(selectedCategory.key)} 
-            shuffle={() => onShuffle(selectedCategory.key)} 
-            />
+            {selectedCategory.start === 0 ?
+              <BracketHandler {...shuffleProps} /> :
+              <BracketHandler {...bracketProps} />}
           </Suspense>
         </div>
       </div>
