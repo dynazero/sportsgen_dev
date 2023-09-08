@@ -16,9 +16,9 @@ export const config = {
   },
 };
 
-function convertToPST(date) {
-  const offset = 8 * 60 * 60 * 1000; // Offset in milliseconds for UTC+8
-  return new Date(date.getTime() + offset);
+function convertToPHT(date) {
+  date.setUTCHours(16, 0, 0, 0); // Set the time to the start of the day in PHT (which is 16:00:00 in UTC)
+  return date;
 }
 
 function convertToString(date) {
@@ -91,8 +91,8 @@ export default async (req, res) => {
           city,
           categories: categoryKeys,
           url,
-          startDate: convertToPST(new Date(startDate)),
-          endDate: convertToPST(new Date(endDate)),
+          startDate: convertToPHT(new Date(startDate)),
+          endDate: convertToPHT(new Date(endDate)),
           description,
           format,
           matchForThird,

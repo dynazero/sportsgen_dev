@@ -20,3 +20,7 @@
     margin: 8px 4px;
     white-space: nowrap;
 }
+
+.shuffleComponentWrapper{
+    position: relative;
+}

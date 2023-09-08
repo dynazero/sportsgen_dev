@@ -199,6 +199,22 @@ export async function getServerSideProps(context) {
   let officiallist = [];
   let members = [];
 
+
+  const getCurrentDateInPHT = () => {
+    const tempDate = new Date();
+    const offset = tempDate.getTimezoneOffset() + 8 * 60;  // Adjust for PHT
+    return new Date(tempDate.getTime() + offset * 60 * 1000);
+  }
+
+  function formatDateToYYYYMMDD(date) {
+    const d = new Date(date);
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-11, so we +1 and pad with a 0 if needed to get the month in MM format
+    const day = String(d.getUTCDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
   if (team.length > 0) {
     teamId = team[0]._id;
 
@@ -315,7 +331,8 @@ export async function getServerSideProps(context) {
   const orgLiveEvents = eventslist.filter(event =>
     event.registeredEmail === email &&
     (event.eventStatus === 'active' || event.eventStatus === 'ready') &&
-    new Date(event.startDate) <= Date.now()
+    // new Date(event.startDate) <= getCurrentDateInPHT()
+    formatDateToYYYYMMDD(event.startDate) <= formatDateToYYYYMMDD(getCurrentDateInPHT())
   );
   const organizedOngoingEvents = orgLiveEvents.map(event => {
     const region = 'sgp1';
@@ -366,6 +383,8 @@ export async function getServerSideProps(context) {
 
   // console.log(organizedUpcomingEvents, 'organizedUpcomingEvents')
   // console.log(organizedOngoingEvents, 'organizedOngoingEvents')
+  // console.log('eventslist', eventslist);
+  // console.log('getCurrentDateInPST', getCurrentDateInPST);
   // console.log(upcomingEvents, 'upcomingEvents')
   // console.log(archivedEvents, 'archived')
 

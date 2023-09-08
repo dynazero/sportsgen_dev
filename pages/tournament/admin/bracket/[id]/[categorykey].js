@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { lazy, Suspense, useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styles from '../../../tournament.module.css'
@@ -8,21 +9,41 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
-import BracketComponent from '../../../../../components/BracketComponent';
-import ShuffleComponent from '../../../../../components/ShuffleComponent';
 import { parse } from 'date-fns';
+
+const ShuffleComponent = dynamic(() => import('../../../../../components/ShuffleComponent'));
+const BracketComponent = dynamic(() => import('../../../../../components/BracketComponent'));
+
+const bracketImports = {
+  0: ShuffleComponent,
+  1: BracketComponent
+};
 
 function Bracket({ id, categorykey, tournamentData, participantsData }) {
   const router = useRouter();
+
+
   const [category, setCategory] = useState(categorykey);
   const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
   const [bracketFS, setBracketFS] = useState(false)
-
+  
   const categorySelection = tournamentData.categorySet
-
+  
   const selectedCategory = categorySelection.find((category) => category.key === parseInt(categorykey));
-
+  
   const [bracketList, setBracketList] = useState(participantsData);
+  
+  const BracketHandler = bracketImports[selectedCategory.start];
+  
+  const [tournamentInfo, setTournamentInfo] = useState({
+    eventName: tournamentData.eventName,
+    title: selectedCategory.title,
+    format: tournamentData.format
+  })
+
+  // if (!BracketHandler) {
+    //   return <div>Bracket is not properly loaded </div>;
+  // }
 
   const handleCategoryChange = (event) => {
     setCategory(event);
@@ -100,10 +121,10 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
         if (response.status === 201) { // Check if the profile was created successfully
           // Navigate to another page (e.g., the home page)
           setTimeout(() => {
-            router.push(`/tournament/admin/${tournamentData._id}`);
+            router.replace(router.asPath);
           }, 2000);
         }
-        if (response.status === 500){
+        if (response.status === 500) {
           console.log(response)
         }
       }
@@ -124,7 +145,7 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   // console.log('participantsData', participantsData);
   // console.log('categorykey', categorykey);
   console.log('selectedCategory', selectedCategory);
-  console.log('tournamentData', tournamentData);
+  // console.log('tournamentData', tournamentData);
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
@@ -161,72 +182,24 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
                     </Link>
                   </li>
                 </ul>
-                {tournamentData.status === 'Live' && (
-                  <p className={`${styles.fsLink}`}
-                    onClick={handleFullScreen}
-                  >
-                    Maximize <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-fullscreen" viewBox="0 0 16 16">
-                      <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"></path>
-                    </svg>
-                  </p>
-                )}
+                
               </div>
             </div>
 
           </div>
-          {tournamentData.status === 'Check-in' && (
-            <>
-              <div className={`${styles.shuffleComponentWrapper}`}>
-                <ShuffleComponent categorykey={categorykey} categorySet={categorySet} bracketList={bracketList} startTournament={() => startTournament(selectedCategory.key)} shuffle={() => onShuffle(selectedCategory.key)} />
-              </div>
-
-            </>
-
-          )}
-          {/* {
-            tournamentData.status === 'Check-in' &&
-            tournamentData.categorySet.map((item, i) => (
-              item.start = == 0 ? (
-                <div className={`${styles.shuffleComponentWrapper}`} key={i}>
-                  <ShuffleComponent
-                    categorykey={categorykey}
-                    categorySet={categorySet}
-                    bracketList={bracketList}
-                    startTournament={() => startTournament(selectedCategory.key)}
-                    shuffle={() => onShuffle(selectedCategory.key)}
-                  />
-                </div>
-              ) : null
-            ))
-          } */}
-
-
-          {tournamentData.status === 'Live' && (
-            <div className={`col-sm-12 ${!bracketFS ? styles.bracketContainer : styles.bracketContainerFS} ${bracketFS ? 'animate-bracket-container' : ''
-              }`}>
-              <>
-                {bracketFS &&
-                  <div className={`${!bracketFS ? styles.hiddenBracketInfo : styles.bracketInfo}`}>
-                    <h3>
-                      {`${tournamentData.eventName}`}
-                    </h3>
-                    <strong>
-                      {`${selectedCategory.title}`}
-                    </strong>
-                    <strong>
-                      {`${tournamentData.format}`}
-                    </strong>
-                  </div>
-                }
-                <BracketComponent categorykey={categorykey} categorySet={categorySet} setBracketFS={setBracketFS} bracketFS={bracketFS} bracketList={bracketList} />
-              </>
-            </div>
-
-          )}
-
-
-          {/* <hr className="my-4" /> */}
-
+          <Suspense fallback={<div>Loading...</div>}>
+            <BracketHandler 
+            tournamentInfo={tournamentInfo} 
+            categorykey={categorykey} 
+            categorySet={categorySet} 
+            setBracketFS={setBracketFS} 
+            handleFullScreen={handleFullScreen} 
+            bracketFS={bracketFS} 
+            bracketList={bracketList} 
+            startTournament={() => startTournament(selectedCategory.key)} 
+            shuffle={() => onShuffle(selectedCategory.key)} 
+            />
+          </Suspense>
         </div>
       </div>
     </div >
@@ -264,7 +237,9 @@ export async function getServerSideProps(context) {
   const getTournamentEndPoint = "/api/getTournamentById?id=";
   const getParticipantsEndPoint = "/api/getParticipantsByEventId?tournamentId=";
   const getEventCategoryEndPoint = "/api/getEventCategory"
+  const getTournamentEventsEndPoint = "/api/getTournamentEventByTId?id="
 
+  // console.log('nextAuthSession', nextAuthSession);
 
   if (!session) {
     return {
@@ -312,6 +287,15 @@ export async function getServerSideProps(context) {
       const categoriesRes = await axios.get(`${apiUrl}${getEventCategoryEndPoint}`);
       const categories = categoriesRes.data.data
 
+      const tournamentEventsRes = await axios.get(`${apiUrl}${getTournamentEventsEndPoint}${id}`, {
+        headers: {
+          ...context.req.headers, // Spread the incoming request headers
+          cookie: context.req.headers.cookie // Forward the cookie
+        }
+      });
+
+      const tournamentEvents = tournamentEventsRes.data.data;
+
       const categoryTitles = tournamentReqData.categories.map(catKey => {
         const cat = categories.find(category => category.key === catKey);
         return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
@@ -319,9 +303,15 @@ export async function getServerSideProps(context) {
 
       const categorySet = tournamentReqData.categories.map(catKey => {
         const cat = categories.find(category => category.key === catKey);
-        return cat ? { title: cat.title, key: cat.key, start: 0 } : { title: 'Unknown category', key: null };
-      });
 
+        // Check if there's a matching categoryKey in the tournamentEvents list
+        const hasMatchingEvent = tournamentEvents.some(event => event.categoryKey == catKey);
+        const startValue = hasMatchingEvent ? 1 : 0;
+
+        return cat
+          ? { title: cat.title, key: cat.key, start: startValue }
+          : { title: 'Unknown category', key: null, start: startValue };
+      })
 
       const tournament = {
         ...tournamentReqData,
@@ -363,7 +353,7 @@ export async function getServerSideProps(context) {
 
   if (nextAuthSession) {
     const tournamentDataReq = await fetchTournamentData(id)
-    const participantsDataReq = await fetchParticipantsData(tournamentDataReq.eventId)
+    const participantsDataReq = await fetchParticipantsData(tournamentDataReq?.eventId)
     if (tournamentDataReq === null) {
       return {
         redirect: {
