@@ -87,7 +87,7 @@ const Home = () => {
 
   
   const onSaveTournamentData = () => {
-    console.log('called save tournament');
+    // console.log('called save tournament');
 
     socketRef.current.emit('get-all-matches',tournamentId)
 

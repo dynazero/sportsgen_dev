@@ -1,12 +1,11 @@
 .bracketWrapper {
-    padding: .5rem 4rem;
+    padding: 5rem 8rem .5rem 2rem;
     position: relative;
     background-color: #212529;
-    width: 95%;
+    width: auto;
     height: 95%;
     z-index: 50;
     margin: auto;
-    padding: 8px;
 }
 
 .bracketWrapperFS {

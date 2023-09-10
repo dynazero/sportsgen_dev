@@ -9,7 +9,7 @@ const componentImports = {
   // Continue with the rest of your components
 };
 
-const SetComponent = ({ participantsCount, bracketFS }) => {
+const SetComponent = ({ participantsCount, bracketFS, categorykey, categorySet, tournamentInfo, reParticipants  }) => {
     // console.log(participantsCount, 'participantsCount')
     const Component = componentImports[participantsCount];
 
@@ -20,7 +20,7 @@ const SetComponent = ({ participantsCount, bracketFS }) => {
 
     return (
       <Suspense fallback={<div>Loading...</div>}>
-        <Component bracketFS={bracketFS} />
+        <Component participantsCount={participantsCount} bracketFS={bracketFS} categorykey={categorykey} categorySet={categorySet} tournamentInfo={tournamentInfo} reParticipants={reParticipants} />
       </Suspense>
     );
 }

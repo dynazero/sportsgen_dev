@@ -36,9 +36,10 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   const BracketHandler = bracketImports[selectedCategory.start];
 
   const [tournamentInfo, setTournamentInfo] = useState({
+    tournamentId : tournamentData._id,
     eventName: tournamentData.eventName,
     title: selectedCategory.title,
-    format: tournamentData.format
+    format: tournamentData.format,
   })
 
   
@@ -94,6 +95,8 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
     });
   };
 
+  const filteredParticipants = bracketList.filter(participant => parseInt(participant.eventKey) === selectedCategory.key);
+
   const genProps = {
     categorykey: categorykey,
     categorySet: categorySet
@@ -111,7 +114,8 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
     tournamentInfo: tournamentInfo,
     handleFullScreen: () => handleFullScreen(),
     setBracketFS: setBracketFS,
-    bracketFS: bracketFS
+    bracketFS: bracketFS,
+    participants: filteredParticipants
   }
   // const startTournament = () => {
   //   console.log('start Tournament')
@@ -160,9 +164,10 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
   }
   // console.log('participantsData', participantsData);
-  // console.log('categorykey', categorykey);
-  console.log('selectedCategory', selectedCategory);
+  // console.log('bracketList', bracketList);
+  // console.log('selectedCategory', selectedCategory);
   // console.log('tournamentData', tournamentData);
+  
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>

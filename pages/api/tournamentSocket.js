@@ -13,69 +13,69 @@ const initializeSocket = (server) => {
 
   io.on('connection', (socket) => {
     socket.on('join', (data) => handleJoin(io, socket, data));
-    socket.on('post-tournament-data', (tournamentId) => handlePostData(io, socket, tournamentId));
+    socket.on('post-tournament-data', (tournamentSocketId) => handlePostData(io, socket, tournamentSocketId));
     socket.on('update-score', (data) => handleUpdateScore(io, socket, data));
     socket.on('update-winner', (data) => handleUpdateWinner(io, socket, data));
     socket.on('update-participant', (data) => handleUpdateParticipant(io, socket, data));
-    socket.on('end-tournament', (tournamentId) => handleEndTournament(io, socket, tournamentId));
-    socket.on('get-all-matches', (tournamentId) => handleGetAllMatches(io, socket, tournamentId));
+    socket.on('end-tournament', (tournamentSocketId) => handleEndTournament(io, socket, tournamentSocketId));
+    socket.on('get-all-matches', (tournamentSocketId) => handleGetAllMatches(io, socket, tournamentSocketId));
     socket.on('initialize-tournament', (data) => handleInitializeTournament(io, socket, data));
 
     socket.on('disconnect', () => console.log('Socket disconnected:', socket.id));
   });
 
-  const handleJoin = (io, socket, { tournamentId, role }) => {
-    socket.join(tournamentId);
+  const handleJoin = (io, socket, { tournamentSocketId, role }) => {
+    socket.join(tournamentSocketId);
 
     if (role === 'admin') {
       // Send the latest match details for that tournament 
-      if (matchDetails[tournamentId] === undefined) {
+      if (matchDetails[tournamentSocketId] === undefined) {
         socket.emit('match-details', 'Tournament Does Not Exist');
       } else {
-        socket.emit('match-details', matchDetails[tournamentId]);
+        socket.emit('match-details', matchDetails[tournamentSocketId]);
       }
     }
 
     if (role === 'guest') {
       // Send the latest match details for that tournament 
-      if (matchDetails[tournamentId] === undefined) {
+      if (matchDetails[tournamentSocketId] === undefined) {
         socket.emit('match-details', 'Tournament will start shortly, please stand by');
       } else {
-        socket.emit('match-details', matchDetails[tournamentId]);
+        socket.emit('match-details', matchDetails[tournamentSocketId]);
       }
     }
 
   };
 
-  const handlePostData = (io, socket, tournamentId) => {
-    console.log('Current Data', tournamentId)
-    // console.log('Current Participants', matchDetails[tournamentId][matchKey].participant1, matchDetails[tournamentId][matchKey].participant2)
+  const handlePostData = (io, socket, tournamentSocketId) => {
+    console.log('Current Data', tournamentSocketId)
+    // console.log('Current Participants', matchDetails[tournamentSocketId][matchKey].participant1, matchDetails[tournamentSocketId][matchKey].participant2)
 
     console.log(matchDetails)
     // Emit the updated match details to all clients in the tournament room
-    io.to(tournamentId).emit('all-match-details', matchDetails);
+    io.to(tournamentSocketId).emit('all-match-details', matchDetails);
   };
 
-  const handleUpdateParticipant = (io, socket, { tournamentId, matchKey, participantSide, player, role }) => {
-    // console.log('Current Data', tournamentId, matchKey, participantSide, player, role)
-    // console.log('Current Participants', matchDetails[tournamentId][matchKey].participant1, matchDetails[tournamentId][matchKey].participant2)
+  const handleUpdateParticipant = (io, socket, { tournamentSocketId, matchKey, participantSide, player, role }) => {
+    // console.log('Current Data', tournamentSocketId, matchKey, participantSide, player, role)
+    // console.log('Current Participants', matchDetails[tournamentSocketId][matchKey].participant1, matchDetails[tournamentSocketId][matchKey].participant2)
     if (role !== 'admin') {
       console.log(`Client is not an admin, skipping winner update.`);
       return;
     }
 
 
-    matchDetails[tournamentId][matchKey][participantSide] = player;
+    matchDetails[tournamentSocketId][matchKey][participantSide] = player;
 
     // Emit the updated match details to all clients in the tournament room
-    io.to(tournamentId).emit('match-details', matchDetails[tournamentId]);
+    io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
   };
 
-  const handleUpdateWinner = (io, socket, { tournamentId, matchKey, matchWinner, role }) => {
-    // console.log('Current Data', tournamentId, matchKey, matchWinner, role)
-    // console.log('Current Participants', matchDetails[tournamentId][matchKey].participant1, matchDetails[tournamentId][matchKey].participant2)
+  const handleUpdateWinner = (io, socket, { tournamentSocketId, matchKey, matchWinner, role }) => {
+    // console.log('Current Data', tournamentSocketId, matchKey, matchWinner, role)
+    // console.log('Current Participants', matchDetails[tournamentSocketId][matchKey].participant1, matchDetails[tournamentSocketId][matchKey].participant2)
 
-    let currentParticipants = [matchDetails[tournamentId][matchKey].participant1, matchDetails[tournamentId][matchKey].participant2];
+    let currentParticipants = [matchDetails[tournamentSocketId][matchKey].participant1, matchDetails[tournamentSocketId][matchKey].participant2];
 
     if (role !== 'admin') {
       console.log(`Client is not an admin, skipping winner update.`);
@@ -88,42 +88,42 @@ const initializeSocket = (server) => {
     }
 
 
-    matchDetails[tournamentId][matchKey].winner = matchWinner;
+    matchDetails[tournamentSocketId][matchKey].winner = matchWinner;
 
     // Emit the updated match details to all clients in the tournament room
-    io.to(tournamentId).emit('match-details', matchDetails[tournamentId]);
+    io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
   };
 
-  const handleUpdateScore = (io, socket, { tournamentId, matchKey, matchScores, role }) => {
-    // console.log('Received update-score:', tournamentId, matchKey, matchScores, role)
-    // console.log('Current Scores', matchDetails[tournamentId][matchKey].score)
+  const handleUpdateScore = (io, socket, { tournamentSocketId, matchKey, matchScores, role }) => {
+    // console.log('Received update-score:', tournamentSocketId, matchKey, matchScores, role)
+    // console.log('Current Scores', matchDetails[tournamentSocketId][matchKey].score)
 
     if (role !== 'admin') {
       console.log(`Client is not an admin, skipping score update.`);
       return;
     }
 
-    matchDetails[tournamentId][matchKey].score = matchScores;
+    matchDetails[tournamentSocketId][matchKey].score = matchScores;
 
     // Emit the updated match details to all clients in the tournament room
-    io.to(tournamentId).emit('match-details', matchDetails[tournamentId]);
+    io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
   };
 
-  const handleEndTournament = (io, socket, tournamentId) => {
-    if (matchDetails[tournamentId]) {
-      delete matchDetails[tournamentId];
-      io.to(tournamentId).emit('tournament-ended', matchDetails);
+  const handleEndTournament = (io, socket, tournamentSocketId) => {
+    if (matchDetails[tournamentSocketId]) {
+      delete matchDetails[tournamentSocketId];
+      io.to(tournamentSocketId).emit('tournament-ended', matchDetails);
     }
   };
 
-  const handleGetAllMatches = (io, socket, tournamentId) => {
-    socket.emit('all-matches-details', matchDetails[tournamentId] || {});
+  const handleGetAllMatches = (io, socket, tournamentSocketId) => {
+    socket.emit('all-matches-details', matchDetails[tournamentSocketId] || {});
   };
 
-  const handleInitializeTournament = (io, socket, { tournamentId, initialMatches, role }) => {
+  const handleInitializeTournament = (io, socket, { tournamentSocketId, initialMatches, role }) => {
     // Check if the match details for the specified tournament already exist
-    if (matchDetails[tournamentId]) {
-      console.log(`Match details for tournament ${tournamentId} already exist, skipping initialization.`);
+    if (matchDetails[tournamentSocketId]) {
+      console.log(`Match details for tournament ${tournamentSocketId} already exist, skipping initialization.`);
       return;
     }
 
@@ -133,10 +133,10 @@ const initializeSocket = (server) => {
       return;
     }
 
-    // console.log(`Initializing tournament ${tournamentId} with initial matches:`, initialMatches, 'and role:', role);
+    // console.log(`Initializing tournament ${tournamentSocketId} with initial matches:`, initialMatches, 'and role:', role);
     // Initialize the tournament with the initial matches
-    matchDetails[tournamentId] = initialMatches;
-    io.to(tournamentId).emit('match-details', matchDetails[tournamentId]);
+    matchDetails[tournamentSocketId] = initialMatches;
+    io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
   };
 
 

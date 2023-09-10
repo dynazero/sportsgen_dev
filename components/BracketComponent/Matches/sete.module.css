@@ -34,18 +34,33 @@
     width: 100%;
 }
 
+
 .headerChamp {
     padding-left: 26px !important;
-    position: relative;
-    top: 143px;
-    left: 42px;
+    position: absolute;
+    top: 5px;
+    right: 57%;
+}
+
+.headerChampFS {
+    padding-left: 26px !important;
+    position: absolute;
+    top: -76px;
+    right: 57%;
 }
 
 .champion {
-    position: relative;
-    top: 56px;
+    position: absolute;
+    top: 5px;
     white-space: nowrap;
-    right: -32px !important;
+    right: 46% !important;
+}
+
+.championFS {
+    position: absolute;
+    top: -76px;
+    white-space: nowrap;
+    right: 46% !important;
 }
 
 .grandFinals {
@@ -80,8 +95,10 @@
 }
 
 .participants {
-    margin-left: 8px;
+     margin-left: 8px;
     position: relative;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .score {
