@@ -87,7 +87,6 @@ const initializeSocket = (server) => {
       return;
     }
 
-
     matchDetails[tournamentSocketId][matchKey].winner = matchWinner;
 
     // Emit the updated match details to all clients in the tournament room
