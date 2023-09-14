@@ -1,4 +1,4 @@
-import React, {lazy, Suspense,} from 'react'
+import React, { Suspense } from 'react'
 import dynamic from 'next/dynamic';
 import styles from './scoremodal.module.css'
 
@@ -11,23 +11,24 @@ const modalImports = {
     1: WinnerUpdate
 };
 
-const ScoreModal = ({ pendingUpdate, setPendingUpdate, matchKey, winnerUpdate, onChangeScoreHandler }) => {
+const ScoreModal = ({ pendingUpdate, setPendingUpdate, matchKey, winnerUpdate, onChangeScoreHandler, winnerConfirm  }) => {
 
     const ModalHandler = modalImports[winnerUpdate];
 
     const genProps = {
         matchKey: matchKey,
         pendingUpdate: pendingUpdate,
+        setPendingUpdate: setPendingUpdate
       }
 
     const scoreProps = {
        ...genProps,
        onChangeScoreHandler: onChangeScoreHandler,
-       setPendingUpdate: setPendingUpdate
       }
 
       const winnerProps = {
        ...genProps,
+       winnerConfirm: winnerConfirm
       }
 
     return (

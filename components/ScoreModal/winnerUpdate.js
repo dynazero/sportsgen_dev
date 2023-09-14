@@ -1,29 +1,46 @@
-import React from 'react'
+import React, { Suspense } from 'react'
+import dynamic from 'next/dynamic';
 
-const WinnerUpdate = ({ pendingUpdate, matchKey, onChangeScoreHandler }) => {
-    console.log('pendingUpdate', pendingUpdate);
+const WinnerDefault = dynamic(() => import('./winnerDefault'));
+const WinnerConfirm = dynamic(() => import('./winnerConfirm'));
 
-    // onChangeWinner
+
+const winnerImports = {
+    0: WinnerDefault,
+    1: WinnerConfirm
+};
+
+
+const WinnerUpdate = ({ pendingUpdate, setPendingUpdate, matchKey, winnerConfirm }) => {
+
+    const ModalHandler = winnerImports[winnerConfirm];
+
+    const genProps = {
+        matchKey: matchKey,
+        pendingUpdate: pendingUpdate,
+        setPendingUpdate: setPendingUpdate
+    }
+
+    const defaultProps = {
+        ...genProps,
+    }
+
+    const confirmProps = {
+        ...genProps,
+    }
+
 
     return (
         <>
-            <select
-                className="form-select"
-                aria-label="scores"
-                onChange={(e) => {
-                    const value = e.target.value === 'default' ? null : e.target.value;
-                    onChangeScoreHandler(e, [`match${matchKey}`], { score: value });
-                }}
-            >
+            <h5>
+                {winnerConfirm === 0 ? 'Select a winner:' : 'Confirm Details:'}
+            </h5>
 
-                <option defaultValue={'default'}>Select athlete</option>
-                <option value={'player1'}>
-                    {pendingUpdate?.[`match${matchKey}`]?.participant1}
-                </option>
-                <option value={'player2'}>
-                    {pendingUpdate?.[`match${matchKey}`]?.participant2}
-                </option>
-            </select>
+            <Suspense fallback={<div>Loading...</div>}>
+                {winnerConfirm === 0 ?
+                    <ModalHandler {...defaultProps} /> :
+                    <ModalHandler {...confirmProps} />}
+            </Suspense>
         </>
     )
 }

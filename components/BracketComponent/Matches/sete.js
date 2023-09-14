@@ -49,11 +49,12 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   const [matchDetails, setMatchDetails] = useState({});
   const [matchDetailsLocal, setMatchDetailsLocal] = useState({});
   const [role, setRole] = useState('admin');
-  const [tournamentSocketId, setTournamentSocketId] = useState(tournamentInfo.tournamentId+categorykey);
+  const [tournamentSocketId, setTournamentSocketId] = useState(tournamentInfo.tournamentId + categorykey);
   const [championId, setChampionId] = useState('');
   const [pendingUpdate, setPendingUpdate] = useState({});
   const [matchKey, setMatchKey] = useState('')
   const [winnerUpdate, setWinnerUpdate] = useState(0)
+  const [winnerConfirm, setWinnerConfirm] = useState(0)
 
   const socketRef = useRef(null); // Using ref to persist socket object
 
@@ -62,6 +63,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   const handleClose = () => {
 
     setShow(false);
+    setWinnerConfirm(0);
   }
 
   const handleShow = (value) => {
@@ -326,7 +328,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
     socketRef.current.emit('update-score',
       {
         tournamentSocketId,
-        matchKey : 'match'+matchKey,
+        matchKey: 'match' + matchKey,
         matchScores,
         role
       });
@@ -336,33 +338,49 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
       // console.log('Received updated match-details:', details);
       setMatchDetails(details);
     });
-    
+
   };
 
-  const handleUpdate = (e, matchKey) => {
+  const handleUpdate = (e, matchKey, winnerUpdate) => {
 
-    setMatchDetailsLocal((prevDetails) => {
+    if (winnerUpdate === 0) {
+      setMatchDetailsLocal((prevDetails) => {
         const updatedScore = {
-            ...prevDetails,
-            [`match${matchKey}`]: {
-                ...prevDetails[`match${matchKey}`],
-                score: pendingUpdate[`match${matchKey}`]?.score
-            }
+          ...prevDetails,
+          [`match${matchKey}`]: {
+            ...prevDetails[`match${matchKey}`],
+            score: pendingUpdate[`match${matchKey}`]?.score
+          }
         };
-        
+
         // Call your handler here with the updated details
         onPostScoreHandler(matchKey, updatedScore);
-        
+
         return updatedScore;
-    });
+      });
 
-    setShow(false); 
-};
+      setShow(false);
+    }
 
-  // console.log('matchDetailsLocal', matchDetailsLocal);
+    if (winnerUpdate === 1) {
+
+      if(pendingUpdate?.[`match${matchKey}`]?.winner === null){
+        toast.warning('Please Select a winner')
+
+        return;
+      }
+
+      console.log('updating winner', winnerUpdate);
+      setWinnerConfirm(1)
+    }
+
+  };
+
+  console.log('matchDetailsLocal', matchDetailsLocal);
   // console.log('matchDetails', matchDetails);
-  // console.log('pendingUpdate', pendingUpdate);
+  console.log('pendingUpdate', pendingUpdate);
   // console.log('matchKey', matchKey);
+  console.log('winner set', pendingUpdate?.[`match${matchKey}`]?.winner);
   return (
     <>
       <div className={`${styles.rowWidth}`}>
@@ -765,23 +783,29 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
           <Modal.Title>Score Update</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ScoreModal pendingUpdate={pendingUpdate} setPendingUpdate={setPendingUpdate} matchKey={matchKey} winnerUpdate={winnerUpdate} onChangeScoreHandler={onChangeScoreHandler} />
+          <ScoreModal
+            pendingUpdate={pendingUpdate}
+            setPendingUpdate={setPendingUpdate}
+            matchKey={matchKey}
+            winnerUpdate={winnerUpdate}
+            onChangeScoreHandler={onChangeScoreHandler}
+            winnerConfirm={winnerConfirm} />
         </Modal.Body>
         <Modal.Footer>
-          <Button className={`${styles.updateWinnerButton}`} variant={`${winnerUpdate === 0 ? "danger" : "secondary"}`} onClick={() => setWinnerUpdate(winnerUpdate === 1 ? 0 : 1)}>
+          <Button className={`${styles.updateWinnerButton}`} variant={`${winnerUpdate === 0 ? "danger" : "secondary"}`} onClick={() => winnerConfirm === 1 ? setWinnerConfirm(0) : setWinnerUpdate(winnerUpdate === 1 ? 0 : 1) }>
             {winnerUpdate === 0 ? 'Winner Update' :
               <>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-bar-left" viewBox="0 0 16 16">
                   <path fillRule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z" />
                 </svg>
-                {'Back to Score'}
+                {winnerConfirm === 1 ? 'Choose Again' : 'Back to Score'}
               </>
             }
           </Button>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={(e) => handleUpdate(e, matchKey)}>
+          <Button className={`${winnerUpdate === 0 ? 'default' : pendingUpdate?.[`match${matchKey}`]?.winner !== null ? 'default' : 'disabled'}`} variant="primary" onClick={(e) => handleUpdate(e, matchKey, winnerUpdate)}>
             Update
           </Button>
         </Modal.Footer>
