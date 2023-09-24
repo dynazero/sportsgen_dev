@@ -84,7 +84,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
       socketRef.current = socket; // Set the current socket to the ref
 
       socket.on('connect', () => {
-        console.log('connected');
+        // console.log('connected');
         socket.emit('join', { tournamentSocketId, role });
       });
 
@@ -123,11 +123,11 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
 
     socketRef.current.on('all-matches-details', (details) => {
 
-      console.log('Received updated all-match-details, Ready for save:', details);
+      // console.log('Received updated all-match-details, Ready for save:', details);
       setMatchDetails(details)
     });
 
-    console.log('matchDetails', matchDetails);
+    // console.log('matchDetails', matchDetails);
 
     // Remove the champion field from the matchDetails object
     const { champion, ...matchDetailsWithoutChampion } = matchDetails;
@@ -138,7 +138,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
     formData.append('champion', champion.winner);
     formData.append('matchDetails', JSON.stringify(matchDetailsWithoutChampion));
 
-    console.log('matchDetailsWithoutChampion', matchDetailsWithoutChampion);
+    // console.log('matchDetailsWithoutChampion', matchDetailsWithoutChampion);
 
 
     const functionThatReturnPromise = axios.post(`../api/createTournamentResult`, formData);
@@ -190,7 +190,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
         socketRef.current.emit('update-participant',
           {
             tournamentSocketId,
-            matchKey: 'matchC',
+            matchKey: 'matchE',
             participantSide: 'participant1',
             player: player,
             role
@@ -204,7 +204,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
         socketRef.current.emit('update-participant',
           {
             tournamentSocketId,
-            matchKey: 'matchD',
+            matchKey: 'matchF',
             participantSide: 'participant1',
             player: player,
             role
@@ -218,8 +218,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
         socketRef.current.emit('update-participant',
           {
             tournamentSocketId,
-            matchKey: 'matchE',
-            participantSide: 'participant1',
+            matchKey: 'matchG',
+            participantSide: 'participant2',
             player: player,
             role
           });
@@ -232,7 +232,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
         socketRef.current.emit('update-participant',
           {
             tournamentSocketId,
-            matchKey: 'matchE',
+            matchKey: 'matchH',
             participantSide: 'participant2',
             player: player,
             role
@@ -243,6 +243,62 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
         });
         return;
       case 'matchE':
+        socketRef.current.emit('update-participant',
+          {
+            tournamentSocketId,
+            matchKey: 'matchG',
+            participantSide: 'participant1',
+            player: player,
+            role
+          });
+        socketRef.current.on('match-details', (details) => {
+          // console.log('Received updated match-details:', details);
+          setMatchDetails(details);
+        });
+        return;
+      case 'matchF':
+        socketRef.current.emit('update-participant',
+          {
+            tournamentSocketId,
+            matchKey: 'matchH',
+            participantSide: 'participant1',
+            player: player,
+            role
+          });
+        socketRef.current.on('match-details', (details) => {
+          // console.log('Received updated match-details:', details);
+          setMatchDetails(details);
+        });
+        return;
+      case 'matchG':
+        socketRef.current.emit('update-participant',
+          {
+            tournamentSocketId,
+            matchKey: 'matchI',
+            participantSide: 'participant1',
+            player: player,
+            role
+          });
+        socketRef.current.on('match-details', (details) => {
+          // console.log('Received updated match-details:', details);
+          setMatchDetails(details);
+        });
+        return;
+      case 'matchH':
+        socketRef.current.emit('update-participant',
+          {
+            tournamentSocketId,
+            matchKey: 'matchI',
+            participantSide: 'participant2',
+            player: player,
+            role
+          });
+        socketRef.current.on('match-details', (details) => {
+          // console.log('Received updated match-details:', details);
+          setMatchDetails(details);
+        });
+        return;
+      case 'matchI':
         socketRef.current.emit('update-participant',
           {
             tournamentSocketId,
@@ -274,16 +330,16 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
     }));
   };
 
-  const onPostWinnerHandler = (matchKey) => {
-    const matchDataLocal = matchDetailsLocal[matchKey];
+  const onPostWinnerHandler = (matchKey, updatedWinner) => {
+    const matchDataLocal = updatedWinner[matchKey];
     let matchWinner = matchDataLocal.winner;
 
 
     if (matchDataLocal.winner === null) {
-      matchWinner = matchDataLocal.participant1;
+      // matchWinner = matchDataLocal.participant1;
+      toast.warning('Choose a winner')
+      return;
     }
-
-    // console.log('called', matchWinner);
 
     socketRef.current.emit('update-winner',
       {
@@ -293,12 +349,18 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
         role
       });
 
-    // Receive the updated match details from the server
     socketRef.current.on('match-details', (details) => {
       // console.log('Received updated match-details:', details);
       setMatchDetails(details);
     });
+
+
     updateParticipants(matchKey, matchWinner);
+    toast.success('Winner updated successfully!');
+
+    // Handle errors if you added error handling
+    // toast.error('Failed to update winner.');
+
 
   };
 
@@ -319,27 +381,39 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   const onPostScoreHandler = (matchKey, updatedScore) => {
     const matchDataLocal = updatedScore[`match${matchKey}`];
     const matchScores = matchDataLocal.score;
-    // console.log('params', tournamentSocketId, matchKey, matchScores);
-    // console.log('role', role);
 
-    toast.warning('Saving Scores')
+    // toast.warning('Saving Scores');
 
-
-    socketRef.current.emit('update-score',
-      {
+    const updateScorePromise = new Promise((resolve, reject) => {
+      // Emit the 'update-score' event
+      socketRef.current.emit('update-score', {
         tournamentSocketId,
         matchKey: 'match' + matchKey,
         matchScores,
         role
       });
 
-    // Receive the updated match details from the server
-    socketRef.current.on('match-details', (details) => {
-      // console.log('Received updated match-details:', details);
-      setMatchDetails(details);
+      socketRef.current.on('match-details', (details) => {
+        resolve(details); // Resolve the promise when details are received
+      });
+
+      // Optional: you can add error handling and reject the promise if needed
+      // socketRef.current.on('error-event', (error) => {
+      //   reject(error);
+      // });
     });
 
+    updateScorePromise
+      .then((details) => {
+        setMatchDetails(details);
+        toast.success('Scores updated successfully!');
+      })
+      .catch((error) => {
+        // Handle errors if you added error handling
+        toast.error('Failed to update scores.');
+      });
   };
+
 
   const handleUpdate = (e, matchKey, winnerUpdate) => {
 
@@ -364,23 +438,48 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
 
     if (winnerUpdate === 1) {
 
-      if(pendingUpdate?.[`match${matchKey}`]?.winner === null){
+      if (pendingUpdate?.[`match${matchKey}`]?.winner === null) {
         toast.warning('Please Select a winner')
 
         return;
       }
 
-      console.log('updating winner', winnerUpdate);
       setWinnerConfirm(1)
+
+    }
+
+    if (winnerUpdate === 1 && winnerConfirm === 1) {
+
+      if (pendingUpdate?.[`match${matchKey}`]?.winner === null) {
+        toast.warning('Please Select a winner')
+
+        return;
+      }
+
+      setMatchDetailsLocal((prevDetails) => {
+        const updatedWinner = {
+          ...prevDetails,
+          [`match${matchKey}`]: {
+            ...prevDetails[`match${matchKey}`],
+            winner: pendingUpdate[`match${matchKey}`]?.winner
+          }
+        };
+        onPostWinnerHandler('match' + matchKey, updatedWinner)
+
+        return updatedWinner;
+      })
+
+      // console.log('matchKey', 'match'+matchKey);
+      setShow(false);
     }
 
   };
 
-  console.log('matchDetailsLocal', matchDetailsLocal);
+  // console.log('matchDetailsLocal', matchDetailsLocal);
   // console.log('matchDetails', matchDetails);
-  console.log('pendingUpdate', pendingUpdate);
+  // console.log('pendingUpdate', pendingUpdate);
   // console.log('matchKey', matchKey);
-  console.log('winner set', pendingUpdate?.[`match${matchKey}`]?.winner);
+  // console.log('winner set', pendingUpdate?.[`match${matchKey}`]?.winner);
   return (
     <>
       <div className={`${styles.rowWidth}`}>
@@ -404,7 +503,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
             <tr >
               <td
                 className={`${matchDetailsLocal?.matchA?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() => handleShow('A')}>
+                onClick={() => 
+                  `${matchDetailsLocal?.matchA?.status === 'open' ? handleShow('A') : null}`}>
                 {matchDetailsLocal?.matchA && (
                   <React.Fragment key='matchA'>
                     <div className={`${styles.participantsWrapperTop}`}>
@@ -437,8 +537,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               </td>
               <td
                 className={`${matchDetailsLocal?.matchE?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={matchDetailsLocal?.matchE?.status === 'open' ? () => handleShow('E') : null}
-              >
+                 onClick={() => 
+                  `${matchDetailsLocal?.matchE?.status === 'open' ? handleShow('E') : null}`}>
                 {matchDetailsLocal?.matchE && (
                   <React.Fragment key='matchE'>
                     <div className={`${styles.participantsWrapperTop}`}>
@@ -481,7 +581,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               <td></td>
               <td
                 className={`${matchDetailsLocal?.matchC?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() => handleShow('C')}>
+                onClick={() => 
+                  `${matchDetailsLocal?.matchC?.status === 'open' ? handleShow('C') : null}`}>
                 {matchDetailsLocal?.matchC && (
                   <React.Fragment key='matchC'>
                     <div className={`${styles.participantsWrapperTop}`}>
@@ -513,8 +614,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               </td>
               <td
                 className={`${styles.matchG} ${matchDetailsLocal?.matchG?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={matchDetailsLocal?.matchG?.status === 'open' ? () => handleShow('G') : null}
-              >
+                onClick={() => 
+                  `${matchDetailsLocal?.matchG?.status === 'open' ? handleShow('G') : null}`}>
                 {matchDetailsLocal?.matchG && (
                   <React.Fragment key='matchG'>
                     <div className={`${styles.participantsWrapperTop}`}>
@@ -558,8 +659,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               </td>
               <td
                 className={`${styles.grandFinals} ${matchDetailsLocal?.matchI?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={matchDetailsLocal?.matchI?.status === 'open' ? () => handleShow('I') : null}
-              >
+                onClick={() => 
+                  `${matchDetailsLocal?.matchI?.status === 'open' ? handleShow('I') : null}`}>
                 {matchDetailsLocal?.matchI && (
                   <React.Fragment key='matchI'>
                     <div className={`${styles.participantsWrapperTop}`}>
@@ -610,7 +711,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
             </tr>
             <tr >
               <td className={`${matchDetailsLocal?.matchB?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() => handleShow('B')}>
+                 onClick={() => 
+                  `${matchDetailsLocal?.matchB?.status === 'open' ? handleShow('B') : null}`}>
                 {matchDetailsLocal?.matchB && (
                   <React.Fragment key='matchB'>
                     <div className={`${styles.participantsWrapperTop}`}>
@@ -642,8 +744,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                 </svg>
               </td>
               <td className={`${matchDetailsLocal?.matchF?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={matchDetailsLocal?.matchF?.status === 'open' ? () => handleShow('F') : null}
-              >
+                 onClick={() => 
+                  `${matchDetailsLocal?.matchF?.status === 'open' ? handleShow('F') : null}`}>
                 {matchDetailsLocal?.matchF && (
                   <React.Fragment key='matchF'>
                     <div className={`${styles.participantsWrapperTop}`}>
@@ -680,8 +782,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               </td>
 
               <td className={`${styles.matchH} ${matchDetailsLocal?.matchH?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={matchDetailsLocal?.matchH?.status === 'open' ? () => handleShow('H') : null}
-              >
+                 onClick={() => 
+                  `${matchDetailsLocal?.matchH?.status === 'open' ? handleShow('H') : null}`}>
                 {matchDetailsLocal?.matchH && (
                   <React.Fragment key='matchH'>
                     <div className={`${styles.participantsWrapperTop}`}>
@@ -737,7 +839,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               <td></td>
               <td></td>
               <td className={`${styles.matchD} ${matchDetailsLocal?.matchD?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() => handleShow('D')}>
+                 onClick={() => 
+                  `${matchDetailsLocal?.matchD?.status === 'open' ? handleShow('D') : null}`}>
                 {matchDetailsLocal?.matchD && (
                   <React.Fragment key='matchD'>
                     <div className={`${styles.participantsWrapperTop}`}>
@@ -792,7 +895,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
             winnerConfirm={winnerConfirm} />
         </Modal.Body>
         <Modal.Footer>
-          <Button className={`${styles.updateWinnerButton}`} variant={`${winnerUpdate === 0 ? "danger" : "secondary"}`} onClick={() => winnerConfirm === 1 ? setWinnerConfirm(0) : setWinnerUpdate(winnerUpdate === 1 ? 0 : 1) }>
+          <Button className={`${styles.updateWinnerButton}`} variant={`${winnerUpdate === 0 ? "danger" : "secondary"}`} onClick={() => winnerConfirm === 1 ? setWinnerConfirm(0) : setWinnerUpdate(winnerUpdate === 1 ? 0 : 1)}>
             {winnerUpdate === 0 ? 'Winner Update' :
               <>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-bar-left" viewBox="0 0 16 16">

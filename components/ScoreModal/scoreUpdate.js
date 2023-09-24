@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const ScoreUpdate = ({ pendingUpdate, setPendingUpdate, matchKey, onChangeScoreHandler }) => {
+const ScoreUpdate = ({ pendingUpdate, setPendingUpdate, matchKey }) => {
 
     const onChangeScoreSub = (e, matchKey, player) => {
         const value = e.target.value;

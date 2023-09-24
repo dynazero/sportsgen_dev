@@ -43,6 +43,10 @@
     cursor: default;
 }
 
+.xActiveMatch > div {
+    opacity: 70%;
+}
+
 .activeMatch{
     cursor: pointer;
 }

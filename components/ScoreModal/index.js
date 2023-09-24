@@ -11,7 +11,7 @@ const modalImports = {
     1: WinnerUpdate
 };
 
-const ScoreModal = ({ pendingUpdate, setPendingUpdate, matchKey, winnerUpdate, onChangeScoreHandler, winnerConfirm  }) => {
+const ScoreModal = ({ pendingUpdate, setPendingUpdate, matchKey, winnerUpdate, winnerConfirm  }) => {
 
     const ModalHandler = modalImports[winnerUpdate];
 
@@ -22,8 +22,7 @@ const ScoreModal = ({ pendingUpdate, setPendingUpdate, matchKey, winnerUpdate, o
       }
 
     const scoreProps = {
-       ...genProps,
-       onChangeScoreHandler: onChangeScoreHandler,
+       ...genProps
       }
 
       const winnerProps = {

@@ -66,6 +66,9 @@ const initializeSocket = (server) => {
 
 
     matchDetails[tournamentSocketId][matchKey][participantSide] = player;
+    if (matchDetails[tournamentSocketId][matchKey].participant1 !== null && matchDetails[tournamentSocketId][matchKey].participant2 !== null) {
+      matchDetails[tournamentSocketId][matchKey].status = 'open';
+    }
 
     // Emit the updated match details to all clients in the tournament room
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
@@ -88,6 +91,7 @@ const initializeSocket = (server) => {
     }
 
     matchDetails[tournamentSocketId][matchKey].winner = matchWinner;
+    matchDetails[tournamentSocketId][matchKey].status = 'closed';
 
     // Emit the updated match details to all clients in the tournament room
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
