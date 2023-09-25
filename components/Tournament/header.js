@@ -11,11 +11,11 @@ const Header = ({ tournamentData, changeCategory, category, participantscount })
             <div className="col ">
                 <div className="card-body d-flex flex-column align-items-start">
                     <h3 className="mb-0">
-                        <strong className="d-inline-block mb-2 text-primary">{tournamentData.eventName}</strong>
+                        <strong className="d-inline-block mb-2 text-primary">{tournamentData?.eventName}</strong>
                     </h3>
                     <div className="d-flex align-items-center justify-content-start">
-                        <p className={`card-text mb-2 ${styles.margintextRight}`}>{tournamentData.address}, {tournamentData.city}</p>
-                        <div className={`mb-2 text-muted ${styles.margintextRight}`}>{tournamentData.eventStartDate}</div>
+                        <p className={`card-text mb-2 ${styles.margintextRight}`}>{tournamentData?.address}, {tournamentData?.city}</p>
+                        <div className={`mb-2 text-muted ${styles.margintextRight}`}>{tournamentData?.eventStartDate}</div>
                     </div>
                     <div className="d-flex align-items-center justify-content-start">
                         <select
@@ -26,7 +26,7 @@ const Header = ({ tournamentData, changeCategory, category, participantscount })
                             defaultValue={category}
                         >
                             <>
-                                {tournamentData.categorySet.map((category, index) => (
+                                {tournamentData?.categorySet.map((category, index) => (
                                     <option key={index} value={category.key}>
                                         {category.title}
                                     </option>
@@ -34,25 +34,25 @@ const Header = ({ tournamentData, changeCategory, category, participantscount })
                             </>
                         </select>
                         <span className={`text-dark mb-2 ${styles.margintextRight}`}>{participantscount} Players</span>
-                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>{tournamentData.format}</span>
+                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>{tournamentData?.format}</span>
                     </div>
                 </div>
             </div>
 
             <div className="col">
                 <div className={`card-body d-flex flex-column align-items-end ${styles.textRight}`}>
-                <Image src={tournamentData.eventLogo} alt='event logo' width={80} height={80} priority />
+                <Image src={tournamentData?.eventLogo} alt='event logo' width={80} height={80} priority />
                     <strong className="d-inline-block mb-2 text-primary">Organized by:</strong>
                     <h5 className="mb-0">
-                        <span className="text-dark" href="#">{tournamentData.organizer}</span>
+                        <span className="text-dark" href="#">{tournamentData?.organizer}</span>
                         <ReactCountryFlag
-                            countryCode={tournamentData.flag}
+                            countryCode={tournamentData?.flag}
                             svg
                             style={{
                                 width: '32px',
                                 height: '16px',
                             }}
-                            title={tournamentData.flag}
+                            title={tournamentData?.flag}
                         />
                     </h5>
                 </div>

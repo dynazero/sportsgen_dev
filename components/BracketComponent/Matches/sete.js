@@ -34,6 +34,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   };
 
   const initialMatches = {
+    tournamentInfo: { tournamentName: tournamentInfo.eventName, tournamentCategory: tournamentInfo.title },
     matchA: { participant1: reParticipants.participant1.name, participant2: reParticipants.participant2.name, winner: matchWinners.matchA, score: scores.matchA, status: 'open' },
     matchB: { participant1: reParticipants.participant3.name, participant2: reParticipants.participant4.name, winner: matchWinners.matchB, score: scores.matchB, status: 'open' },
     matchC: { participant1: reParticipants.participant6.name, participant2: reParticipants.participant7.name, winner: matchWinners.matchC, score: scores.matchC, status: 'open' },
@@ -475,6 +476,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
 
   };
 
+  // console.log('tournamentSocketId', tournamentSocketId);
+  // console.log('tournamentInfo', tournamentInfo);
   // console.log('matchDetailsLocal', matchDetailsLocal);
   // console.log('matchDetails', matchDetails);
   // console.log('pendingUpdate', pendingUpdate);
@@ -483,6 +486,14 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   return (
     <>
       <div className={`${styles.rowWidth}`}>
+
+        <button type="button" className={`btn btn-outline-danger ${matchDetailsLocal?.champion?.winner !== null ? (!bracketFS ? styles.endBtn : styles.endBtnFS) : styles.xEndBtn} `}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-stop-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+            <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z"></path>
+          </svg>
+          End Tournament
+        </button>
 
         <table className={`table table-dark ${!bracketFS ? styles.table : styles.tableFS}`}>
           <thead>
@@ -503,7 +514,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
             <tr >
               <td
                 className={`${matchDetailsLocal?.matchA?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() => 
+                onClick={() =>
                   `${matchDetailsLocal?.matchA?.status === 'open' ? handleShow('A') : null}`}>
                 {matchDetailsLocal?.matchA && (
                   <React.Fragment key='matchA'>
@@ -511,7 +522,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                       <div className={`${styles.participants}`}>
                         {/* Participant 1*/}
                         {matchDetailsLocal.matchA.participant1}
-                        <p className={`${styles.score} ${styles.winner}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchA?.winner ? (matchDetailsLocal?.matchA?.winner === matchDetailsLocal?.matchA?.participant1 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchA.score.player1}
                         </p>
                       </div>
@@ -521,7 +535,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                       <div className={`${styles.participants}`}>
                         {/* Participant 2*/}
                         {matchDetailsLocal.matchA.participant2}
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchA?.winner ? (matchDetailsLocal?.matchA?.winner === matchDetailsLocal?.matchA?.participant2 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchA.score.player2}
                         </p>
                       </div>
@@ -537,7 +554,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               </td>
               <td
                 className={`${matchDetailsLocal?.matchE?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                 onClick={() => 
+                onClick={() =>
                   `${matchDetailsLocal?.matchE?.status === 'open' ? handleShow('E') : null}`}>
                 {matchDetailsLocal?.matchE && (
                   <React.Fragment key='matchE'>
@@ -551,7 +568,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                             </small>
                           </p>
                         }
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchE?.winner ? (matchDetailsLocal?.matchE?.winner === matchDetailsLocal?.matchE?.participant1 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchE.score.player1}
                         </p>
                       </div>
@@ -560,7 +580,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                     <div className={`${styles.participantsWrapperBottom}`}>
                       <div className={`${styles.participants}`}>
                         {matchDetailsLocal.matchE.participant2}
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchE?.winner ? (matchDetailsLocal?.matchE?.winner === matchDetailsLocal?.matchE?.participant2 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchE.score.player2}
                         </p>
                       </div>
@@ -581,7 +604,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               <td></td>
               <td
                 className={`${matchDetailsLocal?.matchC?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() => 
+                onClick={() =>
                   `${matchDetailsLocal?.matchC?.status === 'open' ? handleShow('C') : null}`}>
                 {matchDetailsLocal?.matchC && (
                   <React.Fragment key='matchC'>
@@ -589,7 +612,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                       <div className={`${styles.participants}`}>
                         {/* Participant 1*/}
                         {matchDetailsLocal.matchC.participant1}
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchC?.winner ? (matchDetailsLocal?.matchC?.winner === matchDetailsLocal?.matchC?.participant1 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchC.score.player1}
                         </p>
                       </div>
@@ -599,7 +625,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                       <div className={`${styles.participants}`}>
                         {/* Participant 2*/}
                         {matchDetailsLocal.matchC.participant2}
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchC?.winner ? (matchDetailsLocal?.matchC?.winner === matchDetailsLocal?.matchC?.participant2 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchC.score.player2}
                         </p>
                       </div>
@@ -614,7 +643,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               </td>
               <td
                 className={`${styles.matchG} ${matchDetailsLocal?.matchG?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() => 
+                onClick={() =>
                   `${matchDetailsLocal?.matchG?.status === 'open' ? handleShow('G') : null}`}>
                 {matchDetailsLocal?.matchG && (
                   <React.Fragment key='matchG'>
@@ -628,7 +657,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                             </small>
                           </p>
                         }
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchG?.winner ? (matchDetailsLocal?.matchG?.winner === matchDetailsLocal?.matchG?.participant1 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchG.score.player1}
                         </p>
                       </div>
@@ -644,7 +676,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                             </small>
                           </p>
                         }
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchG?.winner ? (matchDetailsLocal?.matchG?.winner === matchDetailsLocal?.matchG?.participant2 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchG.score.player2}
                         </p>
                       </div>
@@ -659,7 +694,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               </td>
               <td
                 className={`${styles.grandFinals} ${matchDetailsLocal?.matchI?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() => 
+                onClick={() =>
                   `${matchDetailsLocal?.matchI?.status === 'open' ? handleShow('I') : null}`}>
                 {matchDetailsLocal?.matchI && (
                   <React.Fragment key='matchI'>
@@ -673,7 +708,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                             </small>
                           </p>
                         }
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchI?.winner ? (matchDetailsLocal?.matchI?.winner === matchDetailsLocal?.matchI?.participant1 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchI.score.player1}
                         </p>
                       </div>
@@ -689,7 +727,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                             </small>
                           </p>
                         }
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchI?.winner ? (matchDetailsLocal?.matchI?.winner === matchDetailsLocal?.matchI?.participant2 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchI.score.player2}
                         </p>
                       </div>
@@ -702,7 +743,11 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                   {matchDetailsLocal?.champion?.winner && (
                     <React.Fragment key='matchB'>
                       <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.champion.winner}
+                        <h5>
+                          <strong>
+                          {matchDetailsLocal.champion.winner}
+                          </strong>
+                        </h5>
                       </div>
                     </React.Fragment>
                   )}
@@ -711,7 +756,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
             </tr>
             <tr >
               <td className={`${matchDetailsLocal?.matchB?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                 onClick={() => 
+                onClick={() =>
                   `${matchDetailsLocal?.matchB?.status === 'open' ? handleShow('B') : null}`}>
                 {matchDetailsLocal?.matchB && (
                   <React.Fragment key='matchB'>
@@ -719,7 +764,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                       <div className={`${styles.participants}`}>
                         {/* Participant 1*/}
                         {matchDetailsLocal.matchB.participant1}
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchB?.winner ? (matchDetailsLocal?.matchB?.winner === matchDetailsLocal?.matchB?.participant1 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchB.score.player1}
                         </p>
                       </div>
@@ -729,7 +777,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                       <div className={`${styles.participants}`}>
                         {/* Participant 2*/}
                         {matchDetailsLocal.matchB.participant2}
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchB?.winner ? (matchDetailsLocal?.matchB?.winner === matchDetailsLocal?.matchB?.participant2 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchB.score.player2}
                         </p>
                       </div>
@@ -744,7 +795,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                 </svg>
               </td>
               <td className={`${matchDetailsLocal?.matchF?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                 onClick={() => 
+                onClick={() =>
                   `${matchDetailsLocal?.matchF?.status === 'open' ? handleShow('F') : null}`}>
                 {matchDetailsLocal?.matchF && (
                   <React.Fragment key='matchF'>
@@ -758,7 +809,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                             </small>
                           </p>
                         }
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchF?.winner ? (matchDetailsLocal?.matchF?.winner === matchDetailsLocal?.matchF?.participant1 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchF.score.player1}
                         </p>
                       </div>
@@ -767,7 +821,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                     <div className={`${styles.participantsWrapperBottom}`}>
                       <div className={`${styles.participants}`}>
                         {matchDetailsLocal.matchF.participant2}
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchF?.winner ? (matchDetailsLocal?.matchF?.winner === matchDetailsLocal?.matchF?.participant2 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchF.score.player2}
                         </p>
                       </div>
@@ -782,7 +839,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               </td>
 
               <td className={`${styles.matchH} ${matchDetailsLocal?.matchH?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                 onClick={() => 
+                onClick={() =>
                   `${matchDetailsLocal?.matchH?.status === 'open' ? handleShow('H') : null}`}>
                 {matchDetailsLocal?.matchH && (
                   <React.Fragment key='matchH'>
@@ -796,7 +853,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                             </small>
                           </p>
                         }
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchH?.winner ? (matchDetailsLocal?.matchH?.winner === matchDetailsLocal?.matchH?.participant1 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchH.score.player1}
                         </p>
                       </div>
@@ -812,7 +872,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                             </small>
                           </p>
                         }
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchH?.winner ? (matchDetailsLocal?.matchH?.winner === matchDetailsLocal?.matchH?.participant2 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchH.score.player2}
                         </p>
                       </div>
@@ -839,7 +902,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
               <td></td>
               <td></td>
               <td className={`${styles.matchD} ${matchDetailsLocal?.matchD?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                 onClick={() => 
+                onClick={() =>
                   `${matchDetailsLocal?.matchD?.status === 'open' ? handleShow('D') : null}`}>
                 {matchDetailsLocal?.matchD && (
                   <React.Fragment key='matchD'>
@@ -847,8 +910,11 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                       <div className={`${styles.participants}`}>
                         {/* Participant 1*/}
                         {matchDetailsLocal.matchD.participant1}
-                        <p className={`${styles.score}`}>
-                          0
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchD?.winner ? (matchDetailsLocal?.matchD?.winner === matchDetailsLocal?.matchD?.participant1 ? styles.winner : '') : ''}
+                        `}
+                        >
+                          {matchDetailsLocal.matchD.score.player1}
                         </p>
                       </div>
                     </div>
@@ -857,7 +923,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                       <div className={`${styles.participants}`}>
                         {/* Participant 2*/}
                         {matchDetailsLocal.matchD.participant2}
-                        <p className={`${styles.score}`}>
+                        <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchD?.winner ? (matchDetailsLocal?.matchD?.winner === matchDetailsLocal?.matchD?.participant2 ? styles.winner : '') : ''}
+                        `}
+                        >
                           {matchDetailsLocal.matchD.score.player2}
                         </p>
                       </div>
@@ -887,6 +956,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
         </Modal.Header>
         <Modal.Body>
           <ScoreModal
+            tournamentSocketId={tournamentSocketId}
             pendingUpdate={pendingUpdate}
             setPendingUpdate={setPendingUpdate}
             matchKey={matchKey}

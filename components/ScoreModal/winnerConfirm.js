@@ -33,7 +33,7 @@ const WinnerConfirm = ({ pendingUpdate, matchKey }) => {
                                 </div>
                             </td>
                             <td>
-                                <svg className={`${styles.svgLine}`} height="80" width="64">
+                                <svg className={`${styles.svgLine}`} height="80" width="50">
                                     {/* <path d="M50 24.5 H80 V24.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path> */}
                                     <line x1="0" y1="24.5" x2="100" y2="24.5" style={{ stroke: "rgb(233, 236, 239)", strokeWidth: 1 }} />
                                 </svg>

@@ -23,6 +23,22 @@
     padding: 0rem 0rem;
 }
 
+.endBtn{
+    position: absolute;
+    top: -2%;
+    right: 19%;
+}
+
+.endBtnFS{
+    position: absolute;
+    right: 20px;
+    top: -80px;
+}
+
+.xEndBtn{
+    display: none;
+}
+
 .thead {
     position: relative;
     top: -38px;
@@ -55,7 +71,7 @@
     padding-left: 26px !important;
     position: absolute;
     top: 5px;
-    right: 57%;
+    right: 62%;
 }
 
 .headerChampFS {

@@ -6,7 +6,7 @@ const WinnerDefault = ({ pendingUpdate, setPendingUpdate, matchKey }) => {
 
     const onChangeWinnerSub = (e, matchKey) => {
         const value = e.target.value;
-        console.log('called', value);
+        // console.log('called', value);
 
         if(value === 'default'){
             setPendingUpdate((prevDetails) => ({

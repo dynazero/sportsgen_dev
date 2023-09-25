@@ -1,3 +1,11 @@
 .header{
     color:red;
 }
+
+.scoreContainer{
+    padding: 0 0.5rem;
+}
+
+.underLined{
+    text-decoration: underline;
+}

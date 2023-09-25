@@ -97,7 +97,7 @@
 
 .svgLine{
     position: absolute;
-    top:115px;
+    top:131px;
 }
 
 .winnerTag{
@@ -105,7 +105,7 @@
     position: absolute;
     color: white;
     left: 49%;
-    top: 60%;
+    top: 63%;
     opacity: 60%;
     font-style: italic;
 }
@@ -113,5 +113,5 @@
 .winnerPlayer{
     position: absolute;
     left: 57%;
-    top: 62%;
+    top: 65%;
 }
