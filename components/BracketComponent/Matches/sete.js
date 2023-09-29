@@ -34,7 +34,13 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   };
 
   const initialMatches = {
-    tournamentInfo: { tournamentName: tournamentInfo.eventName, tournamentCategory: tournamentInfo.title },
+    tournamentInfo: { tournamentName: tournamentInfo.eventName, tournamentCategory: tournamentInfo.title, status: 'open' },
+    // standings: {
+    //   firstPlace: {standing: null, participant: null},
+    //   secondPlace: {standing: null, participant: null},
+    //   thirdPlace: [{standing: null, participant: null}],
+    //   lastPlace: [{standing: null, participant: null}],
+    // },
     matchA: { participant1: reParticipants.participant1.name, participant2: reParticipants.participant2.name, winner: matchWinners.matchA, score: scores.matchA, status: 'open' },
     matchB: { participant1: reParticipants.participant3.name, participant2: reParticipants.participant4.name, winner: matchWinners.matchB, score: scores.matchB, status: 'open' },
     matchC: { participant1: reParticipants.participant6.name, participant2: reParticipants.participant7.name, winner: matchWinners.matchC, score: scores.matchC, status: 'open' },
@@ -50,6 +56,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   const [matchDetails, setMatchDetails] = useState({});
   const [matchDetailsLocal, setMatchDetailsLocal] = useState({});
   const [role, setRole] = useState('admin');
+  const [tournamentId, setTournamentId] = useState(tournamentInfo.tournamentId);
   const [tournamentSocketId, setTournamentSocketId] = useState(tournamentInfo.tournamentId + categorykey);
   const [championId, setChampionId] = useState('');
   const [pendingUpdate, setPendingUpdate] = useState({});
@@ -118,7 +125,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
 
 
   const onSaveTournamentData = () => {
-    // console.log('called save tournament');
+    console.log('called saving tournament');
 
     socketRef.current.emit('get-all-matches', tournamentSocketId)
 
@@ -128,27 +135,31 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
       setMatchDetails(details)
     });
 
-    // console.log('matchDetails', matchDetails);
+    const { champion, tournamentInfo, ...matchDetailsWithoutChampion } = matchDetails;
 
     // Remove the champion field from the matchDetails object
-    const { champion, ...matchDetailsWithoutChampion } = matchDetails;
 
     const formData = new FormData();
+    formData.append('tournamentId', tournamentId);
     formData.append('tournamentSocketId', tournamentSocketId);
     formData.append('championId', championId);
     formData.append('champion', champion.winner);
     formData.append('matchDetails', JSON.stringify(matchDetailsWithoutChampion));
+    formData.append('participantList', JSON.stringify(reParticipants));
 
-    // console.log('matchDetailsWithoutChampion', matchDetailsWithoutChampion);
+    // console.log('tournamentSocketId', tournamentSocketId);
+    // console.log('championId', championId);
+    // console.log('champion', champion.winner);
+    // console.log('matchDetails', JSON.stringify(matchDetailsWithoutChampion));
+    // console.log('participantList', JSON.stringify(reParticipants));
 
-
-    const functionThatReturnPromise = axios.post(`../api/createTournamentResult`, formData);
+    const functionSaveResult = axios.post(`../../../../api/createTournamentResult`, formData);
     toast.promise(
-      functionThatReturnPromise,
+      functionSaveResult,
       {
-        pending: 'Creating Event',
-        success: 'Event created successfully! 👌',
-        error: 'Error creating event 🤯'
+        pending: 'Saving Event',
+        success: 'Event saved successfully! 👌',
+        error: 'Error saving event 🤯'
       }
     ).then(
       (response) => {
@@ -157,6 +168,17 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
           //    setTimeout(() => {
           //     router.push('/event');
           // }, 3000);
+          socketRef.current.emit('close-tournament',
+          {
+            tournamentSocketId,
+            role
+          });
+        socketRef.current.on('match-details', (details) => {
+          // console.log('Received updated match-details:', details);
+          setMatchDetails(details);
+        });
+
+
           console.log('reponse.status 201, success');
         }
       }
@@ -300,6 +322,12 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
         });
         return;
       case 'matchI':
+        for (let key in reParticipants) {
+          if (reParticipants[key].name === player) {
+            setChampionId(reParticipants[key].id);
+            break;
+          }
+        }
         socketRef.current.emit('update-participant',
           {
             tournamentSocketId,
@@ -476,18 +504,14 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
 
   };
 
-  // console.log('tournamentSocketId', tournamentSocketId);
-  // console.log('tournamentInfo', tournamentInfo);
-  // console.log('matchDetailsLocal', matchDetailsLocal);
+  // // console.log('matchDetailsLocal', matchDetailsLocal);
   // console.log('matchDetails', matchDetails);
-  // console.log('pendingUpdate', pendingUpdate);
-  // console.log('matchKey', matchKey);
-  // console.log('winner set', pendingUpdate?.[`match${matchKey}`]?.winner);
   return (
     <>
       <div className={`${styles.rowWidth}`}>
-
-        <button type="button" className={`btn btn-outline-danger ${matchDetailsLocal?.champion?.winner !== null ? (!bracketFS ? styles.endBtn : styles.endBtnFS) : styles.xEndBtn} `}>
+        <button type="button" onClick={onSaveTournamentData}
+          className={`btn btn-outline-danger ${matchDetailsLocal?.tournamentInfo?.status !== 'closed' ? (matchDetailsLocal?.champion?.winner !== null ? (!bracketFS ? styles.endBtn : styles.endBtnFS) : styles.xEndBtn) : styles.xEndBtn} `}
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-stop-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
             <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z"></path>
@@ -745,7 +769,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
                       <div className={`${styles.participants}`}>
                         <h5>
                           <strong>
-                          {matchDetailsLocal.champion.winner}
+                            {matchDetailsLocal.champion.winner}
                           </strong>
                         </h5>
                       </div>

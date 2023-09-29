@@ -36,13 +36,13 @@ const ScoreModal = ({ tournamentSocketId, pendingUpdate, setPendingUpdate, match
     return (
         <>
             <div>
-                <div class="d-flex justify-content-between">
-                    <div class="p-2">
+                <div className="d-flex justify-content-between">
+                    <div className="p-2">
                         <strong>
                             <h4 className={`${styles.header}`}>Match {matchKey}</h4>
                         </strong>
                     </div>
-                    <div class={`ml-auto p-2 ${styles.underLined}`}>
+                    <div className={`ml-auto p-2 ${styles.underLined}`}>
                         <Link target="_blank" href={`/scoreboard/${tournamentSocketId}/${match}`}rel="noopener noreferrer">
                             Score Board
                         </Link>

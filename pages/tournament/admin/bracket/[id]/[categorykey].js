@@ -115,7 +115,8 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
     handleFullScreen: () => handleFullScreen(),
     setBracketFS: setBracketFS,
     bracketFS: bracketFS,
-    participants: filteredParticipants
+    participants: filteredParticipants,
+
   }
   // const startTournament = () => {
   //   console.log('start Tournament')
@@ -163,6 +164,9 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
     });
 
   }
+
+
+
   // console.log('participantsData', participantsData);
   // console.log('bracketList', bracketList);
   // console.log('selectedCategory', selectedCategory);

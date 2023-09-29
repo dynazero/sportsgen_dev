@@ -104,9 +104,9 @@ const Home = () => {
 
     const formData = new FormData();
     formData.append('tournamentId', tournamentId);
-    formData.append('championId', championId);
-    formData.append('champion', champion.winner);
-    formData.append('matchDetails', JSON.stringify(matchDetailsWithoutChampion));
+    // formData.append('championId', championId);
+    // formData.append('champion', champion.winner);
+    // formData.append('matchDetails', JSON.stringify(matchDetailsWithoutChampion));
 
     console.log('matchDetailsWithoutChampion', matchDetailsWithoutChampion);
 

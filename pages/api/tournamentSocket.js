@@ -1,11 +1,6 @@
 import { Server } from 'socket.io';
 
-let matchDetails = {
-  '02': {
-    matchA: { participant1: 'testParticipant1', participant2: 'testParticipant2' },
-    matchB: { participant1: 'testParticipant3', participant2: 'testParticipant4' }
-  }
-};
+let matchDetails = {};
 
 const initializeSocket = (server) => {
   const io = new Server(server);
@@ -17,6 +12,7 @@ const initializeSocket = (server) => {
     socket.on('update-score', (data) => handleUpdateScore(io, socket, data));
     socket.on('update-winner', (data) => handleUpdateWinner(io, socket, data));
     socket.on('update-participant', (data) => handleUpdateParticipant(io, socket, data));
+    socket.on('close-tournament', (tournamentSocketId) => handleCloseTournament(io, socket, tournamentSocketId));
     socket.on('end-tournament', (tournamentSocketId) => handleEndTournament(io, socket, tournamentSocketId));
     socket.on('get-all-matches', (tournamentSocketId) => handleGetAllMatches(io, socket, tournamentSocketId));
     socket.on('initialize-tournament', (data) => handleInitializeTournament(io, socket, data));
@@ -108,6 +104,20 @@ const initializeSocket = (server) => {
 
     matchDetails[tournamentSocketId][matchKey].score = matchScores;
 
+    // Emit the updated match details to all clients in the tournament room
+    io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
+  };
+
+  const handleCloseTournament = (io, socket, {tournamentSocketId, role}) => {
+    // console.log('Current Data', tournamentSocketId, matchKey, participantSide, player, role)
+    // console.log('Current Participants', matchDetails[tournamentSocketId][matchKey].participant1, matchDetails[tournamentSocketId][matchKey].participant2)
+    if (role !== 'admin') {
+      console.log(`Client is not an admin, skipping winner update.`);
+      return;
+    }
+
+    matchDetails[tournamentSocketId].tournamentInfo.status = closed;
+    
     // Emit the updated match details to all clients in the tournament room
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
   };

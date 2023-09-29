@@ -31,13 +31,15 @@ export default async (req, res) => {
 
       const {
         tournamentId,
+        tournamentSocketId,
         championId,
         champion,
       } = fields;
 
       const matchDetails = JSON.parse(fields.matchDetails);
+      const participantList = JSON.parse(fields.participantList);
 
-      const tournamentVerify = await TournamentResult.findOne({ tournamentId: tournamentId });
+      const tournamentVerify = await TournamentResult.findOne({ tournamentSocketId: tournamentSocketId });
       if (tournamentVerify) {
         res.status(422).json({ message: "Tournament already exists" });
         return;
@@ -47,11 +49,13 @@ export default async (req, res) => {
       try {
          const newTournamentResult = new TournamentResult({
           tournamentId,
+          tournamentSocketId,
           champion: {
             participantId: championId,
             participant: champion,
           },
           matches: matchDetails,
+          participantList: participantList,
         });
 
         await newTournamentResult.save();
