@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
+import LoadingSpinner from './LoadingSpinner'
 import io from 'socket.io-client';
 import axios from 'axios';
 import { toast } from "react-toastify";
@@ -53,6 +54,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
     champion: { winner: matchWinners.matchI }
   };
 
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [matchDetails, setMatchDetails] = useState({});
   const [matchDetailsLocal, setMatchDetailsLocal] = useState({});
   const [role, setRole] = useState('admin');
@@ -120,8 +122,11 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   }, [tournamentSocketId, role]);
 
   useEffect(() => {
-    setMatchDetailsLocal(matchDetails)
-  }, [matchDetails])
+        setMatchDetailsLocal(matchDetails);
+        const timer = setTimeout(() => setDataLoaded(true), 800);
+    
+        return () => clearTimeout(timer);
+  }, [matchDetails]);
 
 
   const onSaveTournamentData = () => {
@@ -507,6 +512,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   // // console.log('matchDetailsLocal', matchDetailsLocal);
   // console.log('matchDetails', matchDetails);
   return (
+     dataLoaded ? 
     <>
       <div className={`${styles.rowWidth}`}>
         <button type="button" onClick={onSaveTournamentData}
@@ -1008,6 +1014,9 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
         </Modal.Footer>
       </Modal>
     </>
+    : (
+    <LoadingSpinner />
+    )
   )
 }
 

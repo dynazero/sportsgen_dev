@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
+import Loading from './loading'
 import dynamic from 'next/dynamic';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -11,8 +12,8 @@ import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
 import { parse } from 'date-fns';
 
-const ShuffleComponent = dynamic(() => import('../../../../../components/ShuffleComponent'));
-const BracketComponent = dynamic(() => import('../../../../../components/BracketComponent'));
+const ShuffleComponent = dynamic(() => import('../../../../../components/ShuffleComponent'), { loading: () => <p>Loading...</p> });
+const BracketComponent = dynamic(() => import('../../../../../components/BracketComponent'), { loading: () => <p>Loading...</p> });
 
 const bracketImports = {
   0: ShuffleComponent,
@@ -36,13 +37,13 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   const BracketHandler = bracketImports[selectedCategory.start];
 
   const [tournamentInfo, setTournamentInfo] = useState({
-    tournamentId : tournamentData._id,
+    tournamentId: tournamentData._id,
     eventName: tournamentData.eventName,
     title: selectedCategory.title,
     format: tournamentData.format,
   })
 
-  
+
 
   const handleCategoryChange = (event) => {
     setCategory(event);
@@ -171,7 +172,7 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   // console.log('bracketList', bracketList);
   // console.log('selectedCategory', selectedCategory);
   // console.log('tournamentData', tournamentData);
-  
+
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
@@ -213,11 +214,10 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
             </div>
 
           </div>
-          <Suspense fallback={<div>Loading...</div>}>
-            {selectedCategory.start === 0 ?
-              <BracketHandler {...shuffleProps} /> :
-              <BracketHandler {...bracketProps} />}
-          </Suspense>
+          {selectedCategory.start === 0 ?
+            <BracketHandler {...shuffleProps} /> :
+            <BracketHandler {...bracketProps} />
+          }
         </div>
       </div>
     </div >

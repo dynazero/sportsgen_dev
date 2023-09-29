@@ -4,8 +4,8 @@ import styles from './scoremodal.module.css'
 import Link from 'next/link';
 import match from '../../pages/scoreboard/[id]/[matchKey]';
 
-const ScoreUpdate = dynamic(() => import('./scoreUpdate'));
-const WinnerUpdate = dynamic(() => import('./winnerUpdate'));
+const ScoreUpdate = dynamic(() => import('./scoreUpdate'), { loading: () => <p>Loading...</p> });
+const WinnerUpdate = dynamic(() => import('./winnerUpdate'), { loading: () => <p>Loading...</p> });
 
 
 const modalImports = {
@@ -16,7 +16,7 @@ const modalImports = {
 const ScoreModal = ({ tournamentSocketId, pendingUpdate, setPendingUpdate, matchKey, winnerUpdate, winnerConfirm }) => {
 
     const ModalHandler = modalImports[winnerUpdate];
-    const match = 'match'+matchKey;
+    const match = 'match' + matchKey;
 
     const genProps = {
         matchKey: matchKey,
@@ -43,17 +43,16 @@ const ScoreModal = ({ tournamentSocketId, pendingUpdate, setPendingUpdate, match
                         </strong>
                     </div>
                     <div className={`ml-auto p-2 ${styles.underLined}`}>
-                        <Link target="_blank" href={`/scoreboard/${tournamentSocketId}/${match}`}rel="noopener noreferrer">
+                        <Link target="_blank" href={`/scoreboard/${tournamentSocketId}/${match}`} rel="noopener noreferrer">
                             Score Board
                         </Link>
                     </div>
                 </div>
                 <div className={`${styles.scoreContainer}`}>
-                    <Suspense fallback={<div>Loading...</div>}>
-                        {winnerUpdate === 0 ?
-                            <ModalHandler {...scoreProps} /> :
-                            <ModalHandler {...winnerProps} />}
-                    </Suspense>
+                    {winnerUpdate === 0 ?
+                        <ModalHandler {...scoreProps} /> :
+                        <ModalHandler {...winnerProps} />
+                    }
                 </div>
 
                 {/* <ScoreUpdate pendingUpdate={pendingUpdate} matchKey={matchKey} /> */}

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
+import dynamic from 'next/dynamic';
 import { useVerified } from '../../context/verifiedContext';
 import axios from 'axios'
 // import { useRouter } from 'next/router';
@@ -6,10 +7,9 @@ import { signIn, signOut, useSession, getSession } from "next-auth/react"
 import Sidebar from '../../components/Sidebar'
 import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
-import MyDashboard from '../../components/MyDashboard'
 import { toast } from "react-toastify";
 
-
+const MyDashboard = dynamic(() => import('../../components/MyDashboard'), { loading: () => <p>Loading...</p>});
 
 export default function dashboard({
   verifiedFromServer,
@@ -80,22 +80,24 @@ export default function dashboard({
           transition: ".4s",
           width: mWidth
         }}>
-        <MyDashboard
-          passPage={passPage}
-          setCurPage={setCurPage}
-          teamItem={teamItem}
-          athletelist={athletelist}
-          coachlist={coachlist}
-          officiallist={officiallist}
-          verifiedFromServer={verifiedFromServer}
-          members={members}
-          organizedUpcomingEvents={organizedUpcomingEvents}
-          organizedOngoingEvents={organizedOngoingEvents}
-          upcomingEvents={upcomingEvents}
-          archivedEvents={archivedEvents}
-          orgLiveTournaments={orgLiveTournaments}
-          liveTournaments={liveTournaments}
-        />
+        
+          <MyDashboard
+            passPage={passPage}
+            setCurPage={setCurPage}
+            teamItem={teamItem}
+            athletelist={athletelist}
+            coachlist={coachlist}
+            officiallist={officiallist}
+            verifiedFromServer={verifiedFromServer}
+            members={members}
+            organizedUpcomingEvents={organizedUpcomingEvents}
+            organizedOngoingEvents={organizedOngoingEvents}
+            upcomingEvents={upcomingEvents}
+            archivedEvents={archivedEvents}
+            orgLiveTournaments={orgLiveTournaments}
+            liveTournaments={liveTournaments}
+          />
+       
       </div>
 
       {arrowV && (
