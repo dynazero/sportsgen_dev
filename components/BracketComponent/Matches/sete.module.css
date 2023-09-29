@@ -68,31 +68,35 @@
 }
 
 .headerChamp {
-    padding-left: 26px !important;
+    color: #0d6efd;
+    /* padding-left: 26px !important; */
     position: absolute;
-    top: 5px;
-    right: 62%;
+    top: 16px;
+    right: 50%;
 }
 
 .headerChampFS {
-    padding-left: 26px !important;
+    color: #0d6efd;
+    /* padding-left: 26px !important; */
     position: absolute;
-    top: -76px;
-    right: 57%;
+    top: -60px;
+    right: 50%;
 }
 
 .champion {
+    color: #fc1a19;
     position: absolute;
-    top: 5px;
+    top: -16px;
     white-space: nowrap;
-    right: 46% !important;
+    right: 49% !important;
 }
 
 .championFS {
+    color: #fc1a19;
     position: absolute;
-    top: -76px;
+    top: -96px;
     white-space: nowrap;
-    right: 46% !important;
+    right: 49.5% !important;
 }
 
 .grandFinals {

@@ -122,10 +122,10 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   }, [tournamentSocketId, role]);
 
   useEffect(() => {
-        setMatchDetailsLocal(matchDetails);
-        const timer = setTimeout(() => setDataLoaded(true), 800);
-    
-        return () => clearTimeout(timer);
+    setMatchDetailsLocal(matchDetails);
+    const timer = setTimeout(() => setDataLoaded(true), 800);
+
+    return () => clearTimeout(timer);
   }, [matchDetails]);
 
 
@@ -174,14 +174,14 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
           //     router.push('/event');
           // }, 3000);
           socketRef.current.emit('close-tournament',
-          {
-            tournamentSocketId,
-            role
+            {
+              tournamentSocketId,
+              role
+            });
+          socketRef.current.on('match-details', (details) => {
+            // console.log('Received updated match-details:', details);
+            setMatchDetails(details);
           });
-        socketRef.current.on('match-details', (details) => {
-          // console.log('Received updated match-details:', details);
-          setMatchDetails(details);
-        });
 
 
           console.log('reponse.status 201, success');
@@ -512,511 +512,511 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   // // console.log('matchDetailsLocal', matchDetailsLocal);
   // console.log('matchDetails', matchDetails);
   return (
-     dataLoaded ? 
-    <>
-      <div className={`${styles.rowWidth}`}>
-        <button type="button" onClick={onSaveTournamentData}
-          className={`btn btn-outline-danger ${matchDetailsLocal?.tournamentInfo?.status !== 'closed' ? (matchDetailsLocal?.champion?.winner !== null ? (!bracketFS ? styles.endBtn : styles.endBtnFS) : styles.xEndBtn) : styles.xEndBtn} `}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-stop-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-            <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z"></path>
-          </svg>
-          End Tournament
-        </button>
+    dataLoaded ?
+      <>
+        <div className={`${styles.rowWidth}`}>
+          <button type="button" onClick={onSaveTournamentData}
+            className={`btn btn-outline-danger ${matchDetailsLocal?.tournamentInfo?.status !== 'closed' ? (matchDetailsLocal?.champion?.winner !== null ? (!bracketFS ? styles.endBtn : styles.endBtnFS) : styles.xEndBtn) : styles.xEndBtn} `}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-stop-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+              <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z"></path>
+            </svg>
+            End Tournament
+          </button>
 
-        <table className={`table table-dark ${!bracketFS ? styles.table : styles.tableFS}`}>
-          <thead>
-            <tr>
-              <th className={`${styles.thead}`}>Round 1</th>
-              <th></th>
-              <th className={`${styles.thead}`}>Round 2</th>
-              <th></th>
-              <th className={`${styles.thead}`}>Round 3 / Semi Finals</th>
-              <th></th>
-              <th className={`${styles.thead}`}>Round 4 / Grand Finals</th>
-              {matchDetailsLocal?.champion?.winner &&
-                <th className={`${!bracketFS ? styles.headerChamp : styles.headerChampFS}`}>Champion</th>
-              }
-            </tr>
-          </thead>
-          <tbody>
-            <tr >
-              <td
-                className={`${matchDetailsLocal?.matchA?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() =>
-                  `${matchDetailsLocal?.matchA?.status === 'open' ? handleShow('A') : null}`}>
-                {matchDetailsLocal?.matchA && (
-                  <React.Fragment key='matchA'>
-                    <div className={`${styles.participantsWrapperTop}`}>
-                      <div className={`${styles.participants}`}>
-                        {/* Participant 1*/}
-                        {matchDetailsLocal.matchA.participant1}
-                        <p className={`${styles.score}
+          <table className={`table table-dark ${!bracketFS ? styles.table : styles.tableFS}`}>
+            <thead>
+              <tr>
+                <th className={`${styles.thead}`}>Round 1</th>
+                <th></th>
+                <th className={`${styles.thead}`}>Round 2</th>
+                <th></th>
+                <th className={`${styles.thead}`}>Round 3 / Semi Finals</th>
+                <th></th>
+                <th className={`${styles.thead}`}>Round 4 / Grand Finals</th>
+                {matchDetailsLocal?.champion?.winner &&
+                  <th className={`${!bracketFS ? styles.headerChamp : styles.headerChampFS}`}>Champion</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              <tr >
+                <td
+                  className={`${matchDetailsLocal?.matchA?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
+                  onClick={() =>
+                    `${matchDetailsLocal?.matchA?.status === 'open' ? handleShow('A') : null}`}>
+                  {matchDetailsLocal?.matchA && (
+                    <React.Fragment key='matchA'>
+                      <div className={`${styles.participantsWrapperTop}`}>
+                        <div className={`${styles.participants}`}>
+                          {/* Participant 1*/}
+                          {matchDetailsLocal.matchA.participant1}
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchA?.winner ? (matchDetailsLocal?.matchA?.winner === matchDetailsLocal?.matchA?.participant1 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchA.score.player1}
-                        </p>
+                          >
+                            {matchDetailsLocal.matchA.score.player1}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>A</small></div>
-                    <div className={`${styles.participantsWrapperBottom}`}>
-                      <div className={`${styles.participants}`}>
-                        {/* Participant 2*/}
-                        {matchDetailsLocal.matchA.participant2}
-                        <p className={`${styles.score}
+                      <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>A</small></div>
+                      <div className={`${styles.participantsWrapperBottom}`}>
+                        <div className={`${styles.participants}`}>
+                          {/* Participant 2*/}
+                          {matchDetailsLocal.matchA.participant2}
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchA?.winner ? (matchDetailsLocal?.matchA?.winner === matchDetailsLocal?.matchA?.participant2 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchA.score.player2}
-                        </p>
-                      </div>
-                    </div>
-                  </React.Fragment>
-                )}
-              </td>
-              <td>
-                <svg height="100" width="100">
-                  {/* <path d="M50 24.5 H80 V24.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path> */}
-                  <line x1="0" y1="24.5" x2="100" y2="24.5" style={{ stroke: "rgb(233, 236, 239)", strokeWidth: 1 }} />
-                </svg>
-              </td>
-              <td
-                className={`${matchDetailsLocal?.matchE?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() =>
-                  `${matchDetailsLocal?.matchE?.status === 'open' ? handleShow('E') : null}`}>
-                {matchDetailsLocal?.matchE && (
-                  <React.Fragment key='matchE'>
-                    <div className={`${styles.participantsWrapperTop}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchE.participant1 ?
-                          matchDetailsLocal.matchE.participant1 :
-                          <p className={`${styles.standByText} ${styles.pmb}`}>
-                            <small>
-                              Match A winner
-                            </small>
+                          >
+                            {matchDetailsLocal.matchA.score.player2}
                           </p>
-                        }
-                        <p className={`${styles.score}
-                         ${matchDetailsLocal?.matchE?.winner ? (matchDetailsLocal?.matchE?.winner === matchDetailsLocal?.matchE?.participant1 ? styles.winner : '') : ''}
-                        `}
-                        >
-                          {matchDetailsLocal.matchE.score.player1}
-                        </p>
-                      </div>
-                    </div>
-                    <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>E</small></div>
-                    <div className={`${styles.participantsWrapperBottom}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchE.participant2}
-                        <p className={`${styles.score}
-                         ${matchDetailsLocal?.matchE?.winner ? (matchDetailsLocal?.matchE?.winner === matchDetailsLocal?.matchE?.participant2 ? styles.winner : '') : ''}
-                        `}
-                        >
-                          {matchDetailsLocal.matchE.score.player2}
-                        </p>
-                      </div>
-                    </div>
-                  </React.Fragment>
-                )}
-              </td>
-              <td className={`${styles.matchtoF}`}>
-                <svg height={`${!bracketFS ? "78" : "165"}`} width="50" style={{
-                  position: `${!bracketFS ? "relative" : "absolute"}`
-                }} >
-                  <path strokeWidth="1" stroke="rgb(233, 236, 239)" fill="transparent" id="" d={`${!bracketFS ? "M100 80 H30 V24.5 H0" : "M110 165 H30 V24.5 H0"}`}></path>
-                </svg>
-              </td>
-            </tr>
-            <tr >
-              <td></td>
-              <td></td>
-              <td
-                className={`${matchDetailsLocal?.matchC?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() =>
-                  `${matchDetailsLocal?.matchC?.status === 'open' ? handleShow('C') : null}`}>
-                {matchDetailsLocal?.matchC && (
-                  <React.Fragment key='matchC'>
-                    <div className={`${styles.participantsWrapperTop}`}>
-                      <div className={`${styles.participants}`}>
-                        {/* Participant 1*/}
-                        {matchDetailsLocal.matchC.participant1}
-                        <p className={`${styles.score}
-                         ${matchDetailsLocal?.matchC?.winner ? (matchDetailsLocal?.matchC?.winner === matchDetailsLocal?.matchC?.participant1 ? styles.winner : '') : ''}
-                        `}
-                        >
-                          {matchDetailsLocal.matchC.score.player1}
-                        </p>
-                      </div>
-                    </div>
-                    <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>C</small></div>
-                    <div className={`${styles.participantsWrapperBottom}`}>
-                      <div className={`${styles.participants}`}>
-                        {/* Participant 2*/}
-                        {matchDetailsLocal.matchC.participant2}
-                        <p className={`${styles.score}
-                         ${matchDetailsLocal?.matchC?.winner ? (matchDetailsLocal?.matchC?.winner === matchDetailsLocal?.matchC?.participant2 ? styles.winner : '') : ''}
-                        `}
-                        >
-                          {matchDetailsLocal.matchC.score.player2}
-                        </p>
-                      </div>
-                    </div>
-                  </React.Fragment>
-                )}
-              </td>
-              <td className={`${styles.matchBelowBracketA}`}>
-                <svg height="70" width="110">
-                  <path d="M110 0 H30 V53.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
-                </svg>
-              </td>
-              <td
-                className={`${styles.matchG} ${matchDetailsLocal?.matchG?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() =>
-                  `${matchDetailsLocal?.matchG?.status === 'open' ? handleShow('G') : null}`}>
-                {matchDetailsLocal?.matchG && (
-                  <React.Fragment key='matchG'>
-                    <div className={`${styles.participantsWrapperTop}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchG.participant1 ?
-                          matchDetailsLocal.matchG.participant1 :
-                          <p className={`${styles.standByText} ${styles.pmb}`}>
-                            <small>
-                              Match E winner
-                            </small>
-                          </p>
-                        }
-                        <p className={`${styles.score}
-                         ${matchDetailsLocal?.matchG?.winner ? (matchDetailsLocal?.matchG?.winner === matchDetailsLocal?.matchG?.participant1 ? styles.winner : '') : ''}
-                        `}
-                        >
-                          {matchDetailsLocal.matchG.score.player1}
-                        </p>
-                      </div>
-                    </div>
-                    <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>G</small></div>
-                    <div className={`${styles.participantsWrapperBottom}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchG.participant2 ?
-                          matchDetailsLocal.matchG.participant2 :
-                          <p className={`${styles.standByText} ${styles.pmb}`}>
-                            <small>
-                              Match C winner
-                            </small>
-                          </p>
-                        }
-                        <p className={`${styles.score}
-                         ${matchDetailsLocal?.matchG?.winner ? (matchDetailsLocal?.matchG?.winner === matchDetailsLocal?.matchG?.participant2 ? styles.winner : '') : ''}
-                        `}
-                        >
-                          {matchDetailsLocal.matchG.score.player2}
-                        </p>
-                      </div>
-                    </div>
-                  </React.Fragment>
-                )}
-              </td>
-              <td className={`${styles.matchtoH}`}>
-                <svg height="110" width="50">
-                  <path strokeWidth="1" stroke="rgb(233, 236, 239)" fill="transparent" id="" d="M100 110 H30 V0 H0"></path>
-                </svg>
-              </td>
-              <td
-                className={`${styles.grandFinals} ${matchDetailsLocal?.matchI?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() =>
-                  `${matchDetailsLocal?.matchI?.status === 'open' ? handleShow('I') : null}`}>
-                {matchDetailsLocal?.matchI && (
-                  <React.Fragment key='matchI'>
-                    <div className={`${styles.participantsWrapperTop}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchI.participant1 ?
-                          matchDetailsLocal.matchI.participant1 :
-                          <p className={`${styles.standByText} ${styles.pmb}`}>
-                            <small>
-                              Match G winner
-                            </small>
-                          </p>
-                        }
-                        <p className={`${styles.score}
-                         ${matchDetailsLocal?.matchI?.winner ? (matchDetailsLocal?.matchI?.winner === matchDetailsLocal?.matchI?.participant1 ? styles.winner : '') : ''}
-                        `}
-                        >
-                          {matchDetailsLocal.matchI.score.player1}
-                        </p>
-                      </div>
-                    </div>
-                    <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>I</small></div>
-                    <div className={`${styles.participantsWrapperBottom}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchI.participant2 ?
-                          matchDetailsLocal.matchI.participant2 :
-                          <p className={`${styles.standByText} ${styles.pmb}`}>
-                            <small>
-                              Match H winner
-                            </small>
-                          </p>
-                        }
-                        <p className={`${styles.score}
-                         ${matchDetailsLocal?.matchI?.winner ? (matchDetailsLocal?.matchI?.winner === matchDetailsLocal?.matchI?.participant2 ? styles.winner : '') : ''}
-                        `}
-                        >
-                          {matchDetailsLocal.matchI.score.player2}
-                        </p>
-                      </div>
-                    </div>
-                  </React.Fragment>
-                )}
-              </td>
-              {matchDetailsLocal?.champion?.winner && (
-                <td className={`${!bracketFS ? styles.champion : styles.championFS}`}>
-                  {matchDetailsLocal?.champion?.winner && (
-                    <React.Fragment key='matchB'>
-                      <div className={`${styles.participants}`}>
-                        <h5>
-                          <strong>
-                            {matchDetailsLocal.champion.winner}
-                          </strong>
-                        </h5>
+                        </div>
                       </div>
                     </React.Fragment>
                   )}
                 </td>
-              )}
-            </tr>
-            <tr >
-              <td className={`${matchDetailsLocal?.matchB?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() =>
-                  `${matchDetailsLocal?.matchB?.status === 'open' ? handleShow('B') : null}`}>
-                {matchDetailsLocal?.matchB && (
-                  <React.Fragment key='matchB'>
-                    <div className={`${styles.participantsWrapperTop}`}>
-                      <div className={`${styles.participants}`}>
-                        {/* Participant 1*/}
-                        {matchDetailsLocal.matchB.participant1}
-                        <p className={`${styles.score}
+                <td>
+                  <svg height="100" width="100">
+                    {/* <path d="M50 24.5 H80 V24.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path> */}
+                    <line x1="0" y1="24.5" x2="100" y2="24.5" style={{ stroke: "rgb(233, 236, 239)", strokeWidth: 1 }} />
+                  </svg>
+                </td>
+                <td
+                  className={`${matchDetailsLocal?.matchE?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
+                  onClick={() =>
+                    `${matchDetailsLocal?.matchE?.status === 'open' ? handleShow('E') : null}`}>
+                  {matchDetailsLocal?.matchE && (
+                    <React.Fragment key='matchE'>
+                      <div className={`${styles.participantsWrapperTop}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchE.participant1 ?
+                            matchDetailsLocal.matchE.participant1 :
+                            <p className={`${styles.standByText} ${styles.pmb}`}>
+                              <small>
+                                Match A winner
+                              </small>
+                            </p>
+                          }
+                          <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchE?.winner ? (matchDetailsLocal?.matchE?.winner === matchDetailsLocal?.matchE?.participant1 ? styles.winner : '') : ''}
+                        `}
+                          >
+                            {matchDetailsLocal.matchE.score.player1}
+                          </p>
+                        </div>
+                      </div>
+                      <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>E</small></div>
+                      <div className={`${styles.participantsWrapperBottom}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchE.participant2}
+                          <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchE?.winner ? (matchDetailsLocal?.matchE?.winner === matchDetailsLocal?.matchE?.participant2 ? styles.winner : '') : ''}
+                        `}
+                          >
+                            {matchDetailsLocal.matchE.score.player2}
+                          </p>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  )}
+                </td>
+                <td className={`${styles.matchtoF}`}>
+                  <svg height={`${!bracketFS ? "78" : "165"}`} width="50" style={{
+                    position: `${!bracketFS ? "relative" : "absolute"}`
+                  }} >
+                    <path strokeWidth="1" stroke="rgb(233, 236, 239)" fill="transparent" id="" d={`${!bracketFS ? "M100 80 H30 V24.5 H0" : "M110 165 H30 V24.5 H0"}`}></path>
+                  </svg>
+                </td>
+              </tr>
+              <tr >
+                <td></td>
+                <td></td>
+                <td
+                  className={`${matchDetailsLocal?.matchC?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
+                  onClick={() =>
+                    `${matchDetailsLocal?.matchC?.status === 'open' ? handleShow('C') : null}`}>
+                  {matchDetailsLocal?.matchC && (
+                    <React.Fragment key='matchC'>
+                      <div className={`${styles.participantsWrapperTop}`}>
+                        <div className={`${styles.participants}`}>
+                          {/* Participant 1*/}
+                          {matchDetailsLocal.matchC.participant1}
+                          <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchC?.winner ? (matchDetailsLocal?.matchC?.winner === matchDetailsLocal?.matchC?.participant1 ? styles.winner : '') : ''}
+                        `}
+                          >
+                            {matchDetailsLocal.matchC.score.player1}
+                          </p>
+                        </div>
+                      </div>
+                      <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>C</small></div>
+                      <div className={`${styles.participantsWrapperBottom}`}>
+                        <div className={`${styles.participants}`}>
+                          {/* Participant 2*/}
+                          {matchDetailsLocal.matchC.participant2}
+                          <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchC?.winner ? (matchDetailsLocal?.matchC?.winner === matchDetailsLocal?.matchC?.participant2 ? styles.winner : '') : ''}
+                        `}
+                          >
+                            {matchDetailsLocal.matchC.score.player2}
+                          </p>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  )}
+                </td>
+                <td className={`${styles.matchBelowBracketA}`}>
+                  <svg height="70" width="110">
+                    <path d="M110 0 H30 V53.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
+                  </svg>
+                </td>
+                <td
+                  className={`${styles.matchG} ${matchDetailsLocal?.matchG?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
+                  onClick={() =>
+                    `${matchDetailsLocal?.matchG?.status === 'open' ? handleShow('G') : null}`}>
+                  {matchDetailsLocal?.matchG && (
+                    <React.Fragment key='matchG'>
+                      <div className={`${styles.participantsWrapperTop}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchG.participant1 ?
+                            matchDetailsLocal.matchG.participant1 :
+                            <p className={`${styles.standByText} ${styles.pmb}`}>
+                              <small>
+                                Match E winner
+                              </small>
+                            </p>
+                          }
+                          <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchG?.winner ? (matchDetailsLocal?.matchG?.winner === matchDetailsLocal?.matchG?.participant1 ? styles.winner : '') : ''}
+                        `}
+                          >
+                            {matchDetailsLocal.matchG.score.player1}
+                          </p>
+                        </div>
+                      </div>
+                      <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>G</small></div>
+                      <div className={`${styles.participantsWrapperBottom}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchG.participant2 ?
+                            matchDetailsLocal.matchG.participant2 :
+                            <p className={`${styles.standByText} ${styles.pmb}`}>
+                              <small>
+                                Match C winner
+                              </small>
+                            </p>
+                          }
+                          <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchG?.winner ? (matchDetailsLocal?.matchG?.winner === matchDetailsLocal?.matchG?.participant2 ? styles.winner : '') : ''}
+                        `}
+                          >
+                            {matchDetailsLocal.matchG.score.player2}
+                          </p>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  )}
+                </td>
+                <td className={`${styles.matchtoH}`}>
+                  <svg height="110" width="50">
+                    <path strokeWidth="1" stroke="rgb(233, 236, 239)" fill="transparent" id="" d="M100 110 H30 V0 H0"></path>
+                  </svg>
+                </td>
+                <td
+                  className={`${styles.grandFinals} ${matchDetailsLocal?.matchI?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
+                  onClick={() =>
+                    `${matchDetailsLocal?.matchI?.status === 'open' ? handleShow('I') : null}`}>
+                  {matchDetailsLocal?.matchI && (
+                    <React.Fragment key='matchI'>
+                      <div className={`${styles.participantsWrapperTop}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchI.participant1 ?
+                            matchDetailsLocal.matchI.participant1 :
+                            <p className={`${styles.standByText} ${styles.pmb}`}>
+                              <small>
+                                Match G winner
+                              </small>
+                            </p>
+                          }
+                          <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchI?.winner ? (matchDetailsLocal?.matchI?.winner === matchDetailsLocal?.matchI?.participant1 ? styles.winner : '') : ''}
+                        `}
+                          >
+                            {matchDetailsLocal.matchI.score.player1}
+                          </p>
+                        </div>
+                      </div>
+                      <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>I</small></div>
+                      <div className={`${styles.participantsWrapperBottom}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchI.participant2 ?
+                            matchDetailsLocal.matchI.participant2 :
+                            <p className={`${styles.standByText} ${styles.pmb}`}>
+                              <small>
+                                Match H winner
+                              </small>
+                            </p>
+                          }
+                          <p className={`${styles.score}
+                         ${matchDetailsLocal?.matchI?.winner ? (matchDetailsLocal?.matchI?.winner === matchDetailsLocal?.matchI?.participant2 ? styles.winner : '') : ''}
+                        `}
+                          >
+                            {matchDetailsLocal.matchI.score.player2}
+                          </p>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  )}
+                </td>
+                {matchDetailsLocal?.champion?.winner && (
+                  <td className={`${!bracketFS ? styles.champion : styles.championFS}`}>
+                    {matchDetailsLocal?.champion?.winner && (
+                      <React.Fragment key='matchB'>
+                        <div className={`${styles.participants}`}>
+                          <h5>
+                            <strong>
+                              {matchDetailsLocal.champion.winner}
+                            </strong>
+                          </h5>
+                        </div>
+                      </React.Fragment>
+                    )}
+                  </td>
+                )}
+              </tr>
+              <tr >
+                <td className={`${matchDetailsLocal?.matchB?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
+                  onClick={() =>
+                    `${matchDetailsLocal?.matchB?.status === 'open' ? handleShow('B') : null}`}>
+                  {matchDetailsLocal?.matchB && (
+                    <React.Fragment key='matchB'>
+                      <div className={`${styles.participantsWrapperTop}`}>
+                        <div className={`${styles.participants}`}>
+                          {/* Participant 1*/}
+                          {matchDetailsLocal.matchB.participant1}
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchB?.winner ? (matchDetailsLocal?.matchB?.winner === matchDetailsLocal?.matchB?.participant1 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchB.score.player1}
-                        </p>
+                          >
+                            {matchDetailsLocal.matchB.score.player1}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>B</small></div>
-                    <div className={`${styles.participantsWrapperBottom}`}>
-                      <div className={`${styles.participants}`}>
-                        {/* Participant 2*/}
-                        {matchDetailsLocal.matchB.participant2}
-                        <p className={`${styles.score}
+                      <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>B</small></div>
+                      <div className={`${styles.participantsWrapperBottom}`}>
+                        <div className={`${styles.participants}`}>
+                          {/* Participant 2*/}
+                          {matchDetailsLocal.matchB.participant2}
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchB?.winner ? (matchDetailsLocal?.matchB?.winner === matchDetailsLocal?.matchB?.participant2 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchB.score.player2}
-                        </p>
-                      </div>
-                    </div>
-                  </React.Fragment>
-                )}
-              </td>
-              <td>
-                <svg height="100" width="100">
-                  {/* <path d="M50 24.5 H80 V24.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path> */}
-                  <line x1="0" y1="24.5" x2="100" y2="24.5" style={{ stroke: "rgb(233, 236, 239)", strokeWidth: 1 }} />
-                </svg>
-              </td>
-              <td className={`${matchDetailsLocal?.matchF?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() =>
-                  `${matchDetailsLocal?.matchF?.status === 'open' ? handleShow('F') : null}`}>
-                {matchDetailsLocal?.matchF && (
-                  <React.Fragment key='matchF'>
-                    <div className={`${styles.participantsWrapperTop}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchF.participant1 ?
-                          matchDetailsLocal.matchF.participant1 :
-                          <p className={`${styles.standByText} ${styles.pmb}`}>
-                            <small>
-                              Match B winner
-                            </small>
+                          >
+                            {matchDetailsLocal.matchB.score.player2}
                           </p>
-                        }
-                        <p className={`${styles.score}
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  )}
+                </td>
+                <td>
+                  <svg height="100" width="100">
+                    {/* <path d="M50 24.5 H80 V24.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path> */}
+                    <line x1="0" y1="24.5" x2="100" y2="24.5" style={{ stroke: "rgb(233, 236, 239)", strokeWidth: 1 }} />
+                  </svg>
+                </td>
+                <td className={`${matchDetailsLocal?.matchF?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
+                  onClick={() =>
+                    `${matchDetailsLocal?.matchF?.status === 'open' ? handleShow('F') : null}`}>
+                  {matchDetailsLocal?.matchF && (
+                    <React.Fragment key='matchF'>
+                      <div className={`${styles.participantsWrapperTop}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchF.participant1 ?
+                            matchDetailsLocal.matchF.participant1 :
+                            <p className={`${styles.standByText} ${styles.pmb}`}>
+                              <small>
+                                Match B winner
+                              </small>
+                            </p>
+                          }
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchF?.winner ? (matchDetailsLocal?.matchF?.winner === matchDetailsLocal?.matchF?.participant1 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchF.score.player1}
-                        </p>
+                          >
+                            {matchDetailsLocal.matchF.score.player1}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>F</small></div>
-                    <div className={`${styles.participantsWrapperBottom}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchF.participant2}
-                        <p className={`${styles.score}
+                      <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>F</small></div>
+                      <div className={`${styles.participantsWrapperBottom}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchF.participant2}
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchF?.winner ? (matchDetailsLocal?.matchF?.winner === matchDetailsLocal?.matchF?.participant2 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchF.score.player2}
-                        </p>
-                      </div>
-                    </div>
-                  </React.Fragment>
-                )}
-              </td>
-              <td className={`${styles.matchtoF}`}>
-                <svg height="78" width="50">
-                  <path strokeWidth="1" stroke="rgb(233, 236, 239)" fill="transparent" id="" d="M100 80 H30 V24.5 H0"></path>
-                </svg>
-              </td>
-
-              <td className={`${styles.matchH} ${matchDetailsLocal?.matchH?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() =>
-                  `${matchDetailsLocal?.matchH?.status === 'open' ? handleShow('H') : null}`}>
-                {matchDetailsLocal?.matchH && (
-                  <React.Fragment key='matchH'>
-                    <div className={`${styles.participantsWrapperTop}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchH.participant1 ?
-                          matchDetailsLocal.matchH.participant1 :
-                          <p className={`${styles.standByText} ${styles.pmb}`}>
-                            <small>
-                              Match F winner
-                            </small>
+                          >
+                            {matchDetailsLocal.matchF.score.player2}
                           </p>
-                        }
-                        <p className={`${styles.score}
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  )}
+                </td>
+                <td className={`${styles.matchtoF}`}>
+                  <svg height="78" width="50">
+                    <path strokeWidth="1" stroke="rgb(233, 236, 239)" fill="transparent" id="" d="M100 80 H30 V24.5 H0"></path>
+                  </svg>
+                </td>
+
+                <td className={`${styles.matchH} ${matchDetailsLocal?.matchH?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
+                  onClick={() =>
+                    `${matchDetailsLocal?.matchH?.status === 'open' ? handleShow('H') : null}`}>
+                  {matchDetailsLocal?.matchH && (
+                    <React.Fragment key='matchH'>
+                      <div className={`${styles.participantsWrapperTop}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchH.participant1 ?
+                            matchDetailsLocal.matchH.participant1 :
+                            <p className={`${styles.standByText} ${styles.pmb}`}>
+                              <small>
+                                Match F winner
+                              </small>
+                            </p>
+                          }
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchH?.winner ? (matchDetailsLocal?.matchH?.winner === matchDetailsLocal?.matchH?.participant1 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchH.score.player1}
-                        </p>
-                      </div>
-                    </div>
-                    <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>H</small></div>
-                    <div className={`${styles.participantsWrapperBottom}`}>
-                      <div className={`${styles.participants}`}>
-                        {matchDetailsLocal.matchH.participant2 ?
-                          matchDetailsLocal.matchH.participant2 :
-                          <p className={`${styles.standByText} ${styles.pmb}`}>
-                            <small>
-                              Match D winner
-                            </small>
+                          >
+                            {matchDetailsLocal.matchH.score.player1}
                           </p>
-                        }
-                        <p className={`${styles.score}
+                        </div>
+                      </div>
+                      <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>H</small></div>
+                      <div className={`${styles.participantsWrapperBottom}`}>
+                        <div className={`${styles.participants}`}>
+                          {matchDetailsLocal.matchH.participant2 ?
+                            matchDetailsLocal.matchH.participant2 :
+                            <p className={`${styles.standByText} ${styles.pmb}`}>
+                              <small>
+                                Match D winner
+                              </small>
+                            </p>
+                          }
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchH?.winner ? (matchDetailsLocal?.matchH?.winner === matchDetailsLocal?.matchH?.participant2 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchH.score.player2}
-                        </p>
+                          >
+                            {matchDetailsLocal.matchH.score.player2}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </React.Fragment>
-                )}
-              </td>
-              <td className={`${styles.matchBelowBracketB}`}>
-                <svg height={`${!bracketFS ? "110" : "210"}`} width="50" style={{
-                  position: `${!bracketFS ? "relative" : "absolute"}`,
-                  bottom: `${!bracketFS ? "0" : "79"}`,
-                  zIndex: `${!bracketFS ? "0" : "5"}`
-                }} >
-                  <path
-                    d={`${!bracketFS ? "M50.5 0 H30 V110 H0" : "M110 0 H30 V210 H0"}`}
-                    id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
-                </svg>
-              </td>
-            </tr>
-            <tr>
+                    </React.Fragment>
+                  )}
+                </td>
+                <td className={`${styles.matchBelowBracketB}`}>
+                  <svg height={`${!bracketFS ? "110" : "210"}`} width="50" style={{
+                    position: `${!bracketFS ? "relative" : "absolute"}`,
+                    bottom: `${!bracketFS ? "0" : "79"}`,
+                    zIndex: `${!bracketFS ? "0" : "5"}`
+                  }} >
+                    <path
+                      d={`${!bracketFS ? "M50.5 0 H30 V110 H0" : "M110 0 H30 V210 H0"}`}
+                      id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
+                  </svg>
+                </td>
+              </tr>
+              <tr>
 
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td className={`${styles.matchD} ${matchDetailsLocal?.matchD?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
-                onClick={() =>
-                  `${matchDetailsLocal?.matchD?.status === 'open' ? handleShow('D') : null}`}>
-                {matchDetailsLocal?.matchD && (
-                  <React.Fragment key='matchD'>
-                    <div className={`${styles.participantsWrapperTop}`}>
-                      <div className={`${styles.participants}`}>
-                        {/* Participant 1*/}
-                        {matchDetailsLocal.matchD.participant1}
-                        <p className={`${styles.score}
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td className={`${styles.matchD} ${matchDetailsLocal?.matchD?.status === 'open' ? styles.activeMatch : styles.xActiveMatch}`}
+                  onClick={() =>
+                    `${matchDetailsLocal?.matchD?.status === 'open' ? handleShow('D') : null}`}>
+                  {matchDetailsLocal?.matchD && (
+                    <React.Fragment key='matchD'>
+                      <div className={`${styles.participantsWrapperTop}`}>
+                        <div className={`${styles.participants}`}>
+                          {/* Participant 1*/}
+                          {matchDetailsLocal.matchD.participant1}
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchD?.winner ? (matchDetailsLocal?.matchD?.winner === matchDetailsLocal?.matchD?.participant1 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchD.score.player1}
-                        </p>
+                          >
+                            {matchDetailsLocal.matchD.score.player1}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>D</small></div>
-                    <div className={`${styles.participantsWrapperBottom}`}>
-                      <div className={`${styles.participants}`}>
-                        {/* Participant 2*/}
-                        {matchDetailsLocal.matchD.participant2}
-                        <p className={`${styles.score}
+                      <div className={`${styles.matchesBorder}`}><small className={`${styles.matchIndicator}`}>D</small></div>
+                      <div className={`${styles.participantsWrapperBottom}`}>
+                        <div className={`${styles.participants}`}>
+                          {/* Participant 2*/}
+                          {matchDetailsLocal.matchD.participant2}
+                          <p className={`${styles.score}
                          ${matchDetailsLocal?.matchD?.winner ? (matchDetailsLocal?.matchD?.winner === matchDetailsLocal?.matchD?.participant2 ? styles.winner : '') : ''}
                         `}
-                        >
-                          {matchDetailsLocal.matchD.score.player2}
-                        </p>
+                          >
+                            {matchDetailsLocal.matchD.score.player2}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </React.Fragment>
-                )}
-              </td>
-              <td className={`${styles.matchBelowBracketC}`}>
-                <svg height={`${!bracketFS ? "70" : "150"}`} width="110" style={{
-                  position: `${!bracketFS ? "relative" : "absolute"}`,
-                  bottom: `${!bracketFS ? "0" : "21"}`
-                }} >
-                  <path
-                    d={`${!bracketFS ? "M110 0 H30 V53.5 H0" : "M110 0 H30 V133 H0"}`}
+                    </React.Fragment>
+                  )}
+                </td>
+                <td className={`${styles.matchBelowBracketC}`}>
+                  <svg height={`${!bracketFS ? "70" : "150"}`} width="110" style={{
+                    position: `${!bracketFS ? "relative" : "absolute"}`,
+                    bottom: `${!bracketFS ? "0" : "21"}`
+                  }} >
+                    <path
+                      d={`${!bracketFS ? "M110 0 H30 V53.5 H0" : "M110 0 H30 V133 H0"}`}
 
-                    id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
-                </svg>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div >
+                      id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path>
+                  </svg>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div >
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Score Update</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <ScoreModal
-            tournamentSocketId={tournamentSocketId}
-            pendingUpdate={pendingUpdate}
-            setPendingUpdate={setPendingUpdate}
-            matchKey={matchKey}
-            winnerUpdate={winnerUpdate}
-            onChangeScoreHandler={onChangeScoreHandler}
-            winnerConfirm={winnerConfirm} />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button className={`${styles.updateWinnerButton}`} variant={`${winnerUpdate === 0 ? "danger" : "secondary"}`} onClick={() => winnerConfirm === 1 ? setWinnerConfirm(0) : setWinnerUpdate(winnerUpdate === 1 ? 0 : 1)}>
-            {winnerUpdate === 0 ? 'Winner Update' :
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                  <path fillRule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z" />
-                </svg>
-                {winnerConfirm === 1 ? 'Choose Again' : 'Back to Score'}
-              </>
-            }
-          </Button>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button className={`${winnerUpdate === 0 ? 'default' : pendingUpdate?.[`match${matchKey}`]?.winner !== null ? 'default' : 'disabled'}`} variant="primary" onClick={(e) => handleUpdate(e, matchKey, winnerUpdate)}>
-            Update
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-    : (
-    <LoadingSpinner />
-    )
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Score Update</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <ScoreModal
+              tournamentSocketId={tournamentSocketId}
+              pendingUpdate={pendingUpdate}
+              setPendingUpdate={setPendingUpdate}
+              matchKey={matchKey}
+              winnerUpdate={winnerUpdate}
+              onChangeScoreHandler={onChangeScoreHandler}
+              winnerConfirm={winnerConfirm} />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button className={`${styles.updateWinnerButton}`} variant={`${winnerUpdate === 0 ? "danger" : "secondary"}`} onClick={() => winnerConfirm === 1 ? setWinnerConfirm(0) : setWinnerUpdate(winnerUpdate === 1 ? 0 : 1)}>
+              {winnerUpdate === 0 ? 'Winner Update' :
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z" />
+                  </svg>
+                  {winnerConfirm === 1 ? 'Choose Again' : 'Back to Score'}
+                </>
+              }
+            </Button>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button className={`${winnerUpdate === 0 ? 'default' : pendingUpdate?.[`match${matchKey}`]?.winner !== null ? 'default' : 'disabled'}`} variant="primary" onClick={(e) => handleUpdate(e, matchKey, winnerUpdate)}>
+              Update
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
+      : (
+        <LoadingSpinner />
+      )
   )
 }
 

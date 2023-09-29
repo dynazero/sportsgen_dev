@@ -132,6 +132,7 @@
     min-height: 844px;
     position: absolute;
     animation: maximize 2s forwards;
+    border-radius: 16px;
 }
 
 @keyframes maximize {
