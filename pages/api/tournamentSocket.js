@@ -1,10 +1,13 @@
 import { Server } from 'socket.io';
+import Log from "../../model/Logs";
+
 
 let matchDetails = {};
 
 const initializeSocket = (server) => {
   const io = new Server(server);
   server.io = io;
+
 
   io.on('connection', (socket) => {
     socket.on('join', (data) => handleJoin(io, socket, data));
@@ -19,6 +22,22 @@ const initializeSocket = (server) => {
 
     socket.on('disconnect', () => console.log('Socket disconnected:', socket.id));
   });
+
+  const logUpdate = async (tournamentId, categoryKey, logAccount, message) => {
+
+    try {
+          const newLog = new Log({
+            tournamentId,
+            categoryKey,
+            logAccount,
+            message,
+          });
+            await newLog.save();
+       
+    } catch (error) {
+        console.error('Error saving log:', error);
+    }
+};
 
   const handleJoin = (io, socket, { tournamentSocketId, role }) => {
     socket.join(tournamentSocketId);
@@ -70,11 +89,16 @@ const initializeSocket = (server) => {
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
   };
 
-  const handleUpdateWinner = (io, socket, { tournamentSocketId, matchKey, matchWinner, role }) => {
+  const handleUpdateWinner = async (io, socket, { tournamentId, categoryKey, logAccount, matchKey, matchWinner, role }) => {
     // console.log('Current Data', tournamentSocketId, matchKey, matchWinner, role)
     // console.log('Current Participants', matchDetails[tournamentSocketId][matchKey].participant1, matchDetails[tournamentSocketId][matchKey].participant2)
 
+    let tournamentSocketId = tournamentId+categoryKey;
+    let match = matchKey.replace(/match(\w+)/g, 'Match ' + '$1');
+
     let currentParticipants = [matchDetails[tournamentSocketId][matchKey].participant1, matchDetails[tournamentSocketId][matchKey].participant2];
+    let message = 'Updated match Winner of '+match+' ('+matchWinner+')'
+
 
     if (role !== 'admin') {
       console.log(`Client is not an admin, skipping winner update.`);
@@ -88,14 +112,21 @@ const initializeSocket = (server) => {
 
     matchDetails[tournamentSocketId][matchKey].winner = matchWinner;
     matchDetails[tournamentSocketId][matchKey].status = 'closed';
+    await logUpdate(tournamentId, categoryKey, logAccount, message);
+
 
     // Emit the updated match details to all clients in the tournament room
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
   };
 
-  const handleUpdateScore = (io, socket, { tournamentSocketId, matchKey, matchScores, role }) => {
+  const handleUpdateScore = async (io, socket, { tournamentId, categoryKey, logAccount, matchKey, matchScores, role }) => {
     // console.log('Received update-score:', tournamentSocketId, matchKey, matchScores, role)
     // console.log('Current Scores', matchDetails[tournamentSocketId][matchKey].score)
+
+    let tournamentSocketId = tournamentId+categoryKey;
+    let match = matchKey.replace(/match(\w+)/g, 'Match ' + '$1');
+
+    let message = 'Updated '+match+' ('+matchScores.player1+'-'+matchScores.player2+')'
 
     if (role !== 'admin') {
       console.log(`Client is not an admin, skipping score update.`);
@@ -103,6 +134,7 @@ const initializeSocket = (server) => {
     }
 
     matchDetails[tournamentSocketId][matchKey].score = matchScores;
+    await logUpdate(tournamentId, categoryKey, logAccount, message);
 
     // Emit the updated match details to all clients in the tournament room
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);

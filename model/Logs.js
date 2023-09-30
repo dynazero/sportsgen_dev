@@ -21,16 +21,10 @@ const logSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },  
-    dateTime: {
+    logTime: {
         type: Date,
-        required: true,
-        trim: true,
-    },
-    timeStamp: {
-        type: String,
-        required: true,
-        trim: true,
-    }
+        default: Date.now,
+      },
 });
 
 const Log = mongoose.models.Log || mongoose.model("Log", logSchema, "log");

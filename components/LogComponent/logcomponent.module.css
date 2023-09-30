@@ -2,6 +2,14 @@
  color: black;    
 }
 
+.date{
+    color: #ff1617;
+}
+
+.time{
+    color: #014bac;
+}
+
 .logAuthor{
     color: #0D6EFD;
 }

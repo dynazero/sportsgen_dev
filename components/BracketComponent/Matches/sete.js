@@ -377,7 +377,9 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
 
     socketRef.current.emit('update-winner',
       {
-        tournamentSocketId,
+        tournamentId: tournamentInfo.tournamentId,
+        categoryKey: categorykey,
+        logAccount: localStorage.getItem('email'),
         matchKey,
         matchWinner,
         role
@@ -421,7 +423,9 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
     const updateScorePromise = new Promise((resolve, reject) => {
       // Emit the 'update-score' event
       socketRef.current.emit('update-score', {
-        tournamentSocketId,
+        tournamentId: tournamentInfo.tournamentId,
+        categoryKey: categorykey,
+        logAccount: localStorage.getItem('email'),
         matchKey: 'match' + matchKey,
         matchScores,
         role
@@ -510,7 +514,8 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   };
 
   // // console.log('matchDetailsLocal', matchDetailsLocal);
-  // console.log('matchDetails', matchDetails);
+  // console.log('tournamentInfo', tournamentInfo);
+  // console.log('categorykey', categorykey);
   return (
     dataLoaded ?
       <>

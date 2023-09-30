@@ -1,4 +1,3 @@
-import { now } from "mongoose";
 import connectDB from "../../connectDB";
 import Log from "../../model/Logs";
 import formidable from "formidable";
@@ -47,8 +46,6 @@ export default async (req, res) => {
         message,
       } = fields;
 
-      const dateTime = new Date(now());
-      const timeStamp = convertToPST(new Date(now())); //"hr:mm:ss" 24-hour time string.
 
       try {
 
@@ -57,8 +54,6 @@ export default async (req, res) => {
           categoryKey,
           logAccount,
           message,
-          dateTime,
-          timeStamp
         });
 
         const savedLog = await newLog.save();

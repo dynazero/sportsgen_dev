@@ -109,10 +109,6 @@ export default async (req, res) => {
         const logAccount = savedTournament.organizerEmail
         const message = "Tournament Created"
                 
-        //Log
-        const dateTime = new Date(now());
-        const timeStamp = convertToString(new Date(now())); //"hr:mm:ss" 24-hour time string.
-        
        
           categoryKeys.forEach(async (categoryKey) => {
             const newLog = new Log({
@@ -120,8 +116,6 @@ export default async (req, res) => {
               categoryKey,
               logAccount,
               message,
-              dateTime,
-              timeStamp
             });
         
             const savedLog = await newLog.save();
