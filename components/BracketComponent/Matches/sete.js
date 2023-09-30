@@ -62,6 +62,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   const [tournamentSocketId, setTournamentSocketId] = useState(tournamentInfo.tournamentId + categorykey);
   const [championId, setChampionId] = useState('');
   const [pendingUpdate, setPendingUpdate] = useState({});
+  const [matchCurrentDetail, setMatchCurrentDetail] = useState({})
   const [matchKey, setMatchKey] = useState('')
   const [winnerUpdate, setWinnerUpdate] = useState(0)
   const [winnerConfirm, setWinnerConfirm] = useState(0)
@@ -124,9 +125,22 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
   useEffect(() => {
     setMatchDetailsLocal(matchDetails);
     const timer = setTimeout(() => setDataLoaded(true), 800);
-
+    
     return () => clearTimeout(timer);
   }, [matchDetails]);
+  
+  useEffect(() => {
+
+    if (pendingUpdate) {
+      const matchKey = Object.keys(pendingUpdate)[0];
+      setMatchCurrentDetail({
+        [matchKey] : matchDetails?.[matchKey]
+      })
+  }
+
+  },[pendingUpdate]) 
+  
+
 
 
   const onSaveTournamentData = () => {
@@ -146,14 +160,15 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
 
     const formData = new FormData();
     formData.append('tournamentId', tournamentId);
-    formData.append('tournamentSocketId', tournamentSocketId);
+    formData.append('categoryKey', categorykey)
+    formData.append('logAccount', localStorage.getItem('email'))
     formData.append('championId', championId);
     formData.append('champion', champion.winner);
     formData.append('matchDetails', JSON.stringify(matchDetailsWithoutChampion));
     formData.append('participantList', JSON.stringify(reParticipants));
 
     // console.log('tournamentSocketId', tournamentSocketId);
-    // console.log('championId', championId);
+    console.log('championId', championId);
     // console.log('champion', champion.winner);
     // console.log('matchDetails', JSON.stringify(matchDetailsWithoutChampion));
     // console.log('participantList', JSON.stringify(reParticipants));
@@ -513,9 +528,6 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
 
   };
 
-  // // console.log('matchDetailsLocal', matchDetailsLocal);
-  // console.log('tournamentInfo', tournamentInfo);
-  // console.log('categorykey', categorykey);
   return (
     dataLoaded ?
       <>
@@ -993,6 +1005,7 @@ const SetE = ({ participantsCount, bracketFS, categorykey, categorySet, tourname
             <ScoreModal
               tournamentSocketId={tournamentSocketId}
               pendingUpdate={pendingUpdate}
+              matchCurrentDetail={matchCurrentDetail}
               setPendingUpdate={setPendingUpdate}
               matchKey={matchKey}
               winnerUpdate={winnerUpdate}

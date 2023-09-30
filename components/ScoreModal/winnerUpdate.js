@@ -11,22 +11,23 @@ const winnerImports = {
 };
 
 
-const WinnerUpdate = ({ pendingUpdate, setPendingUpdate, matchKey, winnerConfirm }) => {
+const WinnerUpdate = ({ pendingUpdate, matchCurrentDetail, setPendingUpdate, matchKey, winnerConfirm }) => {
 
     const ModalHandler = winnerImports[winnerConfirm];
 
     const genProps = {
         matchKey: matchKey,
-        pendingUpdate: pendingUpdate,
-        setPendingUpdate: setPendingUpdate
+        setPendingUpdate: setPendingUpdate,
+        pendingUpdate: pendingUpdate
     }
-
+    
     const defaultProps = {
-        ...genProps,
+        ...genProps
     }
 
     const confirmProps = {
         ...genProps,
+        matchCurrentDetail: matchCurrentDetail
     }
 
 

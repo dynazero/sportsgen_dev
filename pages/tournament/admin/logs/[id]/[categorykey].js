@@ -26,7 +26,7 @@ function Logs({ id, categorykey, tournamentData, logData }) {
         <h2 className="mb-3">Tournament</h2>
       </div>
       <div className={`${styles.containerform}`}>
-        <div className="col-md-7 col-lg-8 mainForm">
+        <div className={`col-md-7 col-lg-8 ${styles.logsMainForm}`}>
           <div className="row g-3">
             <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} />
 

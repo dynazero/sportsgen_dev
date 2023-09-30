@@ -51,3 +51,11 @@
     overflow: hidden;
     min-width: 596px;
 }
+
+.logsMainForm{
+    overflow: hidden;
+    padding: 26px;
+    height: 100%;
+    width: 100%;
+    margin-right: 16px;
+}

@@ -2,7 +2,6 @@ import React, { Suspense } from 'react'
 import dynamic from 'next/dynamic';
 import styles from './scoremodal.module.css'
 import Link from 'next/link';
-import match from '../../pages/scoreboard/[id]/[matchKey]';
 
 const ScoreUpdate = dynamic(() => import('./scoreUpdate'), { loading: () => <p>Loading...</p> });
 const WinnerUpdate = dynamic(() => import('./winnerUpdate'), { loading: () => <p>Loading...</p> });
@@ -13,24 +12,25 @@ const modalImports = {
     1: WinnerUpdate
 };
 
-const ScoreModal = ({ tournamentSocketId, pendingUpdate, setPendingUpdate, matchKey, winnerUpdate, winnerConfirm }) => {
+const ScoreModal = ({ tournamentSocketId, pendingUpdate, matchCurrentDetail, setPendingUpdate, matchKey, winnerUpdate, winnerConfirm }) => {
 
     const ModalHandler = modalImports[winnerUpdate];
     const match = 'match' + matchKey;
 
     const genProps = {
         matchKey: matchKey,
-        pendingUpdate: pendingUpdate,
-        setPendingUpdate: setPendingUpdate
+        setPendingUpdate: setPendingUpdate,
+        pendingUpdate: pendingUpdate
     }
-
+    
     const scoreProps = {
         ...genProps
     }
 
     const winnerProps = {
         ...genProps,
-        winnerConfirm: winnerConfirm
+        winnerConfirm: winnerConfirm,
+        matchCurrentDetail: matchCurrentDetail
     }
 
     return (

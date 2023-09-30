@@ -115,6 +115,10 @@ const tournamentresultSchema = new mongoose.Schema({
   //     type: String,
   //     required: true
   // },
+  timeStamp: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const TournamentResult = mongoose.models.TournamentResult || mongoose.model("TournamentResult", tournamentresultSchema, "tournamentresults");

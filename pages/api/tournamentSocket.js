@@ -148,7 +148,7 @@ const initializeSocket = (server) => {
       return;
     }
 
-    matchDetails[tournamentSocketId].tournamentInfo.status = closed;
+    matchDetails[tournamentSocketId].tournamentInfo.status = 'closed';
     
     // Emit the updated match details to all clients in the tournament room
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);

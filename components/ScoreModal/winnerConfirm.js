@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './winnerConfirm.module.css'
 
-const WinnerConfirm = ({ pendingUpdate, matchKey }) => {
+const WinnerConfirm = ({ pendingUpdate, matchCurrentDetail, matchKey }) => {
     // onChangeWinner
 
     return (
@@ -13,9 +13,9 @@ const WinnerConfirm = ({ pendingUpdate, matchKey }) => {
                             <td>
                                 <div className={`${styles.participantsWrapperTop}`}>
                                     <div className={`${styles.participants}`}>
-                                        {pendingUpdate?.[`match${matchKey}`]?.participant1}
+                                        {matchCurrentDetail?.[`match${matchKey}`]?.participant1}
                                         <p className={`${styles.score}`}>
-                                            {pendingUpdate?.[`match${matchKey}`]?.score.player1}
+                                            {matchCurrentDetail?.[`match${matchKey}`]?.score.player1}
                                         </p>
                                     </div>
                                 </div>
@@ -25,9 +25,9 @@ const WinnerConfirm = ({ pendingUpdate, matchKey }) => {
                             <td>
                                 <div className={`${styles.participantsWrapperBottom}`}>
                                     <div className={`${styles.participants}`}>
-                                        {pendingUpdate?.[`match${matchKey}`]?.participant2}
+                                        {matchCurrentDetail?.[`match${matchKey}`]?.participant2}
                                         <p className={`${styles.score}`}>
-                                            {pendingUpdate?.[`match${matchKey}`]?.score.player2}
+                                            {matchCurrentDetail?.[`match${matchKey}`]?.score.player2}
                                         </p>
                                     </div>
                                 </div>

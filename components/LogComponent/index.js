@@ -12,7 +12,7 @@ const LogComponent = ({ logData, categorykey, categorySet }) => {
   // console.log('logData', logData);
 
   return (
-    <div className="d-flex justify-content-center">
+    <div className={`d-flex justify-content-center ${styles.logContainer}`}>
       <table>
         <tbody>
           {categorySet.map(category => {
@@ -20,10 +20,17 @@ const LogComponent = ({ logData, categorykey, categorySet }) => {
               return (
                 <React.Fragment key={category.key}>
                   {logData[category.key].map((log, index) => (
-                  <tr key={'log'+index}>
+                  <tr key={'log'+index} className='align-baseline'>
                       <td className='text-nowrap' >
-                        <p className={`${styles.date}`}>{log.formattedDate} 
-                        <small className={`${styles.time}`}>{log.formattedTime}</small>
+                        <p>
+                        <small className={`${styles.date}`}>
+                          {log.formattedDate} 
+                        </small>
+                        <small className={`${styles.time}`}>
+                          <strong>
+                          {log.formattedTime}
+                          </strong>
+                        </small>
                         </p>
                       </td>
                       <td className='text-nowrap' >

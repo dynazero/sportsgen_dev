@@ -1,9 +1,7 @@
 import connectDB from "../../connectDB";
 import TournamentResult from "../../model/TournamentResult";
 import formidable from "formidable";
-import { createReadStream } from "fs";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
+import Log from "../../model/Logs";
 
 connectDB();
 
@@ -36,13 +34,16 @@ export default async (req, res) => {
 
       const {
         tournamentId,
-        tournamentSocketId,
+        categoryKey,
+        logAccount,
         championId,
         champion,
       } = fields;
 
+      const tournamentSocketId = tournamentId+categoryKey
       const matchDetails = JSON.parse(fields.matchDetails);
       const participantList = JSON.parse(fields.participantList);
+      const message = 'Tournament Ended'
 
       const tournamentVerify = await TournamentResult.findOne({ tournamentSocketId: tournamentSocketId });
       if (tournamentVerify) {
@@ -50,9 +51,19 @@ export default async (req, res) => {
         return;
       }
 
-     
+      // console.log('tournamentId',tournamentId );
+      // console.log('categoryKey', categoryKey );
+      // console.log('logAccount',logAccount );
+      // console.log('championId', championId );
+      // console.log('champion', champion );
+      // console.log('tournamentSocketId', tournamentSocketId );
+      // console.log('matchDetails', matchDetails );
+      // console.log('participantList', participantList );
+      // console.log('message', message );
+
+
       try {
-         const newTournamentResult = new TournamentResult({
+        const newTournamentResult = new TournamentResult({
           tournamentId,
           tournamentSocketId,
           champion: {
@@ -64,6 +75,16 @@ export default async (req, res) => {
         });
 
         await newTournamentResult.save();
+
+        const newLog = new Log({
+          tournamentId,
+          categoryKey,
+          logAccount,
+          message,
+        });
+
+        await newLog.save();
+
         res.status(201).json({ message: "Tournament Result saved successfully" });
       } catch (error) {
         console.error("Error uploading file:", error);
