@@ -51,17 +51,6 @@ export default async (req, res) => {
         return;
       }
 
-      // console.log('tournamentId',tournamentId );
-      // console.log('categoryKey', categoryKey );
-      // console.log('logAccount',logAccount );
-      // console.log('championId', championId );
-      // console.log('champion', champion );
-      // console.log('tournamentSocketId', tournamentSocketId );
-      // console.log('matchDetails', matchDetails );
-      // console.log('participantList', participantList );
-      // console.log('message', message );
-
-
       try {
         const newTournamentResult = new TournamentResult({
           tournamentId,

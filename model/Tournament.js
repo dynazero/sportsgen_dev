@@ -1,5 +1,52 @@
 import mongoose from "mongoose";
 
+const tournamentEvent = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    categoryKey:{
+        type: Number,
+        required: true,
+        trim: true,
+    },
+    description: {
+        type: String,
+        required: false,
+        trim: true,
+    },
+    format: {
+        type: String,
+        enum: ['Single Elimination', 'Double Elimination', 'Kumite'],
+        default: 'Single Elimination'
+    },
+    matchForThird: {
+        type: Boolean,
+        default: false,
+        trim: true,
+    },
+    registrationFee: {
+        type: Number,
+        required: true,
+        trim: true,
+    },
+    maxParticipants: {
+        type: Number,
+        default: 32
+    },
+    startTime: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    status: {
+        type: String,
+        enum: ['Check-in', 'Live', 'Finals', 'Awarding', 'Closed'],
+        default: 'Check-in'
+    },
+})
+
 const tournamentSchema = new mongoose.Schema({
     eventId: {
         type: mongoose.Types.ObjectId,
@@ -29,6 +76,12 @@ const tournamentSchema = new mongoose.Schema({
     categories: {
         type: [Number],
         required: true,
+        trim: true,
+    },
+    tournamentEvents:{
+        type:Map,
+        of: tournamentEvent,
+        required:true,
         trim: true,
     },
     flag: {
@@ -61,38 +114,9 @@ const tournamentSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    description: {
-        type: String,
-        required: false,
-        trim: true,
-    },
-    format: {
-        type: String,
-        enum: ['Single Elimination', 'Double Elimination'],
-        default: 'Single Elimination'
-    },
-    matchForThird: {
-        type: Boolean,
-        default: false,
-        trim: true,
-    },
-    registrationFee: {
-        type: Number,
-        required: true,
-        trim: true,
-    },
-    maxParticipants: {
-        type: Number,
-        default: 32
-    },
-    startTime: {
-        type: String,
-        required: true,
-        trim: true,
-    },
     status: {
         type: String,
-        enum: ['Check-in', 'Live', 'Finals', 'Awarding', 'Closed'],
+        enum: ['Check-in', 'Live', 'Closed'],
         default: 'Check-in'
     },
     // eventType: {
