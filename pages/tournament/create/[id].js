@@ -247,84 +247,101 @@ function Index({ id, email, eventData }) {
               </li>
               <li className="list-group-item">
                 <strong className="d-inline-block mb-2 text-primary">Events:  &nbsp;</strong>
-                <div>
+                <div className='row'>
                   {categoryChunks.map((chunk, index) => (
-                    <ul key={index} className="list-group list-group-horizontal">
-                      {chunk.map((category, index) => (
-                        <li key={index} className="list-group-item">{category}</li>
-                      ))}
-                    </ul>
+                    <div className='col-md-6'>
+                      <ul key={index} className="list-group list-group-horizontal ">
+                        {chunk.map((category, index) => (
+                          <li key={index} className="card list-group-item col-md-12" >
+                            <div className="card-body">
+                              <h5 className="card-title">  {category}</h5>
+
+
+                              <ul className="list-group list-group-flush">
+                                <li className="list-group-item">
+                                  <p className="card-text"><strong className="d-inline-block mb-2 text-primary">Description:  &nbsp;</strong>
+                                    <textarea className="form-control" id="Description" placeholder='Type Here (optional)' rows="3"
+                                      value={description}
+                                      onChange={(event) => handleFormChange(event, 1, event.target.value)}
+                                    ></textarea>
+                                  </p>
+                                </li>
+                                <li className="list-group-item">
+                                  <strong className="d-inline-block mb-2 text-primary">Entry Fee:  &nbsp;</strong>
+                                  <strong>₱{eventData.entryFee}</strong>
+                                </li>
+                                <li className="list-group-item">
+                                  <div className='row'>
+                                      <strong className="d-inline-block mb-2 text-primary">Format:  &nbsp;</strong>
+                                    <div className='col-md-7'>
+                                      <select className="form-select" id="format"
+                                        value={selectedFormat}
+                                        onChange={(event) => handleFormChange(event, 2, event.target.value)}
+                                        required>
+                                        <option key={0} value={'Single Elimination'}>Single Elimination</option>
+                                        <option key={1} value={'Double Elimination'}>Double Elimination</option>
+                                        <option key={2} value={'Double Elimination'}>Kumite</option>
+                                      </select>
+                                    </div>
+
+                                    <div className="col-md-5">
+                                      <div className="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                                        <input
+                                          type="checkbox"
+                                          className="btn-check"
+                                          id="forthird"
+                                          autoComplete="off"
+                                          checked={battleForThird}
+                                          onChange={(event) => handleFormChange(event, 3, event.target.checked)}
+                                        />
+                                        <label className="btn btn-outline-primary  text-nowrap" htmlFor="forthird">
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2" viewBox="0 0 16 16">
+                                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
+                                          </svg>
+                                          &nbsp;Battle for 3rd
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li className="list-group-item">
+                                  <strong className="d-inline-block mb-2 text-primary text-nowrap">Max Participants:  &nbsp;</strong>
+                                  <div className='row'>
+                                    <div className='col-md-6'>
+                                      <input className="form-control " type="number" min="6" max="32" step="10"
+                                        value={maxParticipants}
+                                        onChange={(event) => handleFormChange(event, 4, event.target.value)}
+                                        onBlur={(event) => handleInputBlur(event)}
+                                      />
+                                    </div>
+                                    <div className='col-md-6'>
+                                      <p><em><cite>Min 6 - Max 32</cite></em></p>
+                                    </div>
+                                  </div>
+                                </li>
+                                <li className="list-group-item">
+                                  <strong className="d-inline-block mb-2 text-primary">Start Time:  &nbsp;</strong>
+                                  <div className='row'>
+                                    <div className='col-md-6'>
+                                      <TimePicker className={`form-control ${styles['custom-time-picker']}`}
+                                        onChange={setStartTime}
+                                        value={startTime} disableClock={true} />
+                                    </div>
+                                  </div>
+                                </li>
+
+                              </ul>
+
+                            </div>
+                          </li>
+
+                        ))}
+                      </ul>
+                    </div>
                   ))}
                 </div>
               </li>
-              <li className="list-group-item">
-                <strong className="d-inline-block mb-2 text-primary">Entry Fee:  &nbsp;</strong>
-                <strong>₱{eventData.entryFee}</strong>
-              </li>
-              <li className="list-group-item">
-                <strong className="d-inline-block mb-2 text-primary">Description:  &nbsp;</strong>
-                <textarea className="form-control" id="Description" placeholder='Type Here (optional)' rows="3"
-                  value={description}
-                  onChange={(event) => handleFormChange(event, 1, event.target.value)}
-                ></textarea>
-              </li>
-              <li className="list-group-item">
-                <strong className="d-inline-block mb-2 text-primary">Format:  &nbsp;</strong>
-                <div className="row">
-                  <div className="col">
-                    <select className="form-select" id="format"
-                      value={selectedFormat}
-                      onChange={(event) => handleFormChange(event, 2, event.target.value)}
-                      required>
-                      <option key={0} value={'Single Elimination'}>Single Elimination</option>
-                      <option key={1} value={'Double Elimination'}>Double Elimination</option>
-                    </select>
-                  </div>
-                  <div className="col">
-                    <div className="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                      <input
-                        type="checkbox"
-                        className="btn-check"
-                        id="forthird"
-                        autoComplete="off"
-                        checked={battleForThird}
-                        onChange={(event) => handleFormChange(event, 3, event.target.checked)}
-                      />
-                      <label className="btn btn-outline-primary" htmlFor="forthird">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2" viewBox="0 0 16 16">
-                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
-                        </svg>
-                        &nbsp;Battle for 3rd
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li className="list-group-item">
-                <strong className="d-inline-block mb-2 text-primary">Max Participants:  &nbsp;</strong>
-                <div className='row'>
-                  <div className='col-md-4'>
-                    <input className="form-control " type="number" min="6" max="32" step="10"
-                      value={maxParticipants}
-                      onChange={(event) => handleFormChange(event, 4, event.target.value)}
-                      onBlur={(event) => handleInputBlur(event)}
-                    />
-                  </div>
-                  <div className='col-md-4'>
-                    <p><em><cite>Min 6 - Max 32</cite></em></p>
-                  </div>
-                </div>
-              </li>
-              <li className="list-group-item">
-                <strong className="d-inline-block mb-2 text-primary">Start Time:  &nbsp;</strong>
-                <div className='row'>
-                  <div className='col-md-4'>
-                    <TimePicker className={`form-control ${styles['custom-time-picker']}`}
-                      onChange={setStartTime}
-                      value={startTime} disableClock={true} />
-                  </div>
-                </div>
-              </li>
+
             </ul>
 
           </div>
