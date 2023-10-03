@@ -25,13 +25,8 @@ export const config = {
 };
 
 function convertToPST(date) {
-  return new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Manila',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  }).format(date);
+  const offset = 8 * 60 * 60 * 1000; // Offset in milliseconds for UTC+8
+  return new Date(date.getTime() + offset);
 }
 
 export default async (req, res) => {
@@ -47,8 +42,8 @@ export default async (req, res) => {
       const {
         eventName,
         eventType,
-        registeredEmail,
         flag,
+        registeredEmail,
         startDate,
         endDate,
         city,
@@ -58,6 +53,7 @@ export default async (req, res) => {
       } = fields;
 
       const categoryKeys = JSON.parse(fields.categories);
+      const eventCategories = JSON.parse(fields.eventCategories);
 
       const eventVerify = await Event.findOne({ eventName: eventName });
       if (eventVerify) {
@@ -96,8 +92,8 @@ export default async (req, res) => {
           endDate: convertToPST(new Date(endDate)),
           city,
           address,
-          entryFee,
           categories: categoryKeys, 
+          eventCategories: eventCategories, 
           eventStatus,
           eventLogo: originalFileName,
         });

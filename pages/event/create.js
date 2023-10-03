@@ -5,21 +5,21 @@ import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
 import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router';
-import { MotionConfig, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { debounce } from 'lodash';
 import InputDropdownRow from '../../components/inputDropdownRow';
-import CustomDatePicker from '../../components/CustomDatePicker';
 import CustomDateRangePicker from '../../components/CustomDateRangePicker';
 import { toast } from "react-toastify";
 
 const CreateEvent = () => {
     const { data: session } = useSession()
-    
+
     const router = useRouter();
     const MotionLink = motion(Link)
     const [rows, setRows] = useState([]);
+    const [rowIndex, setRowIndex] = useState(0);
     const [eventName, setEventName] = useState('');
     const [eventType, setEventType] = useState('Tournament');
-    const [eventStatus, setEventStatus] = useState('active');
     const [registeredEmail, setRegisteredEmail] = useState(session.user.email);
 
     const [flag, setFlag] = useState('PH');
@@ -41,6 +41,7 @@ const CreateEvent = () => {
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [excludedCategories, setExcludedCategories] = useState([]);
     const [defaultCategory, setDefaultCategory] = useState([]);
+    const [defaultCategoryFee, setDefaultCategoryFee] = useState([]);
     const [resetDefaultCategory, setResetDefaultCategory] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('');
 
@@ -64,45 +65,71 @@ const CreateEvent = () => {
 
     useEffect(() => {
         if (resetDefaultCategory) {
-          setSelectedCategory('');
-          setResetDefaultCategory(false);
+            setSelectedCategory('');
+            setResetDefaultCategory(false);
         }
-      }, [resetDefaultCategory]);
+    }, [resetDefaultCategory]);
 
+    useEffect(() => {
+        if (resetDropdown) {
+            setSelectedCategories([]);
+            setRows([]);
+        }
+    }, [resetDropdown]);
 
-    const checkSelectedCategories = (key, value) => {
+    const checkSelectedCategories = (key, value, set) => {
         const categoryValue = parseInt(value)
         // console.log(key, categoryValue)
+        if (set === 0) {
+            if (typeof selectedCategories === 'object' && selectedCategories !== null) {
+                setSelectedCategories((prevCategories) => {
 
-        if (selectedCategories.length != 0) {
-            setSelectedCategories((prevCategories) => {
-                const existingObjectIndex = prevCategories.findIndex((item) => item.key === key);
-                const existingValueIndex = prevCategories.findIndex((item) => item.value === categoryValue);
+                    const hasExistingKey = prevCategories.some((item) => item.key === key);
+                    const hasExistingValue = prevCategories.some((item) => item.value === categoryValue);
 
-                if (existingValueIndex !== -1) {
-                    toast.warning('Event already selected');  //todo
-                    setDuplicates(true)
-                } else {
-                    // toast.success('Event Added!');
-                    setDuplicates(false)
-                }
+                    if (hasExistingValue) {
+                        toast.warning('Event already selected');
+                        setDuplicates(true);
+                        return prevCategories;
+                    } else {
+                        setDuplicates(false);
+                    }
 
-                if (existingObjectIndex !== -1) {
-                    // Update existing object
-                    return prevCategories.map((item) =>
-                        item.key === key ? { ...item, value: categoryValue } : item
-                    );
-                } else {
-                    // Add new object
-                    const newObject = { key: key, value: categoryValue };
-                    return [...prevCategories, newObject];
-                }
-            });
-        } else {
-            setSelectedCategories([{
-                key: key,
-                value: categoryValue
-            }])
+                    if (hasExistingKey) {
+                        return prevCategories.map((item) =>
+                            item.key === key ? { ...item, value: categoryValue } : item
+                        );
+                    } else {
+                        const newObject = { key: key, value: categoryValue };
+                        return [...prevCategories, newObject];
+                    }
+                });
+            } else {
+                setSelectedCategories([{
+                    key: key,
+                    value: categoryValue
+                }])
+            }
+        }
+
+        if (set === 1) {
+            if (typeof selectedCategories === 'object' && selectedCategories !== null) {
+                setSelectedCategories((prevCategories) => {
+
+                    const hasExistingKey = prevCategories.some((item) => item.key === key);
+                    // console.log('hasExistingKey', hasExistingKey);
+
+                    if (hasExistingKey) {
+                        return prevCategories.map((item) =>
+                            item.key === key ? { ...item, entryFee: parseInt(value) } : item
+                        );
+                    } else {
+                        toast.warning('Select your event 1st');
+                    }
+                });
+            } else {
+                toast.warning('Select your event 1st');
+            }
         }
     }
 
@@ -115,84 +142,46 @@ const CreateEvent = () => {
 
         if (value === "Choose...") {
             switch (index) {
-                // case 1:
-                //     setEventName(value);
-                //     break;
                 case 2:
                     setFlag(value);
                     break;
-                // case 3:
-                //     setEndDate(value);
-                //     break;
                 case 4:
                     setCityErrorMessage(" Please Enter a valid Location.");
                     break;
                 case 5:
                     setBarangayErrorMessage("Please provide a valid Barangay.");
                     break;
-                // case 6:
-                //     setZipErrorMessage(value);
-                //     break;
                 case 7:
                     setAddressErrorMessage(value);
                     break;
-                // case 8:
-                //     setImage(value);
-                //     break;
                 case 9:
                     setEntryFeeErrorMessage(value);
                     break;
                 case 0:
                     setDefaultCategory(value);
                     break;
-                // case 0:
-                //   text = "Today is Sunday";
-                // break;
-                // default:
-                //   text = "Looking forward to the Weekend";
             }
 
             return false;
         }
-        // setCityErrorMessage("");
-        // console.log('yourre good')
+       
 
         switch (index) {
-            // case 1:
-            //     setEventName(value);
-            //     break;
-            // case 2:
-            //     setStartDate(value);
-            //     break;
-            // case 3:
-            //     setEndDate(value);
-            //     break;
             case 4:
                 setCityErrorMessage("");
                 break;
             case 5:
                 setBarangayErrorMessage("");
                 break;
-            // case 6:
-            //     setZipErrorMessage(value);
-            //     break;
             case 7:
                 setAddressErrorMessage(value);
                 break;
-            // case 8:
-            //     setImage(value);
-            //     break;
             case 9:
                 setEntryFeeErrorMessage(value);
                 break;
             case 0:
                 setDefaultCategory(value);
                 break;
-            // case 0:
-            //   text = "Today is Sunday";
-            // break;
-            // default:
-            //   text = "Looking forward to the Weekend";
         }
         return true;
     };
@@ -204,12 +193,6 @@ const CreateEvent = () => {
             case 1:
                 setEventName(value);
                 break;
-            // case 2:
-            //     setStartDate(value);
-            //     break;
-            // case 3:
-            //     setEndDate(value);
-            //     break;
             case 4:
                 if (!validateInput(index, value)) {
                     setCity('');
@@ -234,10 +217,10 @@ const CreateEvent = () => {
                 setImage(value);
                 break;
             case 9:
-                setEntryFee(value);
+                checkSelectedCategories(arrIndex, value, 1)
                 break;
             case 0:
-                checkSelectedCategories(arrIndex, value)
+                checkSelectedCategories(arrIndex, value, 0)
                 if (!excludedCategories.includes(value)) {
                     if (rows.length == 0) {
                         setExcludedCategories(value)
@@ -250,42 +233,49 @@ const CreateEvent = () => {
                     }
                 }
                 break;
-            // case 0:
-            //   text = "Today is Sunday";
-            // break;
-            // default:
-            //   text = "Looking forward to the Weekend";
+           
         }
 
     }
 
-
-
     const removeFromList = (keyValue) => {
         const indexToDelete = selectedCategories.findIndex(selected => selected.key === keyValue);
-        const newSelectedCategories = [...selectedCategories]
+        if (indexToDelete === -1) return;  // Add this line to handle the case where keyValue is not found in the array
 
-        newSelectedCategories.splice(indexToDelete, 1)
+        // Remove the item at indexToDelete
+        const newSelectedCategories = selectedCategories.filter((_, index) => index !== indexToDelete);
 
-        setSelectedCategories(newSelectedCategories)
+        // Adjust the key, value, and entryFee for the items following the deleted one
+        for (let i = indexToDelete; i < newSelectedCategories.length; i++) {
+            newSelectedCategories[i].key = i;
+            if (i + 1 < selectedCategories.length) {
+                newSelectedCategories[i].value = selectedCategories[i + 1].value;
+                newSelectedCategories[i].entryFee = selectedCategories[i + 1].entryFee;
+            }
+        }
+
+        setSelectedCategories(newSelectedCategories);
     }
 
 
-    const handleChange = (event, index) => {
+
+    const handleChange = (e, index) => {
+
         const newRows = [...rows];
-        newRows[index].selectedValue = event.target.value;
+        newRows[index].selectedValue = e.target.value;
         setRows(newRows);
 
-        handleFormChange(event, 0, event.target.value, index + 1)
+        handleFormChange(e, 0, e.target.value, index + 1)
 
     };
 
     const handleDelete = (event, row, index) => {
-        const keyValue = row + 1;
-
+        const keyValue = index + 1;
+       
         const newRows = [...rows];
-        const newSelectedCategories = [...selectedCategories]
-        newRows.splice(row, 1);
+
+        newRows.splice(index, 1);
+
         setRows(newRows);
 
         removeFromList(keyValue)
@@ -298,53 +288,57 @@ const CreateEvent = () => {
         setRows([
             ...rows,
             {
+                key: rowIndex,
                 options: categories.map((category) => ({
                     value: category.key,
                     label: category.title,
                 })),
             },
         ]);
+        setRowIndex(rowIndex + 1);
     };
+
+    const debouncedHandleFormChange = debounce((event, value, i) => {
+        handleFormChange(event, 9, value, i);
+    }, 400);
 
 
 
     const SubmitHandler = async (e) => {
         e.preventDefault();
 
-        // const config = {
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        // };
+        const categoryKeys = selectedCategories.map((category) => category.value);
+        const eventType = 'Tournament'
+        const eventStatus = 'active'
+        const eventCategories = selectedCategories.reduce((acc, selectedCategory) => {
+            const category = categories.find(cat => cat.key === selectedCategory.value);
+            acc[selectedCategory.key] = {
+                indexKey: selectedCategory.key,
+                categoryKey: selectedCategory.value,
+                title: category ? category.title : 'Not Found',  
+                entryFee: selectedCategory.entryFee
+            };
+            return acc;
+        }, {});
+        
+        
 
         if (!duplicates) {
             const formData = new FormData();
             formData.append('eventName', eventName);
             formData.append('eventType', eventType);
-            formData.append('registeredEmail', registeredEmail);
             formData.append('flag', flag);
+            formData.append('registeredEmail', registeredEmail);
             formData.append('startDate', startDate);
             formData.append('endDate', endDate);
             formData.append('city', city);
             formData.append('address', address);
-            formData.append('entryFee', entryFee);
             formData.append('image', image);
             formData.append('eventStatus', eventStatus);
-            const categoryKeys = selectedCategories.map((category) => category.value);
             formData.append('categories', JSON.stringify(categoryKeys));
-            
+            formData.append('eventCategories', JSON.stringify(eventCategories));
 
 
-            // formData.append('categories', JSON.stringify(rows.map((row) => row.selectedValue)));
-
-            // try {
-            //     const { data } = await axios.post(`../api/createEvent`, formData);
-            //     console.log(data);
-            //     toast.success('Event created successfully!');
-            // } catch (error) {
-            //     console.error('Error during axios request', error);
-            //     toast.error('Error creating event');
-            // }
             const functionThatReturnPromise = axios.post(`../api/createEvent`, formData);
             toast.promise(
                 functionThatReturnPromise,
@@ -356,31 +350,30 @@ const CreateEvent = () => {
             ).then(
                 (response) => {
                     if (response.status === 201) { // Check if the event was created successfully
-                      // Clear the form
-                      setEventName('');
-                      setFlag('');
-                      setStartDate('');
-                      setEndDate('');
-                      setResetDatePicker(!resetDatePicker);
-                      setCity('');
-                      setAddress('');
-                      setEntryFee('');
-                      setImage('');
-                      fileInputRef.current.value = '';
-                      setSelectedCategories([])
-                      setRows([])
-                      setResetDropdown(!resetDropdown);
-                      setResetDefaultCategory(true);
-                
-                      // Navigate to another page (e.g., the home page)
-                      setTimeout(() => {
-                        router.push('/event');
-                    }, 3000);
+                        // Clear the form
+                        setEventName('');
+                        setFlag('');
+                        setStartDate('');
+                        setEndDate('');
+                        setResetDatePicker(!resetDatePicker);
+                        setCity('');
+                        setAddress('');
+                        setImage('');
+                        fileInputRef.current.value = '';
+                        setSelectedCategories([])
+                        setRows([])
+                        setResetDropdown(!resetDropdown);
+                        setResetDefaultCategory(true);
+
+                        // Navigate to another page (e.g., the home page)
+                        setTimeout(() => {
+                            router.push('/event');
+                        }, 3000);
                     }
-                  }
+                }
             ).catch((error) => {
                 console.error('Error submitting form:', error);
-              });
+            });
 
         } else {
             toast.warning('Duplicate Categories, Please check your choosen events');
@@ -388,8 +381,11 @@ const CreateEvent = () => {
 
     };
 
-    // console.log(selectedCategories)
-
+    // console.log('selectedCategories', selectedCategories)
+    // console.log('selectedCategoriesDefault', selectedCategories[0]?.value)
+    // console.log(!selectedCategories[0]?.value ? 'not true' : 'has value')
+    // console.log('rows', rows)
+    // console.log('categories', categories);
     return (
 
         <div className='wrapperForm '>
@@ -445,7 +441,7 @@ const CreateEvent = () => {
                             <div className="col-sm-6">
 
                             </div>
-                            <CustomDateRangePicker onDateRangeChange={onDateRangeChange}  reset={resetDatePicker}  />
+                            <CustomDateRangePicker onDateRangeChange={onDateRangeChange} reset={resetDatePicker} />
 
                             <div className="col-sm-6" style={{ zIndex: '4' }}>
 
@@ -506,7 +502,7 @@ const CreateEvent = () => {
                         <div className="my-3">
 
                             <div className='row'>
-                                <div className="col-sm-6">
+                                <div className="col-sm-12">
                                     <label htmlFor="uploadLogo" className="form-label">Add logo of the event</label>
                                     <input
                                         type="file"
@@ -523,23 +519,6 @@ const CreateEvent = () => {
                                         Please upload only valid format
                                     </div>
                                 </div>
-
-
-                                <div className='col-sm-6'>
-                                    <label htmlFor="entryfee" className="form-label">Entry fee per category</label>
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        id="fee"
-                                        placeholder=""
-                                        value={entryFee}
-                                        onChange={(event) => handleFormChange(event, 9, event.target.value)}
-                                        required
-                                    />
-                                    <div className="invalid-feedback">
-                                        Entry fee is required
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -547,7 +526,7 @@ const CreateEvent = () => {
                         <div className="row categoryMargin">
                             <label htmlFor="category" className="form-label">Add Category</label>
                             <div className="col-1">
-
+                                <label htmlFor="category" className="form-label">+Add</label>
                                 <button type="button" className="btn btn-primary form" onClick={handleAddRow}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard2-plus-fill" viewBox="0 0 16 16">
                                         <path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z" />
@@ -557,11 +536,13 @@ const CreateEvent = () => {
                                 </button>
 
                             </div>
-                            <div className="col-11">
+                            <div className="col-6">
+                                <label htmlFor="entryfee" className="form-label">Events</label>
+
                                 <select className="form-select" id="category"
-                                value={selectedCategory}
-                                    onChange={(event) => { 
-                                            setSelectedCategory(event.target.value);
+                                    value={selectedCategory}
+                                    onChange={(event) => {
+                                        setSelectedCategory(event.target.value);
                                         handleFormChange(event, 0, event.target.value, 0)
                                     }}
                                     required>
@@ -576,19 +557,37 @@ const CreateEvent = () => {
                                     Please Enter a valid Category.
                                 </div>
                             </div>
+                            <div className='col-5'>
+                                <label htmlFor="entryfee" className="form-label">Entry fee</label>
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text">₱</span>
+                                    </div>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        id="fee"
+                                        onChange={(event) => debouncedHandleFormChange(event, event.target.value, 0)}
+                                        required
+                                        disabled={!selectedCategories[0]?.value}
+                                    />
+                                </div>
+
+                                <div className="invalid-feedback">
+                                    Entry fee is required
+                                </div>
+                            </div>
                         </div>
 
                         <div>
-                            {rows.map((row, index) => (
-                                <InputDropdownRow
-                                    key={index}
-                                    options={row.options}
-                                    selectedValue={row.selectedValue}
-                                    handleChange={(event) => handleChange(event, index)}
-                                    handleDelete={() => handleDelete(row, index)}
-                                    reset={resetDropdown}
-                                />
-                            ))}
+
+                            <InputDropdownRow
+                                rows={rows}
+                                handleChange={handleChange}
+                                debouncedHandleFormChange={debouncedHandleFormChange}
+                                handleDelete={handleDelete}
+                            />
+
 
                         </div>
 
@@ -635,19 +634,19 @@ export default CreateEvent;
 
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions)
-  
+
     if (!session) {
-      return {
-        redirect: {
-          destination: '/event/error',
-          permanent: false,
-        },
-      }
+        return {
+            redirect: {
+                destination: '/event/error',
+                permanent: false,
+            },
+        }
     }
-  
+
     return {
-      props: {
-        session,
-      },
+        props: {
+            session,
+        },
     }
-  }
+}

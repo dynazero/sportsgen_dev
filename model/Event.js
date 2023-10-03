@@ -1,5 +1,28 @@
 import mongoose from "mongoose";
 
+const eventCategory = new mongoose.Schema({
+  indexKey: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  categoryKey: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+  entryFee: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+})
+
 const eventSchema = new mongoose.Schema({
   eventName: {
     type: String,
@@ -36,11 +59,7 @@ const eventSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true,
-  },
-  entryFee: {
-    type: Number,
-    required: true,
-  },
+  },  
   createdDate: {
     type: Date,
     default: Date.now,
@@ -57,7 +76,13 @@ const eventSchema = new mongoose.Schema({
   categories: {
     type: [Number],
     required: true,
-  }
+  },
+  eventCategories: {
+    type: Map,
+    of: eventCategory,
+    required: true,
+    trim: true,
+  },
   // uniqueFileName: {
   //   type: String,
   //   required: true,
