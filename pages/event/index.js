@@ -132,6 +132,18 @@ export default function events({ eventItem, tournamentItem }) {
   }, [session, getTeamId]);
 
 
+
+  // console.log('tournamentItem', tournamentItem);
+  // console.log('eventItem', eventItem);
+
+  // eventItem.forEach((item) => {
+  //   Object.values(item.eventCategories).forEach((category) => {
+  //     console.log('Title:', category.title);
+  //   });
+  // });
+
+
+
   return (
     <>
       <div className='picClass mx-auto minWidth caret'>
@@ -287,11 +299,11 @@ export default function events({ eventItem, tournamentItem }) {
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" className="bi bi-record-fill" viewBox="0 0 16 16">
                               <path fillRule="evenodd" d="M8 13A5 5 0 1 0 8 3a5 5 0 0 0 0 10z" />
                             </svg>
-                          <small>Event will start shortly  »</small>
+                            <small>Event will start shortly  »</small>
 
                           </div>
 
-                         
+
                         </div>
 
                       )}
@@ -314,7 +326,7 @@ export default function events({ eventItem, tournamentItem }) {
                           <MotionLink
                             type="button"
                             className="btn btn-dark"
-                            href={`/tournament/admin/bracket/${item._id}/${item.categoryTitles[0].key}`}
+                            href={`/tournament/admin/bracket/${item._id}/${item.item.eventCategories[0].indexKey}`}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                           >
@@ -353,9 +365,9 @@ export default function events({ eventItem, tournamentItem }) {
                                   <h6>Events</h6>
 
                                   <ul>
-                                    {item.categoryTitles.map((category, index) => (
-                                      <li className='text-nowrap' key={index}>{category.title}</li>
-                                    ))}
+                                    {item.eventCategories.map((category) => (
+                                      <li className='text-nowrap' key={category.indexKey}>{category.title}</li>
+                                    ))}2
                                   </ul>
 
 
@@ -374,7 +386,7 @@ export default function events({ eventItem, tournamentItem }) {
 
                           {session && (
                             <>
-                              <RegistrationBody athletelist={athletelist} events={item.categoryTitles} eventId={item.eventId} entryFee={item.registrationFee} getTeamId={getTeamId} />
+                              <RegistrationBody athletelist={athletelist} events={item.eventCategories} eventId={item.eventId} getTeamId={getTeamId} />
                             </>
                           )}
 
@@ -476,18 +488,21 @@ export default function events({ eventItem, tournamentItem }) {
                           <div className="row g-5">
                             <div className="col-md-7 col-lg-8">
                               <div className="row g-3">
-                                <div className="col-sm-8">
+                                <div className="col-sm-6">
                                   <h6>Event Address</h6>
 
                                   <div>{item.address},{item.city}</div>
 
                                 </div>
-                                <div className="col-sm-4">
+                                <div className="col-sm-6">
                                   <h6>Events</h6>
 
                                   <ul>
-                                    {item.categoryTitles.map((category, index) => (
-                                      <li className='text-nowrap' key={index}>{category.title}</li>
+                                    {Object.values(item.eventCategories).map((category) => (
+                                      <li className={`text-nowrap ${styles.categoryItem}`} key={category.indexKey}>
+                                        <span className={`${styles.categoryTitle}`}>{category.title}</span>
+                                        <strong className={`${styles.categoryFee}`}><small>{category.entryFee}php</small></strong>
+                                      </li>
                                     ))}
                                   </ul>
 
@@ -507,7 +522,7 @@ export default function events({ eventItem, tournamentItem }) {
 
                           {session && (
                             <>
-                              <RegistrationBody athletelist={athletelist} events={item.categoryTitles} eventId={item._id} entryFee={item.entryFee} getTeamId={getTeamId} />
+                              <RegistrationBody athletelist={athletelist} events={item.eventCategories} eventId={item._id} getTeamId={getTeamId} />
                             </>
                           )}
 
@@ -596,15 +611,6 @@ export async function getServerSideProps(context) {
     const formattedEndDate = formatDate(eventEndDate);
 
 
-    // Map the category keys to their titles
-    const categoryTitles = event.categories.map(catKey => {
-      const cat = categories.find(category => category.key === catKey);
-      return cat
-        ? { key: cat.key, title: cat.title }
-        : { key: 'unknown', title: 'Unknown category test' };  // return 'Unknown category' if the category key was not found
-    });
-
-
     return {
       ...event,
       eventdateD: eventStartDate.getDate().toString().padStart(2, '0'),
@@ -613,7 +619,6 @@ export async function getServerSideProps(context) {
       logoURL,
       countdown,
       eventPeriod: `${formattedStartDate} - ${formattedEndDate}`,
-      categoryTitles  // add the category titles to the event
     };
   });
 
@@ -630,12 +635,6 @@ export async function getServerSideProps(context) {
 
 
     // Map the category keys to their titles
-    const categoryTitles = event.categories.map(catKey => {
-      const cat = categories.find(category => category.key === catKey);
-      return cat
-        ? { key: cat.key, title: cat.title }
-        : { key: 'unknown', title: 'Unknown category test' };  // return 'Unknown category' if the category key was not found
-    });
 
 
     return {
@@ -646,7 +645,6 @@ export async function getServerSideProps(context) {
       logoURL,
       countdown,
       eventPeriod: `${formattedStartDate} - ${formattedEndDate}`,
-      categoryTitles  // add the category titles to the event
     };
   });
 

@@ -1,3 +1,21 @@
+.cartItem{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  text-align: left;
+}
+
+.cartTitle{
+  flex-grow: 1;
+  text-align: left;
+}
+
+.cartFee{
+  text-align: right;
+}
+
+
 .doubleTap {
   font-size: smaller;
   position: absolute;
@@ -66,18 +84,9 @@
 }
 
 
-.mydivelement {
-  padding-right: 10px;
-  /* Add padding to reduce space */
-}
 
 .mycontainer {
   display: flex;
   justify-content: flex-start;
   /* Align items at the start */
-}
-
-.mydivelement:not(:last-child) {
-  margin-right: 95px;
-  /* Add margin to the right of all elements except the last one */
 }

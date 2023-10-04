@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import PaymentMethods from '../PaymentMethods'
 
 
-export default function RegistrationBody({ getTeamId, athletelist, events, eventId, entryFee }) {
+export default function RegistrationBody({ getTeamId, athletelist, events, eventId }) {
 
     const [athleteFill, setAthleteFill] = useState(false)
     const [athletes, setAthletes] = useState([])
@@ -29,8 +29,10 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                 const participantId = athlete.athleteId;
                 const participantName = athlete.athleteName;
                 const participantImageURL = athlete.athleteImageURL;
-                const categoryId = event.key;
+                const indexKey = event.indexKey;
+                const categoryId = event.categoryKey;
                 const categoryName = event.title;
+                const entryFee = event.entryFee;
 
                 if (participantId == 'empty' || participantId == undefined) {
                     toast.warning('Please choose a participant');
@@ -55,12 +57,13 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                     const newObject = {
                         key: prevCartEvents.length + 1,
                         tournamentId: eventId,
+                        indexKey: indexKey,
                         categoryId: categoryId,
                         categoryName: categoryName,
+                        entryFee: entryFee,
                         participantId: participantId,
                         participantName: participantName,
                         participantImageURL: participantImageURL,
-                        entryFee: entryFee
                     };
                     return [...prevCartEvents, newObject]; // Add the new object to the array
                 }
@@ -70,6 +73,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
             }
         });
     };
+
     return (
         <>
             <div className="row g-5">
@@ -158,15 +162,17 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                                                 title: 'empty',
                                             })}>
                                                 Choose Category..</option>
-                                            {events.map((event, index) => (
+                                            {Object.values(events).map((category) => (
                                                 <option
-                                                    key={index}
+                                                    key={category.indexKey}
                                                     value={JSON.stringify({
-                                                        key: event.key,
-                                                        title: event.title,
+                                                        indexKey: category.indexKey,
+                                                        categoryKey: category.categoryKey,
+                                                        title: category.title,
+                                                        entryFee: category.entryFee,
                                                     })}
                                                 >
-                                                    {event.title}
+                                                    {category.title}
                                                 </option>
                                             ))}
                                         </>
