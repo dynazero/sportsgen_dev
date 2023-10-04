@@ -70,10 +70,12 @@ export default async (req, res) => {
             tournamentId,
             team,
             athleteId: reg.participantId,
-            athlete: reg.participantName,
+            athleteName: reg.participantName,
             imageURL: reg.participantImageURL,
-            event: reg.categoryName,
-            eventKey: reg.categoryId,
+            eventName: reg.categoryName,
+            eventKey: reg.indexKey,
+            categoryKey: reg.categoryId,
+            entryFee: reg.entryFee,
             status,
           });
 

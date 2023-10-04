@@ -224,7 +224,7 @@ export async function getServerSideProps(context) {
   // Accessing dynamic route parameter 'id'
   const id = context.params.id;
 
-  if (email) {
+  if (!email) {
     return {
       redirect: {
         destination: '/checkout/error',
@@ -232,7 +232,7 @@ export async function getServerSideProps(context) {
       },
     }
   }
-  
+
   async function fetchUserTeam(email) {
     try {
 
@@ -302,8 +302,8 @@ export async function getServerSideProps(context) {
           );
 
           return {
-            athlete: participant.athlete,
-            event: participant.event,
+            athlete: participant.athleteName,
+            event: participant.eventName,
             imageURL,
           };
         });

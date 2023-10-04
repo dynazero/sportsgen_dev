@@ -11,33 +11,53 @@ const participantSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  athlete: {
-    type:String,
+  country: {
+    type: String,
     required: true,
     trim: true,
   },
-  imageURL: {
-      type:String,
-      required: true,
-      trim: true,
-    },
   athleteId: {
     type: mongoose.Types.ObjectId,
     required: true,
     trim: true,
   },
-  event: {
+  athleteName: {
     type: String,
     required: true,
     trim: true,
   },
-  eventKey: {
+  imageURL: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  eventName: {
     type: String,
     required: true,
     trim: true,
   },
   status: {
     type: String,
+    required: true,
+    trim: true,
+  },
+  eventName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  eventKey: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+  categoryKey: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+  entryFee: {
+    type: Number,
     required: true,
     trim: true,
   },
