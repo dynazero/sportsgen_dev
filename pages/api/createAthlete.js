@@ -40,6 +40,7 @@ export default async (req, res) => {
               lname,
               email,
               team,
+              country,
               profileStatus,
               // overallRank,
               titles,
@@ -119,6 +120,7 @@ export default async (req, res) => {
                   lname: lname,
                   email: email,
                   team,
+                  country,
                   profilePicture: uniqueFileName,  // Store unique file name
                   document: uniqueFileName1,  // Store unique file name
                   profileStatus: profileStatus,

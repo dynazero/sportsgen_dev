@@ -10,51 +10,13 @@ import styles from './summary.module.css'
 import ReactCountryFlag from 'react-country-flag';
 
 
-
-
-function Index({ id, email, checkoutItem, teamItem }) {
+function Index({ id, email, checkoutItem, eventdata, teamItem }) {
   const router = useRouter()
 
-  const [eventData, setEventData] = useState([])
-  const [checkoutInfo, setCheckoutInfo] = useState(checkoutItem?.checkoutData)
-  const [participants, setParticipants] = useState(checkoutItem?.relevantParticipants)
+  const [eventData, setEventData] = useState(eventdata)
+  const [checkoutInfo, setCheckoutInfo] = useState(checkoutItem)
+  const [participants, setParticipants] = useState(checkoutItem?.registration)
 
-
-  const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
-
-  let NEXT_PUBLIC_API_URL;
-
-  switch (NEXT_PUBLIC_APP_ENV) {
-    case 'dev':
-      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
-      break;
-    case 'test':
-      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_NGROK_API_URL;
-      break;
-    case 'production':
-      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-      break;
-    default:
-      console.error('Invalid environment specified in NEXT_PUBLIC_APP_ENV');
-      break;
-  }
-
-
-  const getEventEndPoint = "/api/getEventById?id="
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const apiUrl = NEXT_PUBLIC_API_URL;
-        const { data } = await axios.get(`${apiUrl}${getEventEndPoint}${checkoutInfo.tournamentId}`)
-        setEventData(data.data)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    fetchCategories()
-  }, [])
 
   function capitalizeFirstLetter(string) {
     return string?.charAt(0).toUpperCase() + string?.slice(1);
@@ -68,6 +30,9 @@ function Index({ id, email, checkoutItem, teamItem }) {
   const paymentMethod = capitalizeFirstLetter(checkoutInfo?.paymentMethod)
   const status = checkoutInfo?.status.toUpperCase()
 
+  // return(
+  //   <div>test</div>
+  // )
   // console.log(teamItem)
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
@@ -146,6 +111,7 @@ function Index({ id, email, checkoutItem, teamItem }) {
                 <thead>
                   <tr>
                     <th></th>
+                    <th></th>
                     <th>Athlete</th>
                     <th>Event</th>
                   </tr>
@@ -156,10 +122,21 @@ function Index({ id, email, checkoutItem, teamItem }) {
                     <tr key={index}>
                       {/* <td><img src={participant.picture} alt={participant.name} /></td> */}
                       <td>
-                        <Image src={participant.imageURL} alt='athlete picture' width={25} height={25} priority />
+                        <ReactCountryFlag
+                          countryCode={participant.country}
+                          svg
+                          style={{
+                            width: '32px',
+                            height: '16px',
+                          }}
+                          title={participant.country}
+                        />
                       </td>
-                      <td>{participant.athlete}</td>
-                      <td>{participant.event}</td>
+                      <td>
+                        <Image src={participant.athleteImageURL} alt='athlete picture' width={25} height={25} priority />
+                      </td>
+                      <td>{participant.athleteName}</td>
+                      <td>{participant.categoryName}</td>
                     </tr>
                   ))}
 
@@ -214,8 +191,7 @@ export async function getServerSideProps(context) {
   const apiUrl = NEXT_PUBLIC_API_URL;
   const getCheckoutEndPoint = "/api/getCheckoutById?id="
   const getUserTeamEndPoint = "/api/getTeamByRegisteredEmail?registeredEmail="
-  const getAthleteByIdEndPoint = "/api/getAthleteById?id="
-  const getParticipantsEndPoint = "/api/getParticipantsById?id="
+  const getEventEndPoint = "/api/getEventById?id="
   const session = await getServerSession(context.req, context.res, authOptions)
   const nextAuthSession = await getSession(context);
   const email = session.user?.email
@@ -263,58 +239,8 @@ export async function getServerSideProps(context) {
 
       if (!checkoutData) return null;
 
-      // Check if checkout data is available
-      if (checkoutData) {
-        // Extract registration ObjectIds array
-        const registrationIds = checkoutData.registration.join(',');
+      return checkoutData;
 
-        // Get participants data
-        const participantsResponse = await axios.get(`${apiUrl}${getParticipantsEndPoint}${registrationIds}`);
-        const participantsData = participantsResponse.data.data;
-        const athleteIds = participantsData.map((item, index) => {
-          return item.athleteId;
-        })
-
-        const joinAthleteIds = athleteIds.join(',');
-
-
-        const athleteProfileResponse = await axios.get(`${apiUrl}${getAthleteByIdEndPoint}${joinAthleteIds}`);
-        const athleteProfileData = athleteProfileResponse.data.data;
-        const athleteImageUrl = athleteProfileData.map((item, index) => {
-          return {
-            athleteId: item._id,
-            url: item.profilePicture
-          }
-        })
-
-        const athleteIdToUrlMap = athleteProfileData.reduce((map, item) => {
-          map[item._id] = item.profilePicture;
-          // map the athleteId to the url
-          return map;
-        }, {});
-
-        const relevantParticipants = participantsData.map(participant => {
-          const imageURL = constructImageUrl(
-            process.env.DO_SPACES_BUCKET,
-            region,
-            'uploads/athletes/profile',
-            athleteIdToUrlMap[participant.athleteId] // Use the map here
-          );
-
-          return {
-            athlete: participant.athleteName,
-            event: participant.eventName,
-            imageURL,
-          };
-        });
-        // // Filter the participantsData based on the registration ObjectIds
-        // const relevantParticipants = participantsData.filter(participant =>
-        //   registrationIds.includes(participant._id)
-        // );
-
-        //   // Return both checkoutData and relevantParticipants
-        return { checkoutData, relevantParticipants };
-      }
     } catch (error) {
       console.error("An error occurred while fetching the data:", error);
       // Optionally, return something to indicate an error occurred
@@ -322,11 +248,29 @@ export async function getServerSideProps(context) {
     }
   }
 
+  async function fetchEventData(id) {
+
+    try {
+      const apiUrl = NEXT_PUBLIC_API_URL;
+      const { data } = await axios.get(`${apiUrl}${getEventEndPoint}${id}`)
+
+      const eventdata = data.data
+
+      return eventdata;
+
+    } catch (error) {
+      console.error("An error occurred while fetching the event data:", error);
+
+      return null;
+    }
+
+  }
+
   if (nextAuthSession) {
     const teamdata = await fetchUserTeam(email);
     const checkoutdata = await fetchCheckoutData(id);
-  
-    if (checkoutdata === null) {
+    const eventdata = await fetchEventData(checkoutdata?.tournamentId);
+    if (checkoutdata === null || eventdata === null) {
       return {
         redirect: {
           destination: '/checkout/error',
@@ -334,15 +278,18 @@ export async function getServerSideProps(context) {
         },
       }
     }
-  
+
     return {
       props: {
+        id,
+        email,
+        eventdata,
         checkoutItem: checkoutdata,
         teamItem: teamdata || null,
       },
     };
   }
-  
+
   if (!session) {
     return {
       redirect: {
@@ -351,7 +298,7 @@ export async function getServerSideProps(context) {
       },
     }
   }
-  
+
 
   // Pass 'id' as a prop to your component
   return {
@@ -359,6 +306,7 @@ export async function getServerSideProps(context) {
       id,
       email,
       teamItem,
+      eventdata,
       checkoutItem,
     },
   };

@@ -16,11 +16,6 @@ const tournamentEvent = new mongoose.Schema({
         required: false,
         trim: true,
     },
-    format: {
-        type: String,
-        enum: ['Single Elimination', 'Double Elimination', 'Kumite'],
-        default: 'Single Elimination'
-    },
     matchForThird: {
         type: Boolean,
         default: false,

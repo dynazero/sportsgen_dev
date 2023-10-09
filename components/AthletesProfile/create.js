@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { toast } from "react-toastify";
 
-const Create = ({ teamId }) => {
+const Create = ({ teamId, country }) => {
     const { data: session } = useSession()
     const router = useRouter();
 
@@ -65,6 +65,7 @@ const Create = ({ teamId }) => {
             formData.append('image1', image1);
             // formData.append('overallRank', overallRank);
             formData.append('titles', titles);
+            formData.append('country', country);
             // formData.append('events', events);
 
 
@@ -110,6 +111,9 @@ const Create = ({ teamId }) => {
         }
 
     };
+
+    // console.log('test', test);
+    console.log('test athlete');
 
 
     return (

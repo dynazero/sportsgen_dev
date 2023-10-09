@@ -10,8 +10,6 @@ import ReactDOM from "react-dom";
 import Image from 'next/image'
 import ReactCountryFlag from "react-country-flag"
 
-
-
 export default function events({ eventItem, tournamentItem }) {
   const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
 
@@ -130,19 +128,6 @@ export default function events({ eventItem, tournamentItem }) {
 
     }
   }, [session, getTeamId]);
-
-
-
-  // console.log('tournamentItem', tournamentItem);
-  // console.log('eventItem', eventItem);
-
-  // eventItem.forEach((item) => {
-  //   Object.values(item.eventCategories).forEach((category) => {
-  //     console.log('Title:', category.title);
-  //   });
-  // });
-
-
 
   return (
     <>
@@ -364,11 +349,11 @@ export default function events({ eventItem, tournamentItem }) {
                                 <div className="col-sm-4">
                                   <h6>Events</h6>
 
-                                  <ul>
+                                  {/* <ul>
                                     {item.eventCategories.map((category) => (
                                       <li className='text-nowrap' key={category.indexKey}>{category.title}</li>
-                                    ))}2
-                                  </ul>
+                                    ))}
+                                  </ul> */}
 
 
                                 </div>

@@ -13,12 +13,14 @@ export default function AthletesProfile({ teamItem, athletelist }) {
   let athletes = athletelist;
 
   const [team, setTeam] = useState('');
+  const [country, setCountry] = useState('');
 
 
   const [alist, setAlist] = useState(false)
 
   useEffect(() => {
     teamItem?.length === 0 ? setTeam() : setTeam(teamItem?.[0]?._id);
+    teamItem?.length === 0 ? setCountry() : setCountry(teamItem?.[0]?.country);
     athletes?.length === 0 ? setAlist(false)  : setAlist(true);
 
    
@@ -39,7 +41,7 @@ export default function AthletesProfile({ teamItem, athletelist }) {
               <div className='headerForm'>
                 <h2 className="mb-3 p-3">Add Athlete</h2>
               </div>
-              <Create teamId={team} />
+              <Create teamId={team} country={country}/>
             </div>
 
 

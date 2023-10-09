@@ -38,12 +38,11 @@ export default async (req, res) => {
       const {
         tournamentId,
         team,
-        registration,
         paymentmethod,
         status
       } = fields;
 
-      let parsedRegistration;
+      const registrationList = JSON.parse(fields.registration);
 
       const checkoutVerify = await Checkout.findOne({ tournamentId: tournamentId,team: team });
       if (checkoutVerify) {
@@ -51,30 +50,22 @@ export default async (req, res) => {
         return;
       }
 
-
-      try {
-        parsedRegistration = JSON.parse(registration); // Deserialize from JSON
-      } catch (error) {
-        console.error("Error parsing registration:", error);
-        res.status(500).json({ message: "Error parsing registration data" });
-        return;
-      }
-
       // Create an array to store participant IDs
       let participantIds = [];
 
       // Use a for-loop instead of forEach for better async/await handling
-      for (let reg of parsedRegistration) {
+      for (let reg of registrationList) {
         try {
           const newParticipant = new Participant({
             tournamentId,
             team,
-            athleteId: reg.participantId,
-            athleteName: reg.participantName,
-            imageURL: reg.participantImageURL,
+            athleteId: reg.athleteId,
+            athleteName: reg.athleteName,
+            imageURL: reg.athleteImageURL,
             eventName: reg.categoryName,
-            eventKey: reg.indexKey,
-            categoryKey: reg.categoryId,
+            eventKey: reg.eventKey,
+            categoryKey: reg.categoryKey,
+            country: reg.country,
             entryFee: reg.entryFee,
             status,
           });
@@ -91,15 +82,6 @@ export default async (req, res) => {
           console.error("Error saving registration to database:", error);
         }
       }
-
-
-      // console.log(participantIds, 'participantIds')
-
-      // const checkout Verify = await Checkout.findOne({ eventName: eventName });
-      // if (eventVerify) {
-      //   res.status(422).json({ message: "Checkout already exists" });
-      //   return;
-      // }
 
       if (!files.paymentproof) {
         res.status(400).json({ message: "No proof of payment uploaded" });
@@ -125,7 +107,7 @@ export default async (req, res) => {
         const newCheckout = new Checkout({
           tournamentId,
           team,
-          registration: participantIds,
+          registration: registrationList,
           paymentMethod: paymentmethod,
           paymentProof: uniqueFileName,
           status,

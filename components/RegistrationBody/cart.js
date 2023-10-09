@@ -106,7 +106,6 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
 
     }
 
-    // console.log(cartEvents,'cartEvents')
     return (
         <>
             <form
@@ -126,7 +125,7 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
                                     <div className={`${styles.mycontainer}  ${styles.cartItem} p-2 bd-highlight`}>
                                         <div className={`${styles.myanchor} ${styles.mydivelement}`} onDoubleClick={() => handleRemoveItem(index)}>
                                             <h6 className="my-0 anchorHighlight text-nowrap">{cartList.categoryName}</h6>
-                                            <small className="text-muted anchorHighlight">{cartList.participantName}</small>
+                                            <small className="text-muted anchorHighlight">{cartList.athleteName}</small>
                                             <span className={`text-muted ${styles.remove}`}><span className={styles.doubleTap}>double-tap</span>Remove</span>
                                         </div>
 

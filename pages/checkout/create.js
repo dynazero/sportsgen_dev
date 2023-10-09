@@ -11,7 +11,7 @@ import CustomDatePicker from '../../components/CustomDatePicker';
 import CustomDateRangePicker from '../../components/CustomDateRangePicker';
 import { toast } from "react-toastify";
 
-const Createevent = () => {
+const CreateCheckout = () => {
     const { data: session } = useSession()
     
     const router = useRouter();
@@ -387,7 +387,6 @@ const Createevent = () => {
 
     };
 
-    // console.log(selectedCategories)
 
     return (
 
@@ -629,7 +628,7 @@ const Createevent = () => {
     )
 }
 
-export default Createevent;
+export default CreateCheckout;
 
 
 export async function getServerSideProps(context) {

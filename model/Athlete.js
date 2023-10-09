@@ -37,6 +37,11 @@ const athleteSchema =  new mongoose.Schema({
     //     required: true,
     //     trim: true,
     // },  
+    country: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     titles: {
         type: String,
         required: true,

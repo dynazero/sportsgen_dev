@@ -29,6 +29,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                 const participantId = athlete.athleteId;
                 const participantName = athlete.athleteName;
                 const participantImageURL = athlete.athleteImageURL;
+                const country = athlete.country;
                 const indexKey = event.indexKey;
                 const categoryId = event.categoryKey;
                 const categoryName = event.title;
@@ -46,7 +47,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
 
                 // Check if the participant is already registered for the event
                 const existingIndex = prevCartEvents.findIndex((item) =>
-                    item.participantId === participantId && item.categoryId === categoryId && eventId === eventId
+                    item.athleteId === participantId && item.categoryKey === categoryId && item.tournamentId === eventId
                 );
 
                 if (existingIndex !== -1) {
@@ -55,15 +56,16 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                 } else {
                     // Create a new object with the properties you extracted
                     const newObject = {
-                        key: prevCartEvents.length + 1,
+                        registrationKey: prevCartEvents.length + 1,
                         tournamentId: eventId,
-                        indexKey: indexKey,
-                        categoryId: categoryId,
+                        eventKey: indexKey,
+                        categoryKey: categoryId,
                         categoryName: categoryName,
+                        country: country,
                         entryFee: entryFee,
-                        participantId: participantId,
-                        participantName: participantName,
-                        participantImageURL: participantImageURL,
+                        athleteId: participantId,
+                        athleteName: participantName,
+                        athleteImageURL: participantImageURL,
                     };
                     return [...prevCartEvents, newObject]; // Add the new object to the array
                 }
@@ -73,6 +75,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
             }
         });
     };
+
 
     return (
         <>
@@ -124,6 +127,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                                                         athleteId: athlete._id,
                                                         athleteName: `${athlete.lname}, ${athlete.fname}`,
                                                         athleteImageURL: athlete.imageURL,
+                                                        country: athlete.country,
                                                     })}
                                                 >
                                                     {athlete.lname}, {athlete.fname}

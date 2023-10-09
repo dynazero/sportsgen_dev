@@ -41,11 +41,6 @@ const participantSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  eventName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
   eventKey: {
     type: Number,
     required: true,
