@@ -6,6 +6,7 @@ import { getSession } from "next-auth/react"
 import { authOptions } from '../../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
 import { toast } from "react-toastify";
+import { debounce } from 'lodash';
 import ReactCountryFlag from 'react-country-flag';
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
@@ -14,34 +15,12 @@ import styles from '../tournament.module.css'
 
 
 function Index({ id, email, eventData }) {
-  const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;
-
-  let NEXT_PUBLIC_API_URL;
-
-  switch (NEXT_PUBLIC_APP_ENV) {
-    case 'dev':
-      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_DEV_API_URL;
-      break;
-    case 'test':
-      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_NGROK_API_URL;
-      break;
-    case 'production':
-      NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL;
-      break;
-    default:
-      console.error('Invalid environment specified in NEXT_PUBLIC_APP_ENV');
-      break;
-  }
-
   const router = useRouter()
   const [tournamentUrl, setTournamentUrl] = useState('sampleURL');
   const [formIsFilled, setFormIsFilled] = useState(false);
 
-  const [description, setDescription] = useState('');
-  const [selectedFormat, setSelectedFormat] = useState('Single Elimination');
-  const [battleForThird, setBattleForThird] = useState(false);
-  const [maxParticipants, setMaxParticipants] = useState(6);
-  const [startTime, setStartTime] = useState('10:00');
+  const [te_maxPart_Local, setTe_maxPart_Local] = useState([]);
+  const [tournamentEvents, setTournamentEvents] = useState([]);
   const [tournamentStatus, setTournamentStatus] = useState('Check-in');
   const stringToDisplay = 'Do you want to save before leaving the page ?';
 
@@ -72,6 +51,20 @@ function Index({ id, email, eventData }) {
     };
   }, [formIsFilled]);
 
+  useEffect(() => {
+    const updatedEvents = Object.values(eventData?.eventCategories || {}).map(event => ({
+      ...event,
+      description: '',
+      maxParticipants: 32,
+      startTime: '10:00',
+      status: 'Check-in'
+    }));
+    const maxParticipantsArray = Object.values(eventData?.eventCategories || {}).map(event => event.maxParticipants || 32);
+
+    setTournamentEvents(updatedEvents);
+    setTe_maxPart_Local(maxParticipantsArray);
+  }, [eventData]);
+
   const backChecker = (event) => {
     if (!formIsFilled) {
       router.push('/dashboard')
@@ -86,42 +79,45 @@ function Index({ id, email, eventData }) {
 
   }
 
-
-  const handleFormChange = (event, index, value, arrIndex = null) => {
+  const handleFormChange = (index, value, cardIndex = null) => {
+    let updatedEvents = [...tournamentEvents];  // Create a shallow copy of the tournamentEvents array
 
     switch (index) {
       case 1:
-        setDescription(value);
-        setFormIsFilled(true)
+        updatedEvents[cardIndex].description = value;
+        // console.log('Description Set', index, value, cardIndex);
         break;
       case 2:
-        setSelectedFormat(value);
-        setFormIsFilled(true)
-        break;
-      case 3:
-        setBattleForThird(value);
-        setFormIsFilled(true)
-        break;
-      case 4:
-        if (value > 32) {
-          alert('The maximum value is 32');
+        if (value > 64) {
+          alert('The maximum value is 64');
+        } else if (value < 3) {
+          return;
         } else {
-          setMaxParticipants(value);
-          setFormIsFilled(true)
+          updatedEvents[cardIndex].maxParticipants = value;
+          // console.log('Max Participants Set', index, value, cardIndex);
         }
         break;
+      case 3:
+        updatedEvents[cardIndex].startTime = value;
+        // console.log('Time Set', index, value, cardIndex);
+        break;
+      default:
+        console.error('Invalid form update');
+        return; // Exit the function if the index is invalid
     }
 
+    setTournamentEvents(updatedEvents);  // Update the state with the modified array
   }
+
 
   const handleInputBlur = (event) => {
     const value = event.target.value;
-    if (value < 6) {
-      alert('The minimum value is 6');
+    if (value < 3) {
+      alert('The minimum value is 3');
     }
   }
 
-
+  //sepration of rows for our event cards, chunkSize represents how many cards per row
   function chunkArray(arr, chunkSize) {
     let chunks = [];
     for (let i = 0; i < arr.length; i += chunkSize) {
@@ -129,8 +125,13 @@ function Index({ id, email, eventData }) {
     }
     return chunks;
   }
+  // 3 cards per row
+  // const categoryChunks = chunkArray(Object.values(tournamentEvents), 3);
+  const categoryChunks = Object.values(tournamentEvents);
 
-  const categoryChunks = chunkArray(eventData.categoryTitles, 3);
+  const debouncedmaxParticipants = debounce((index, value, cardIndex) => {
+    handleFormChange(index, value, cardIndex);
+  }, 800);
 
   const SubmitHandler = async (e) => {
     e.preventDefault();
@@ -141,21 +142,16 @@ function Index({ id, email, eventData }) {
     formData.append('eventLogo', eventData.logoURL);
     formData.append('organizer', eventData.organizer);
     formData.append('organizerEmail', email);
-    formData.append('categories', JSON.stringify(eventData.categories));
+    formData.append('categories', eventData.categories);
+    formData.append('tournamentEvents', JSON.stringify(tournamentEvents));
     formData.append('flag', eventData.flag);
     formData.append('address', eventData.address);
     formData.append('city', eventData.city);
     formData.append('url', tournamentUrl);
     formData.append('startDate', eventData.startDate);
     formData.append('endDate', eventData.endDate);
-    formData.append('description', description);
-    formData.append('format', selectedFormat);
-    formData.append('matchForThird', battleForThird);
-    formData.append('registrationFee', eventData.entryFee);
-    formData.append('maxParticipants', maxParticipants);
-    formData.append('startTime', startTime);
     formData.append('status', tournamentStatus);
-
+  
     const functionThatReturnPromise = axios.post(`../../api/createTournament`, formData);
     toast.promise(
       functionThatReturnPromise,
@@ -169,9 +165,6 @@ function Index({ id, email, eventData }) {
         if (response.status === 201) { // Check if the profile was created successfully
           // Clear the form
           setFormIsFilled(false)
-          setDescription('');
-          setSelectedFormat('Single Elimination');
-          setBattleForThird(false);
 
           // Navigate to another page (e.g., the home page)
           setTimeout(() => {
@@ -194,8 +187,7 @@ function Index({ id, email, eventData }) {
 
   }
 
-
-
+  
   return (
     <form onSubmit={SubmitHandler} className="needs-validation" noValidate="" >
       <div className={`wrapperForm ${styles.wrapperFormStyle}`}>
@@ -247,103 +239,68 @@ function Index({ id, email, eventData }) {
               </li>
               <li className="list-group-item">
                 <strong className="d-inline-block mb-2 text-primary">Events:  &nbsp;</strong>
-                <div className='row'>
-                  {categoryChunks.map((chunk, index) => (
-                    <div className='col-md-6'>
-                      <ul key={index} className="list-group list-group-horizontal ">
-                        {chunk.map((category, index) => (
-                          <li key={index} className="card list-group-item col-md-12" >
-                            <div className="card-body">
-                              <h5 className="card-title">  {category}</h5>
-
-
-                              <ul className="list-group list-group-flush">
-                                <li className="list-group-item">
-                                  <p className="card-text"><strong className="d-inline-block mb-2 text-primary">Description:  &nbsp;</strong>
-                                    <textarea className="form-control" id="Description" placeholder='Type Here (optional)' rows="3"
-                                      value={description}
-                                      onChange={(event) => handleFormChange(event, 1, event.target.value)}
-                                    ></textarea>
-                                  </p>
-                                </li>
-                                <li className="list-group-item">
-                                  <strong className="d-inline-block mb-2 text-primary">Entry Fee:  &nbsp;</strong>
-                                  <strong>₱{eventData.entryFee}</strong>
-                                </li>
-                                <li className="list-group-item">
-                                  <div className='row'>
-                                      <strong className="d-inline-block mb-2 text-primary">Format:  &nbsp;</strong>
-                                    <div className='col-md-7'>
-                                      <select className="form-select" id="format"
-                                        value={selectedFormat}
-                                        onChange={(event) => handleFormChange(event, 2, event.target.value)}
-                                        required>
-                                        <option key={0} value={'Single Elimination'}>Single Elimination</option>
-                                        <option key={1} value={'Double Elimination'}>Double Elimination</option>
-                                        <option key={2} value={'Double Elimination'}>Kumite</option>
-                                      </select>
-                                    </div>
-
-                                    <div className="col-md-5">
-                                      <div className="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                                        <input
-                                          type="checkbox"
-                                          className="btn-check"
-                                          id="forthird"
-                                          autoComplete="off"
-                                          checked={battleForThird}
-                                          onChange={(event) => handleFormChange(event, 3, event.target.checked)}
-                                        />
-                                        <label className="btn btn-outline-primary  text-nowrap" htmlFor="forthird">
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2" viewBox="0 0 16 16">
-                                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
-                                          </svg>
-                                          &nbsp;Battle for 3rd
-                                        </label>
-                                      </div>
-                                    </div>
+                <div >
+                  <div className='row justify-content-md-center'>
+                    {categoryChunks.map((category, index) => (
+                      <div key={index} className={`col-sm-4 mb-3 ${styles.categoryCards}`} >
+                        <div className='card'>
+                          <div className="card-body">
+                            <h5 className="card-title text-nowrap text-truncate">{category.title}</h5>
+                            <ul className="list-group list-group-flush">
+                              <li className="list-group-item">
+                                <p className="card-text"><strong className="d-inline-block mb-2 text-primary">Description:  &nbsp;</strong>
+                                  <textarea className="form-control" id="Description" placeholder='Type Here (optional)' rows="3"
+                                    value={category.description}
+                                    onChange={(event) => handleFormChange(1, event.target.value, category.indexKey)}
+                                  ></textarea>
+                                </p>
+                              </li>
+                              <li className="list-group-item">
+                                <strong className="d-inline-block mb-2 text-primary">Entry Fee: &nbsp;</strong>
+                                <strong>₱{category.entryFee}</strong>
+                              </li>
+                              <li className="list-group-item text-truncate">
+                                <strong className="d-inline-block mb-2 text-primary text-nowrap ">Max Participants:  &nbsp;</strong>
+                                <div className='row'>
+                                  <div className='col-md-4'>
+                                    <input className="form-control " type="number" min="3" max="64" step="1" placeholder='10'
+                                      value={te_maxPart_Local[category.indexKey]}
+                                      onChange={(event) => {
+                                        const newValue = event.target.value;
+                                        setTe_maxPart_Local(prevValues => {
+                                          const updatedValues = [...prevValues];
+                                          updatedValues[category.indexKey] = newValue; // Update the specific index
+                                          return updatedValues;
+                                        });
+                                        debouncedmaxParticipants(2, event.target.value, category.indexKey)
+                                      }}
+                                      onBlur={handleInputBlur}
+                                    />
                                   </div>
-                                </li>
-                                <li className="list-group-item">
-                                  <strong className="d-inline-block mb-2 text-primary text-nowrap">Max Participants:  &nbsp;</strong>
-                                  <div className='row'>
-                                    <div className='col-md-6'>
-                                      <input className="form-control " type="number" min="6" max="32" step="10"
-                                        value={maxParticipants}
-                                        onChange={(event) => handleFormChange(event, 4, event.target.value)}
-                                        onBlur={(event) => handleInputBlur(event)}
-                                      />
-                                    </div>
-                                    <div className='col-md-6'>
-                                      <p><em><cite>Min 6 - Max 32</cite></em></p>
-                                    </div>
+                                  <div className='col-md-8 text-nowrap '>
+                                    <p className='text-truncate'><em><cite>Min 3 - Max 64</cite></em></p>
                                   </div>
-                                </li>
-                                <li className="list-group-item">
-                                  <strong className="d-inline-block mb-2 text-primary">Start Time:  &nbsp;</strong>
-                                  <div className='row'>
-                                    <div className='col-md-6'>
-                                      <TimePicker className={`form-control ${styles['custom-time-picker']}`}
-                                        onChange={setStartTime}
-                                        value={startTime} disableClock={true} />
-                                    </div>
+                                </div>
+                              </li>
+                              <li className="list-group-item">
+                                <strong className="d-inline-block mb-2 text-primary">Start Time:  &nbsp;</strong>
+                                <div className='row'>
+                                  <div className={`col-sm-8 ${styles.timePicker}`}>
+                                    <TimePicker className={`form-control ${styles['custom-time-picker']}`}
+                                      onChange={(value) => handleFormChange(3, value, category.indexKey)}
+                                      value={category.startTime} disableClock={true} />
                                   </div>
-                                </li>
-
-                              </ul>
-
-                            </div>
-                          </li>
-
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </li>
-
             </ul>
-
           </div>
 
           <div className="container">
@@ -387,7 +344,6 @@ export async function getServerSideProps(context) {
   const getEventEndPoint = "/api/getEventById?id="
   const getTournamentEndPoint = "/api/getTournamentByEventId?eventId="
   const getUserTeamEndPoint = "/api/getTeamByRegisteredEmail?registeredEmail="
-  const getEventCategoryEndPoint = "/api/getEventCategory"
   const session = await getServerSession(context.req, context.res, authOptions)
   const nextAuthSession = await getSession(context);
   const email = session?.user.email
@@ -431,13 +387,9 @@ export async function getServerSideProps(context) {
       const organizerRes = await axios.get(`${apiUrl}${getUserTeamEndPoint}${event.registeredEmail}`);
       const organizer = organizerRes.data.data.clubName;
 
-      const categoriesRes = await axios.get(`${apiUrl}${getEventCategoryEndPoint}`);
-      const categories = categoriesRes.data.data
+      const categories = Object.values(event.eventCategories).map(category => category.categoryKey);
 
-      const categoryTitles = event.categories.map(catKey => {
-        const cat = categories.find(category => category.key === catKey);
-        return cat ? cat.title : 'Unknown category';  // return 'Unknown category' if the category key was not found
-      });
+      const categoryTitles = Object.values(event.eventCategories).map(category => category.title);
 
       const eventData = {
         ...event,
@@ -493,7 +445,6 @@ export async function getServerSideProps(context) {
 
   if (nextAuthSession) {
     const checkEventData = await fetchEventData(id)
-
     if (checkEventData === null) {
       return {
         redirect: {

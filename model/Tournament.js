@@ -16,12 +16,7 @@ const tournamentEvent = new mongoose.Schema({
         required: false,
         trim: true,
     },
-    matchForThird: {
-        type: Boolean,
-        default: false,
-        trim: true,
-    },
-    registrationFee: {
+    entryFee: {
         type: Number,
         required: true,
         trim: true,
@@ -74,8 +69,7 @@ const tournamentSchema = new mongoose.Schema({
         trim: true,
     },
     tournamentEvents:{
-        type:Map,
-        of: tournamentEvent,
+        type:[tournamentEvent],
         required:true,
         trim: true,
     },

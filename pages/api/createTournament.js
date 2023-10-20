@@ -38,7 +38,7 @@ export default async (req, res) => {
     res.status(401).json({ message: 'Unauthorized' }); // Return 401 status for Unauthorized
     return; // Stop further execution
   }
-  
+
   if (req.method === "POST") {
     const form = new formidable.IncomingForm();
     form.parse(req, async (err, fields, files) => {
@@ -54,29 +54,30 @@ export default async (req, res) => {
         eventLogo,
         organizer,
         organizerEmail,
+        categories,
         flag,
         address,
         city,
         url,
         startDate,
         endDate,
-        description,
-        format,
-        matchForThird,
-        registrationFee,
-        maxParticipants,
-        startTime,
         status
       } = fields;
 
-      const categoryKeys = JSON.parse(fields.categories);
+      const tournamentEventsArray = JSON.parse(fields.tournamentEvents);
+
+      const categoryKeys = tournamentEventsArray.map(event => ({
+        _id: event._id,
+        categoryKey: event.categoryKey
+      }));
+
+      const categoryNumbers = fields.categories.split(',').map(Number);
 
       const eventVerify = await Tournament.findOne({ eventId: eventId });
       if (eventVerify) {
         res.status(422).json({ message: "Tournament already exists" });
         return;
       }
-
 
       try {
 
@@ -89,16 +90,11 @@ export default async (req, res) => {
           flag,
           address,
           city,
-          categories: categoryKeys,
+          categories: categoryNumbers,
+          tournamentEvents: tournamentEventsArray,
           url,
           startDate: convertToPHT(new Date(startDate)),
           endDate: convertToPHT(new Date(endDate)),
-          description,
-          format,
-          matchForThird,
-          registrationFee,
-          maxParticipants,
-          startTime,
           status
         });
 
@@ -108,19 +104,23 @@ export default async (req, res) => {
         const tournamentId = savedTournament._id
         const logAccount = savedTournament.organizerEmail
         const message = "Tournament Created"
-                
-       
-          categoryKeys.forEach(async (categoryKey) => {
-            const newLog = new Log({
-              tournamentId,
-              categoryKey,
-              logAccount,
-              message,
-            });
-        
-            const savedLog = await newLog.save();
+
+
+        const logPromises = categoryKeys.map((category) => {
+          const newLog = new Log({
+            tournamentId,
+            tournamentEventId: category._id,
+            categoryKey: category.categoryKey,
+            logAccount,
+            message,
           });
-          
+
+          return newLog.save(); // return the promise here
+        });
+
+        // Wait for all log saving promises to resolve
+        await Promise.all(logPromises);
+
         // Update the corresponding event's status to 'closed'
         await Event.findByIdAndUpdate(eventId, { eventStatus: 'closed' });
 

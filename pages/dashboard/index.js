@@ -208,6 +208,16 @@ export async function getServerSideProps(context) {
     return new Date(tempDate.getTime() + offset * 60 * 1000);
   }
 
+  function convertToString(date) {
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Manila',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).format(date);
+  }
+
   function formatDateToYYYYMMDD(date) {
     const d = new Date(date);
     const year = d.getUTCFullYear();
@@ -294,7 +304,6 @@ export async function getServerSideProps(context) {
     const tournamentLogo = event.eventLogo;
     const tournamentFlag = event.flag;
     const tournamentStatus = event.status;
-    const tournamentStartTime = event.startTime;
 
 
     return {
@@ -303,7 +312,6 @@ export async function getServerSideProps(context) {
       tournamentLogo,
       tournamentFlag,
       tournamentStatus,
-      tournamentStartTime
     }
   })
 
@@ -389,6 +397,7 @@ export async function getServerSideProps(context) {
   // console.log('getCurrentDateInPST', getCurrentDateInPST);
   // console.log(upcomingEvents, 'upcomingEvents')
   // console.log(archivedEvents, 'archived')
+  // console.log('date.now()', convertToString(Date.now()));
 
   return {
     props: {

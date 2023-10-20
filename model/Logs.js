@@ -6,6 +6,11 @@ const logSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+    tournamentEventId: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        trim: true,
+    },
     categoryKey: {
         type: Number,
         required: true,

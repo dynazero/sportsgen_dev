@@ -8,6 +8,14 @@
 
 }
 
+.timePicker{
+    min-width: 168px;
+}
+
+.categoryCards{
+    min-width: 294px;
+}
+
 .custom-time-picker div,
 .custom-time-picker input {
     border: none !important;

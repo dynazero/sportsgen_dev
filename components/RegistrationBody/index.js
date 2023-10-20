@@ -89,7 +89,6 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                         paymentInfo={paymentInfo}
                         athleteFill={athleteFill}
                         cartUpdate={setCartEvents}
-
                     />
 
                 </div>
