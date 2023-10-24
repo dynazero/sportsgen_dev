@@ -1,14 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import styles from './header.module.css'
 import Image from 'next/image'
 import ReactCountryFlag from 'react-country-flag';
 
 
-const Header = ({ tournamentData, changeCategory, category, participantscount }) => {
+const Header = ({ tournamentData, changeCategory, category, playersCount, participantsCount }) => {
+
+    // Search for the specific event with the given categoryKey
+    const eventWithCategory = tournamentData?.tournamentEvents?.find(event => event.categoryKey ===  parseInt(category));
+
+    // If the event with the categoryKey is found, retrieve its maxParticipants value, otherwise set a default value
+    const [maxParticipants, setMaxParticipants] = useState(eventWithCategory?.maxParticipants || 'Not Set');
+
 
     return (
         <div className={`row ${styles.rowMinWidth}`}>
-            <div className="col ">
+            <div className="col-md-9 ">
                 <div className="card-body d-flex flex-column align-items-start">
                     <h3 className="mb-0">
                         <strong className="d-inline-block mb-2 text-primary">{tournamentData?.eventName}</strong>
@@ -33,15 +40,16 @@ const Header = ({ tournamentData, changeCategory, category, participantscount })
                                 ))}
                             </>
                         </select>
-                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>{participantscount} Players</span>
-                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>{tournamentData?.format}</span>
+                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>{playersCount} Players</span>
+                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>{maxParticipants} Max Players</span>
+                        <span className={`text-dark mb-2 ${styles.margintextRight}`}>{participantsCount} Event Participants</span>
                     </div>
                 </div>
             </div>
 
-            <div className="col">
+            <div className="col-md-3">
                 <div className={`card-body d-flex flex-column align-items-end ${styles.textRight}`}>
-                <Image src={tournamentData?.eventLogo} alt='event logo' width={80} height={80} priority />
+                    <Image src={tournamentData?.eventLogo} alt='event logo' width={80} height={80} priority />
                     <strong className="d-inline-block mb-2 text-primary">Organized by:</strong>
                     <h5 className="mb-0">
                         <span className="text-dark" href="#">{tournamentData?.organizer}</span>

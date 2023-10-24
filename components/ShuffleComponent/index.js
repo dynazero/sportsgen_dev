@@ -53,7 +53,7 @@ const ShuffleComponent = ({ categorykey, categorySet, bracketList, startTourname
                                             <div className="tab-pane fade show active" id={`pills-list${selectedCategory}`} role="tabpanel" aria-labelledby="pills-list-tab">
                                                 {filteredParticipants.map((participant, index) => (
                                                     <div key={`athlete${index}`}>
-                                                        <p>{index + 1}.  <strong>{participant.athlete}</strong></p>
+                                                        <p>{index + 1}.  <strong>{participant.athleteName}</strong></p>
                                                     </div>
                                                 )
                                                 )}

@@ -32,6 +32,9 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
   const selectedCategory = categorySelection.find((category) => category.key === parseInt(categorykey));
 
+  const [playersList, setPlayersList] = useState(
+    participantsData.filter(participant => participant.eventKey === selectedCategory.key)
+  ); 
   const [bracketList, setBracketList] = useState(participantsData);
 
   const BracketHandler = bracketImports[selectedCategory.start];
@@ -40,7 +43,6 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
     tournamentId: tournamentData._id,
     eventName: tournamentData.eventName,
     title: selectedCategory.title,
-    format: tournamentData.format,
   })
 
 
@@ -119,9 +121,6 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
     participants: filteredParticipants,
 
   }
-  // const startTournament = () => {
-  //   console.log('start Tournament')
-  // }
 
   const startTournament = async () => {
 
@@ -166,13 +165,6 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
   }
 
-
-
-  // console.log('participantsData', participantsData);
-  // console.log('bracketList', bracketList);
-  // console.log('selectedCategory', selectedCategory);
-  // console.log('tournamentData', tournamentData);
-
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
@@ -181,7 +173,7 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
       <div className={`${styles.containerform}`}>
         <div className="col-md-7 col-lg-8 mainForm">
           <div className="row g-3">
-            <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} participantscount={bracketList.length} />
+            <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} playersCount={playersList.length} participantsCount={bracketList.length} />
             <div className="container">
               <div className={`row ${styles.posRel}`}>
                 <ul className="nav nav-tabs">
