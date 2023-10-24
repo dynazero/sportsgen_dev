@@ -106,7 +106,7 @@ function Index({ id, email, checkoutItem, eventdata, teamItem }) {
 
           <div className={`my-3 ${styles.participantsH}`}>
 
-            <div className='row'>
+            <div className={`row ${styles.rowWidth}`}>
               <table className="table table-striped table-sm">
                 <thead>
                   <tr>

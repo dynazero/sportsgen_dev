@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import axios from 'axios';
 import { signIn, useSession } from "next-auth/react"
+import EventCategoriesComponent from '../../components/Pagination/registrationEventCategories'
 import { MotionConfig, motion } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react'
 import navbarstyle from '../../styles/Menu.module.css'
@@ -129,6 +130,8 @@ export default function events({ eventItem, tournamentItem }) {
     }
   }, [session, getTeamId]);
 
+  // console.log('tournamentList', tournamentList);
+
   return (
     <>
       <div className='picClass mx-auto minWidth caret'>
@@ -145,8 +148,6 @@ export default function events({ eventItem, tournamentItem }) {
           </div>
         </div>
 
-
-
         <div className="accordion" id="accordionEvents">
           {(!events && !tournaments) && (
             <div className='picClassItem eventsDialogBox '>
@@ -154,7 +155,6 @@ export default function events({ eventItem, tournamentItem }) {
             </div>
 
           )}
-
 
           {tournaments && tournamentList.map((item, i) => (
             <motion.div
@@ -311,7 +311,7 @@ export default function events({ eventItem, tournamentItem }) {
                           <MotionLink
                             type="button"
                             className="btn btn-dark"
-                            href={`/tournament/admin/bracket/${item._id}/${item.item.eventCategories[0].indexKey}`}
+                            href={`/tournament/admin/bracket/${item._id}/${item.item.tournamentEvents[0].indexKey}`}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                           >
@@ -340,21 +340,16 @@ export default function events({ eventItem, tournamentItem }) {
                           <div className="row g-5">
                             <div className="col-md-7 col-lg-8">
                               <div className="row g-3">
-                                <div className="col-sm-8">
+                                <div className="col-sm-6">
                                   <h6>Event Address</h6>
 
                                   <div>{item.address},{item.city}</div>
 
                                 </div>
-                                <div className="col-sm-4">
+                                <div className="col-sm-6">
                                   <h6>Events</h6>
 
-                                  {/* <ul>
-                                    {item.eventCategories.map((category) => (
-                                      <li className='text-nowrap' key={category.indexKey}>{category.title}</li>
-                                    ))}
-                                  </ul> */}
-
+                                  <EventCategoriesComponent events={item.tournamentEvents} />
 
                                 </div>
                               </div>
@@ -364,14 +359,14 @@ export default function events({ eventItem, tournamentItem }) {
                             <Link href="/dashboard" className="nav-link active" aria-current="page"
                               onClick={() => signIn()}>
                               <span className={navbarstyle.textcoloractive}>
-                                Please to login to Register »
+                                Please login to Register »
                               </span>
                             </Link>
                           )}
 
                           {session && (
                             <>
-                              <RegistrationBody athletelist={athletelist} events={item.eventCategories} eventId={item.eventId} getTeamId={getTeamId} />
+                              <RegistrationBody athletelist={athletelist} events={item.tournamentEvents} eventId={item.eventId} getTeamId={getTeamId} />
                             </>
                           )}
 
@@ -482,15 +477,7 @@ export default function events({ eventItem, tournamentItem }) {
                                 <div className="col-sm-6">
                                   <h6>Events</h6>
 
-                                  <ul>
-                                    {Object.values(item.eventCategories).map((category) => (
-                                      <li className={`text-nowrap ${styles.categoryItem}`} key={category.indexKey}>
-                                        <span className={`${styles.categoryTitle}`}>{category.title}</span>
-                                        <strong className={`${styles.categoryFee}`}><small>{category.entryFee}php</small></strong>
-                                      </li>
-                                    ))}
-                                  </ul>
-
+                                  <EventCategoriesComponent events={item.eventCategories} />
 
                                 </div>
                               </div>
@@ -500,7 +487,7 @@ export default function events({ eventItem, tournamentItem }) {
                             <Link href="/dashboard" className="nav-link active" aria-current="page"
                               onClick={() => signIn()}>
                               <span className={navbarstyle.textcoloractive}>
-                                Please to login to Register »
+                                Please login to Register »
                               </span>
                             </Link>
                           )}

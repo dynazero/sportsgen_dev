@@ -76,7 +76,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
         });
     };
 
-
+console.log('cartEvents', cartEvents);
     return (
         <>
             <div className="row g-5">
@@ -160,16 +160,16 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                                 >
                                     {events && (
                                         <>
-                                            <option value={JSON.stringify({
+                                            <option key='defaultCategory1' value={JSON.stringify({
                                                 key: 'empty',
                                                 title: 'empty',
                                             })}>
                                                 Choose Category..</option>
                                             {Object.values(events).map((category) => (
                                                 <option
-                                                    key={category.indexKey}
+                                                    key={category.categoryKey}
                                                     value={JSON.stringify({
-                                                        indexKey: category.indexKey,
+                                                        indexKey: category.categoryKey,
                                                         categoryKey: category.categoryKey,
                                                         title: category.title,
                                                         entryFee: category.entryFee,
@@ -178,7 +178,7 @@ export default function RegistrationBody({ getTeamId, athletelist, events, event
                                                     {category.title}
                                                 </option>
                                             ))}
-                                        </>
+                                        </> 
                                     )}
                                 </select>
                                 <div className="invalid-feedback">

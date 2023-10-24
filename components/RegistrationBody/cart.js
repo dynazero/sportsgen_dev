@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import CartListPagination from '../Pagination/cartRegistrationList'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -94,8 +95,13 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
             }
         ).catch((error) => {
             if (error.response.status === 422) {
-                return toast.warning(error.response.data.message); // Show warning if team is already registered
+                toast.warning(error.response.data.message); // Show warning if team is already registered
+            
+                setTimeout(() => {
+                    router.replace(router.asPath);
+                }, 2000); // Adjust the time as per your requirement
             }
+
             console.error('Error submission on checkout:', error);
         });
 
@@ -119,24 +125,7 @@ const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUp
                 <ul className="list-group mb-3">
                     {!cartEmpty && (
                         <>
-                            {cart.map((cartList, index) => (
-                                <li key={index} className={`list-group-item d-flex justify-content-between lh-sm ${styles.liList} ${styles.anchorTrigger}`}>
-                                    {/* <a className={`justify-content-between ${styles.myanchor}`} onClick={() => handleRemoveItem(index)}> */}
-                                    <div className={`${styles.mycontainer}  ${styles.cartItem} p-2 bd-highlight`}>
-                                        <div className={`${styles.myanchor} ${styles.mydivelement}`} onDoubleClick={() => handleRemoveItem(index)}>
-                                            <h6 className="my-0 anchorHighlight text-nowrap">{cartList.categoryName}</h6>
-                                            <small className="text-muted anchorHighlight">{cartList.athleteName}</small>
-                                            <span className={`text-muted ${styles.remove}`}><span className={styles.doubleTap}>double-tap</span>Remove</span>
-                                        </div>
-
-                                    </div>
-                                    <div className='p-2 bd-highlight '>
-                                        {/* Here we add a button to remove the item */}
-                                        <span className={`text-muted ${styles.sidePrice} `}>{cartList.entryFee}</span>
-                                    </div>
-                                    {/* </a> */}
-                                </li>
-                            ))}
+                                <CartListPagination cartItems={cart} handleRemoveItem={handleRemoveItem}/>
                         </>
                     )}
                     <li className="list-group-item d-flex justify-content-between">

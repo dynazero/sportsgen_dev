@@ -14,16 +14,6 @@ const participantListSchema = new mongoose.Schema({
 })
 
 const matchSchema = new mongoose.Schema({
-  // participant1Id: {
-  //   type: mongoose.Types.ObjectId,
-  //   required: true,
-  //   trim: true,
-  // },
-  // participant2Id: {
-  //   type: mongoose.Types.ObjectId,
-  //   required: true,
-  //   trim: true,
-  // },
   participant1: {
     type: String,
     required: true,
@@ -96,25 +86,11 @@ const tournamentresultSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  // runnerUp: {
-  //     type: String,
-  //     required: true,
-  //     trim: true,
-  // },
-  // thirdPlace: {
-  //     type: String,
-  //     required: true,
-  //     trim: true,
-  // },
   status: {
     type: String,
     enum: ['Check-in', 'Live', 'Finals', 'Awarding', 'Closed'],
     default: 'Closed'
   },
-  // eventType: {
-  //     type: String,
-  //     required: true
-  // },
   timeStamp: {
     type: Date,
     default: Date.now,

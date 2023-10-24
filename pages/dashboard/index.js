@@ -2,6 +2,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import dynamic from 'next/dynamic';
 import { useVerified } from '../../context/verifiedContext';
 import axios from 'axios'
+import { DateTime } from 'luxon';
 // import { useRouter } from 'next/router';
 import { signIn, signOut, useSession, getSession } from "next-auth/react"
 import Sidebar from '../../components/Sidebar'
@@ -9,7 +10,7 @@ import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
 import { toast } from "react-toastify";
 
-const MyDashboard = dynamic(() => import('../../components/MyDashboard'), { loading: () => <p>Loading...</p>});
+const MyDashboard = dynamic(() => import('../../components/MyDashboard'), { loading: () => <p>Loading...</p> });
 
 export default function dashboard({
   verifiedFromServer,
@@ -80,24 +81,24 @@ export default function dashboard({
           transition: ".4s",
           width: mWidth
         }}>
-        
-          <MyDashboard
-            passPage={passPage}
-            setCurPage={setCurPage}
-            teamItem={teamItem}
-            athletelist={athletelist}
-            coachlist={coachlist}
-            officiallist={officiallist}
-            verifiedFromServer={verifiedFromServer}
-            members={members}
-            organizedUpcomingEvents={organizedUpcomingEvents}
-            organizedOngoingEvents={organizedOngoingEvents}
-            upcomingEvents={upcomingEvents}
-            archivedEvents={archivedEvents}
-            orgLiveTournaments={orgLiveTournaments}
-            liveTournaments={liveTournaments}
-          />
-       
+
+        <MyDashboard
+          passPage={passPage}
+          setCurPage={setCurPage}
+          teamItem={teamItem}
+          athletelist={athletelist}
+          coachlist={coachlist}
+          officiallist={officiallist}
+          verifiedFromServer={verifiedFromServer}
+          members={members}
+          organizedUpcomingEvents={organizedUpcomingEvents}
+          organizedOngoingEvents={organizedOngoingEvents}
+          upcomingEvents={upcomingEvents}
+          archivedEvents={archivedEvents}
+          orgLiveTournaments={orgLiveTournaments}
+          liveTournaments={liveTournaments}
+        />
+
       </div>
 
       {arrowV && (
@@ -203,9 +204,7 @@ export async function getServerSideProps(context) {
 
 
   const getCurrentDateInPHT = () => {
-    const tempDate = new Date();
-    const offset = tempDate.getTimezoneOffset() + 8 * 60;  // Adjust for PHT
-    return new Date(tempDate.getTime() + offset * 60 * 1000);
+    return DateTime.now().setZone('Asia/Manila').toJSDate();
   }
 
   function convertToString(date) {
@@ -217,6 +216,15 @@ export async function getServerSideProps(context) {
       hour12: false
     }).format(date);
   }
+
+  function convertToStringDate(date) {
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Manila',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(date);
+}
 
   function formatDateToYYYYMMDD(date) {
     const d = new Date(date);
@@ -342,7 +350,7 @@ export async function getServerSideProps(context) {
     event.registeredEmail === email &&
     (event.eventStatus === 'active' || event.eventStatus === 'ready') &&
     // new Date(event.startDate) <= getCurrentDateInPHT()
-    formatDateToYYYYMMDD(event.startDate) <= formatDateToYYYYMMDD(getCurrentDateInPHT())
+    formatDateToYYYYMMDD(event.startDate) <= convertToStringDate(getCurrentDateInPHT())
   );
   const organizedOngoingEvents = orgLiveEvents.map(event => {
     const region = 'sgp1';
@@ -390,14 +398,6 @@ export async function getServerSideProps(context) {
   const archivedEvents = eventslist.filter(event =>
     event.registeredEmail === email && event.eventStatus === 'closed'
   );
-
-  // console.log(organizedUpcomingEvents, 'organizedUpcomingEvents')
-  // console.log(organizedOngoingEvents, 'organizedOngoingEvents')
-  // console.log('eventslist', eventslist);
-  // console.log('getCurrentDateInPST', getCurrentDateInPST);
-  // console.log(upcomingEvents, 'upcomingEvents')
-  // console.log(archivedEvents, 'archived')
-  // console.log('date.now()', convertToString(Date.now()));
 
   return {
     props: {

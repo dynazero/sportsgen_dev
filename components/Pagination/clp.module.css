@@ -1,0 +1,93 @@
+.cartItem{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    text-align: left;
+  }
+  
+  .cartTitle{
+    flex-grow: 1;
+    text-align: left;
+  }
+  
+  .cartFee{
+    text-align: right;
+  }
+  
+  
+  .doubleTap {
+    font-size: smaller;
+    position: absolute;
+    width: 66px;
+    opacity: 0.7;
+    right: 0px;
+    bottom: 22px;
+  }
+  
+  .liList {
+    cursor: pointer;
+  }
+  
+  .myanchor {
+    position: static;
+    transition: all .35s;
+    z-index: 5;
+  
+  }
+  
+  .myanchor>div>h6,
+  .myanchor>div>small {
+    position: relative;
+    z-index: 5;
+  }
+  
+  .anchorTrigger:hover .myanchor:after {
+    /* Add the properties you want when .anchorTrigger is hovered */
+    width: 100%;
+  }
+  
+  .anchorTrigger:hover .myanchor {
+    /* Add the properties you want when .anchorTrigger is hovered */
+    color: black;
+    z-index: 5;
+  }
+  
+  .myanchor:after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: #004bac;
+    transition: all .35s;
+    opacity: .4;
+  }
+  
+  /* This will make the .remove element invisible by default */
+  .remove {
+    position: absolute;
+    right: 10px;
+    opacity: 0;
+    transition: opacity .35s;
+    z-index: 3;
+  }
+  
+  /* This will make the .remove element visible when .myanchor is hovered */
+  .anchorTrigger:hover .remove {
+    opacity: 1;
+  }
+  
+  .anchorTrigger:hover .sidePrice {
+    opacity: 0;
+  }
+  
+  
+  
+  .mycontainer {
+    display: flex;
+    justify-content: flex-start;
+    /* Align items at the start */
+  }
+  

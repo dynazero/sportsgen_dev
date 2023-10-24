@@ -1,0 +1,15 @@
+.categoryItem{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.categoryTitle{
+    flex-grow: 1;
+    text-align: left;
+}
+
+.categoryFee{
+    text-align: right;
+}

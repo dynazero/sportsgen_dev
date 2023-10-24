@@ -4,6 +4,11 @@
 
 .participantsH{
     height: 65%;
+    overflow: overlay;
+}
+
+.rowWidth{
+    width:100%;
 }
 
 .textRight{
