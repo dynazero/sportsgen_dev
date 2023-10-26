@@ -10,7 +10,6 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
-import { parse } from 'date-fns';
 
 const ShuffleComponent = dynamic(() => import('../../../../../components/ShuffleComponent'), { loading: () => <p>Loading...</p> });
 const BracketComponent = dynamic(() => import('../../../../../components/BracketComponent'), { loading: () => <p>Loading...</p> });
@@ -23,6 +22,82 @@ const bracketImports = {
 function Bracket({ id, categorykey, tournamentData, participantsData }) {
   const router = useRouter();
 
+  const bracketListDemo = (initialData => {
+    const dummyNames = [
+      'Smith, John', 'Doe, Jane', 'White, Walter', 'Black, Joe', 'Green, Mary',
+      'Brown, James', 'Johnson, Jenny', 'Lee, Bruce', 'Moore, Michael', 'Taylor, Thomas', 'Jaylah, Hill',
+      'Ezra, Greene', 'Iliana, Noble', 'Mila, Cordova', 'Piper, Banks', 'Averie, Xiong', 'Rosalia, Hull', 'Brynleigh, Schmidt',
+      'Braelynn, Frederick', 'Isaac, Wang', 'O’Connell, Kailani', 'Jovanni, Bass', 'Zahra, Stone', 'Finn, Watson', 'Hailey, Delgado',
+      'Colt, Beard', 'Griffin, Ortega', 'Lilah, Moran', 'Tate, Gonzales', 'Hadley, Howe', 'Alaric, Donovan', 'Azariah, Waters', 'Maximilian, Dunlap',
+      'Idris, Mays', 'Denisse, Parrish', 'Karsyn, Ayers', 'Simone, Dunlap', 'Aries, Trejo', 'Rosalyn, Sims', 'Brian, Martin', 'Vicente, Swanson', 'Helen, Ayers',
+      'Ulises, Tucker', 'Huang, Esther', 'Ayaan, Horton', 'Villarreal, Aitana', 'Nikolai, Price', 'Villarreal, Azrael', 'Terry, Jazlyn'
+    ];
+
+    // Generate random athleteId
+    const generateRandomId = () => {
+      let result = '64e';
+      for (let i = 0; i < 13; i++) {
+        result += Math.floor(Math.random() * 9);
+      }
+      return result;
+    };
+
+    const additionalData = [];
+
+    for (let i = initialData.length; i < 10; i++) {
+      additionalData.push({
+        athleteId: generateRandomId(),
+        athleteName: dummyNames[i % dummyNames.length],  // Cycle through dummy names
+        categoryKey: 1,
+        country: 'PH',
+        eventKey: 1,
+        eventName: 'Cadet Kata Male',
+        status: 'checkout',
+        tournamentId: '"6527bcedab91debff7c923e1"'
+      });
+    }
+
+    return [...initialData, ...additionalData];
+  })([
+    {
+      athleteId: '64e892f830f886fea8924407',
+      athleteName: 'Yilmaz, Serkan',
+      categoryKey: 1,
+      country: 'PH',
+      eventKey: 1,
+      eventName: 'Cadet Kata Male',
+      status: 'checkout',
+      tournamentId: '"6527bcedab91debff7c923e1"'
+    }, {
+      athleteId: '64e8936030f886fea8924411',
+      athleteName: 'Nurmagomedov, Khabib',
+      categoryKey: 1,
+      country: 'PH',
+      eventKey: 1,
+      eventName: 'Cadet Kata Male',
+      status: 'checkout',
+      tournamentId: '"6527bcedab91debff7c923e1"'
+    }, {
+      athleteId: '64e8941630f886fea892441b',
+      athleteName: 'McGregor, Conor',
+      categoryKey: 1,
+      country: 'PH',
+      eventKey: 1,
+      eventName: 'Cadet Kata Male',
+      status: 'checkout',
+      tournamentId: '"6527bcedab91debff7c923e1"'
+    }, {
+      athleteId: '64ecb4e922f48136e549ec7d',
+      athleteName: 'Pacquiao, Manny',
+      categoryKey: 1,
+      country: 'PH',
+      eventKey: 1,
+      eventName: 'Cadet Kata Male',
+      status: 'checkout',
+      tournamentId: '"6527bcedab91debff7c923e1"'
+    }
+  ]);
+
 
   const [category, setCategory] = useState(categorykey);
   const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
@@ -34,8 +109,8 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
   const [playersList, setPlayersList] = useState(
     participantsData.filter(participant => participant.eventKey === selectedCategory.key)
-  ); 
-  const [bracketList, setBracketList] = useState(participantsData);
+  );
+  const [bracketList, setBracketList] = useState(bracketListDemo);
 
   const BracketHandler = bracketImports[selectedCategory.start];
 
@@ -87,7 +162,7 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   const onShuffle = (shuffleCategory) => {
     const shuffledList = shuffleByEventKey(bracketList, shuffleCategory);
     setBracketList(shuffledList);
-    console.log('shuffleCategory', shuffleCategory);
+    // console.log('shuffleCategory', shuffleCategory);
   };
 
   const shuffleAthletes = () => {
@@ -165,16 +240,18 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
   }
 
+  // console.log('bracketList', bracketList);
+
   return (
     <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
       <div className='headerForm'>
         <h2 className="mb-3">Tournament</h2>
       </div>
       <div className={`${styles.containerform}`}>
-        <div className="col-md-7 col-lg-8 mainForm">
+        <div className={`col-md-7 col-lg-8 ${styles.tournamentMainForm}`} >
           <div className="row g-3">
             <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} playersCount={playersList.length} participantsCount={bracketList.length} />
-            <div className="container">
+            <div className={`container ${styles.tabContainer}`}>
               <div className={`row ${styles.posRel}`}>
                 <ul className="nav nav-tabs">
                   <li className="nav-item">

@@ -13,7 +13,6 @@ const SetComponent = ({ participantsCount, bracketList }) => {
     // console.log(participantsCount, 'participantsCount')
     const Component = componentImports[participantsCount];
 
-
     // This will provide a fallback in case the participantsCount doesn't match any key in componentImports
     if (!Component) {
       return <div>No matching component found for participantsCount {participantsCount}</div>;

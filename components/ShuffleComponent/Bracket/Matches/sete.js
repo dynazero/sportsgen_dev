@@ -4,34 +4,33 @@ import { bottom } from '@popperjs/core';
 
 const SetE = ({ categorykey, categorySet, participantsCount, bracketList }) => {
 
-  const [participant1, setParticipant1] = useState(bracketList[0].athlete);
-  const [participant2, setParticipant2] = useState(bracketList[1].athlete);
-  const [participant3, setParticipant3] = useState(bracketList[2].athlete);
-  const [participant4, setParticipant4] = useState(bracketList[3].athlete);
-  const [participant5, setParticipant5] = useState(bracketList[4].athlete);
-  const [participant6, setParticipant6] = useState(bracketList[5].athlete);
-  const [participant7, setParticipant7] = useState(bracketList[6].athlete);
-  const [participant8, setParticipant8] = useState(bracketList[7].athlete);
-  const [participant9, setParticipant9] = useState(bracketList[8].athlete);
-  const [participant10, setParticipant10] = useState(bracketList[9].athlete);
+  const [participant1, setParticipant1] = useState(bracketList[0].athleteName);
+  const [participant2, setParticipant2] = useState(bracketList[1].athleteName);
+  const [participant3, setParticipant3] = useState(bracketList[2].athleteName);
+  const [participant4, setParticipant4] = useState(bracketList[3].athleteName);
+  const [participant5, setParticipant5] = useState(bracketList[4].athleteName);
+  const [participant6, setParticipant6] = useState(bracketList[5].athleteName);
+  const [participant7, setParticipant7] = useState(bracketList[6].athleteName);
+  const [participant8, setParticipant8] = useState(bracketList[7].athleteName);
+  const [participant9, setParticipant9] = useState(bracketList[8].athleteName);
+  const [participant10, setParticipant10] = useState(bracketList[9].athleteName);
 
   useEffect(() => {
-    setParticipant1(bracketList[0].athlete);
-    setParticipant2(bracketList[1].athlete);
-    setParticipant3(bracketList[2].athlete);
-    setParticipant4(bracketList[3].athlete);
-    setParticipant5(bracketList[4].athlete);
-    setParticipant6(bracketList[5].athlete);
-    setParticipant7(bracketList[6].athlete);
-    setParticipant8(bracketList[7].athlete);
-    setParticipant9(bracketList[8].athlete);
-    setParticipant10(bracketList[9].athlete);
+    setParticipant1(bracketList[0].athleteName);
+    setParticipant2(bracketList[1].athleteName);
+    setParticipant3(bracketList[2].athleteName);
+    setParticipant4(bracketList[3].athleteName);
+    setParticipant5(bracketList[4].athleteName);
+    setParticipant6(bracketList[5].athleteName);
+    setParticipant7(bracketList[6].athleteName);
+    setParticipant8(bracketList[7].athleteName);
+    setParticipant9(bracketList[8].athleteName);
+    setParticipant10(bracketList[9].athleteName);
   }, [bracketList])
 
 
   return (
     <div className={`${styles.rowWidth}`}>
-
       <table className={`table table-dark ${styles.table}`}>
         <thead>
           <tr>
@@ -66,7 +65,7 @@ const SetE = ({ categorykey, categorySet, participantsCount, bracketList }) => {
                 </div>
               </div>
             </td>
-            <td>
+            <td className={`${styles.straightLine}`}>
               <svg height="100" width="100">
                 {/* <path d="M50 24.5 H80 V24.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path> */}
                 <line x1="0" y1="24.5" x2="100" y2="24.5" style={{ stroke: "rgb(233, 236, 239)", strokeWidth: 1 }} />
@@ -95,7 +94,7 @@ const SetE = ({ categorykey, categorySet, participantsCount, bracketList }) => {
                 </div>
               </div>
             </td>
-            <td className={`${styles.matchtoF}`}>
+            <td className={`${styles.matchtoF} ${styles.bracketToptoBot}`}>
               <svg height="78" width="50" style={{
                 position: "relative"
               }} >
@@ -216,7 +215,7 @@ const SetE = ({ categorykey, categorySet, participantsCount, bracketList }) => {
                 </div>
               </div>
             </td>
-            <td>
+            <td className={`${styles.straightLine}`}>
               <svg height="100" width="100">
                 {/* <path d="M50 24.5 H80 V24.5 H0" id="" fill="transparent" stroke="rgb(233, 236, 239)" strokeWidth="1"></path> */}
                 <line x1="0" y1="24.5" x2="100" y2="24.5" style={{ stroke: "rgb(233, 236, 239)", strokeWidth: 1 }} />
@@ -245,7 +244,7 @@ const SetE = ({ categorykey, categorySet, participantsCount, bracketList }) => {
                 </div>
               </div>
             </td>
-            <td className={`${styles.matchtoF}`}>
+            <td className={`${styles.matchtoF} ${styles.bracketToptoBot}`}>
               <svg height="78" width="50">
                 <path strokeWidth="1" stroke="rgb(233, 236, 239)" fill="transparent" id="" d="M100 80 H30 V24.5 H0"></path>
               </svg>

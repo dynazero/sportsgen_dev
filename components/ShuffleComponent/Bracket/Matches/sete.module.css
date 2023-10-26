@@ -40,15 +40,15 @@
 .headerChamp {
     padding-left: 26px !important;
     position: relative;
-    top: 143px;
-    left: 42px;
+    top: -38px;
+    left: 35px;
 }
 
 .champion {
     position: relative;
-    top: 56px;
+    top: 62px;
     white-space: nowrap;
-    right: -32px !important;
+    left: 39px !important;
 }
 
 .grandFinals {
@@ -63,7 +63,7 @@
     top: -2px;
     text-align: left;
     min-width: 140px;
-    background-color: #92a7c094;
+    background-color: #298bff94;
     z-index: 10;
 }
 
@@ -74,7 +74,7 @@
     top: 2px;
     text-align: left;
     min-width: 140px;
-    background-color: #92a7c094;
+    background-color: #dc3545;
     z-index: 10;
 }
 
@@ -126,13 +126,11 @@
 
 .matchtoH {
     position: relative;
-    /* z-index: 4; */
     top: -30px;
+    width: 54px;
 }
 
 .matchBelowLine {
-    /* position: relative; */
-    /* top: -29px; */
     width: 100%;
 }
 
@@ -181,4 +179,13 @@
     /* border-width: 1px; */
     /* border-style: solid; */
     border-color: #e9ecef94;
+}
+
+.straightLine{
+    width: 108px;
+}
+
+.bracketToptoBot{
+    overflow: visible;
+    width: 116px; 
 }

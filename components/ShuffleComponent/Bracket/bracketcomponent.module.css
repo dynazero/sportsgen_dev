@@ -2,12 +2,12 @@
     padding: .5rem 4rem;
     position: relative;
     background-color: #212529;
-    width: 95%;
+    width: 100%;
     z-index: 10;
     margin: auto;
     padding: 8px;
     height: 527px;
-    border-radius: 0px 0px 24px 24px;
+    border-radius: 16px;
     overflow: overlay;
 }
 
@@ -23,4 +23,10 @@
 
 .hidemnmLink {
     display: none;
+}
+
+@media (max-width: 991.98px) {
+    .bracketWrapper {
+        height: 443px;
+    }
 }
