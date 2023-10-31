@@ -1,27 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, createContext, useContext } from 'react'
 import MyTeam from './MyTeam';
 import MyAthletes from './MyAthletes';
 import MyCoaches from './MyCoaches';
 import MyOfficials from './MyOfficials';
+import { UIContext } from '../pages/dashboard/index'
 
 
-export default function MyDashboard({
-  passPage,
-  setCurPage,
-  verifiedFromServer,
-  teamItem,
-  athletelist,
-  coachlist,
-  officiallist,
-  members,
-  organizedUpcomingEvents,
-  organizedOngoingEvents,
-  upcomingEvents,
-  archivedEvents,
-  orgLiveTournaments,
-  liveTournaments
-}) {
+export default function MyDashboard() {
   const [currentPage, setCurrentPage] = useState(0)
+
+  let {
+    passPage,
+    setCurPage,
+  } = useContext(UIContext);
 
 
   useEffect(() => {
@@ -49,43 +40,26 @@ export default function MyDashboard({
   }, [passPage]);
 
 
-
   if (passPage === "myathletes") {
-
     return (
-      <MyAthletes onPageChange={setCurrentPage} teamItem={teamItem} athletelist={athletelist} verifiedFromServer={verifiedFromServer} />
+      <MyAthletes onPageChange={setCurrentPage} />
     )
   }
+  
   if (passPage === "mycoaches") {
-
-
     return (
-
-      <MyCoaches onPageChange={setCurrentPage} teamItem={teamItem} coachlist={coachlist} />
+      <MyCoaches onPageChange={setCurrentPage} />
     )
-
   }
 
   if (passPage === "myofficials") {
-
     return (
-      <MyOfficials onPageChange={setCurrentPage} teamItem={teamItem} officiallist={officiallist} />
+      <MyOfficials onPageChange={setCurrentPage} />
     )
   }
 
   return (
-    <MyTeam
-      onPageChange={setCurrentPage}
-      teamItem={teamItem}
-      verifiedFromServer={verifiedFromServer}
-      members={members}
-      organizedUpcomingEvents={organizedUpcomingEvents}
-      organizedOngoingEvents={organizedOngoingEvents}
-      upcomingEvents={upcomingEvents}
-      archivedEvents={archivedEvents}
-      orgLiveTournaments={orgLiveTournaments}
-      liveTournaments={liveTournaments}
-    />
+    <MyTeam onPageChange={setCurrentPage} />
   )
 
 }

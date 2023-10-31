@@ -1,14 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import Link from 'next/link'
+import { DashBoardDataContext } from '../../pages/dashboard/index'
 import axios from 'axios';
 import { useSession, getSession } from "next-auth/react"
 import { motion } from 'framer-motion';
 import Image from 'next/image'
 import Create from './create';
 
-export default function CoachesProfile({ teamItem, coachlist }) {
+export default function CoachesProfile() {
 
   const { data: session } = useSession()
+
+  let {
+    teamItem,
+    coachlist,
+} = useContext(DashBoardDataContext);
 
   let coaches = coachlist;
 

@@ -1,6 +1,9 @@
 import React, { lazy, Suspense } from 'react';
 
 const componentImports = {
+  3: lazy(() => import('./setalpha')),
+  4: lazy(() => import('./setbravo')),
+  5: lazy(() => import('./setcharlie')),
   6: lazy(() => import('./seta')),
   7: lazy(() => import('./setb')),
   8: lazy(() => import('./setc')),

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
+import { DashBoardDataContext } from '../../pages/dashboard/index'
 import axios from 'axios';
 import Link from 'next/link'
 import { useSession } from "next-auth/react"
@@ -11,19 +12,19 @@ import Members from './members'
 import OrgOngoingEvents from './orgongoingevents';
 import UpComingEvents from './upcomingevents';
 
+export default function TeamProfile() {
 
-
-export default function TeamProfile({
-    teamItem,
-    verifiedFromServer,
-    members,
-    organizedUpcomingEvents,
-    organizedOngoingEvents,
-    upcomingEvents,
-    archivedEvents,
-    orgLiveTournaments,
-    liveTournaments
-}) {
+    let {
+        verifiedFromServer,
+        teamItem,
+        members,
+        organizedUpcomingEvents,
+        organizedOngoingEvents,
+        upcomingEvents,
+        archivedEvents,
+        orgLiveTournaments,
+        liveTournaments
+    } = useContext(DashBoardDataContext);
 
     const { data: session } = useSession()
     const NEXT_PUBLIC_APP_ENV = process.env.NEXT_PUBLIC_APP_ENV;

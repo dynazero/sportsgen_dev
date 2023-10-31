@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect, createContext, useContext, Suspense } from 'react'
 import dynamic from 'next/dynamic';
 import { useVerified } from '../../context/verifiedContext';
 import axios from 'axios'
@@ -9,6 +9,9 @@ import Sidebar from '../../components/Sidebar'
 import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
 import { toast } from "react-toastify";
+
+export const UIContext = createContext();
+export const DashBoardDataContext = createContext();
 
 const MyDashboard = dynamic(() => import('../../components/MyDashboard'), { loading: () => <p>Loading...</p> });
 
@@ -30,7 +33,7 @@ export default function dashboard({
   const { setIsVerified } = useVerified();
   const [passSBS, setPassSBS] = useState(true)
   const [passPage, setPassPage] = useState('')
-  const [curPage, setCurPage] = useState('')
+  const [curPage, setCurPage] = useState()
   const [arrowV, setArrowV] = useState(false)
 
   useEffect(() => {
@@ -66,53 +69,66 @@ export default function dashboard({
   }, [verifiedFromServer]);
   // const { params = [] } = router.query
 
+  const changePassSBS = (x) => {
+    setPassSBS(x)
+  }
+
   const mDB = passSBS ? "280px" : "0px"
   const mWidth = passSBS ? "calc(100% - 280px)" : "100%"
 
   return (
-    <div className='dashboard panelsBG'>
 
-      <div className='sidebarWidth'>
-        <Sidebar setPassSBS={setPassSBS} setPassPage={setPassPage} passPage={passPage} curPage={curPage} />
-      </div>
-      <div className='mainDashboard'
-        style={{
-          left: mDB,
-          transition: ".4s",
-          width: mWidth
-        }}>
+    <UIContext.Provider value={{
+      changePassSBS,
+      setPassPage,
+      passPage,
+      curPage,
+      setCurPage,
+    }}>
+      <div className='dashboard panelsBG'>
 
-        <MyDashboard
-          passPage={passPage}
-          setCurPage={setCurPage}
-          teamItem={teamItem}
-          athletelist={athletelist}
-          coachlist={coachlist}
-          officiallist={officiallist}
-          verifiedFromServer={verifiedFromServer}
-          members={members}
-          organizedUpcomingEvents={organizedUpcomingEvents}
-          organizedOngoingEvents={organizedOngoingEvents}
-          upcomingEvents={upcomingEvents}
-          archivedEvents={archivedEvents}
-          orgLiveTournaments={orgLiveTournaments}
-          liveTournaments={liveTournaments}
-        />
+        <div className='sidebarWidth'>
+          <Sidebar />
 
-      </div>
-
-      {arrowV && (
-        <div className="arrow">
-          <span></span>
-          <span></span>
-          <span></span>
         </div>
-      )}
+        <div className='mainDashboard'
+          style={{
+            left: mDB,
+            transition: ".4s",
+            width: mWidth
+          }}>
+          <DashBoardDataContext.Provider value={{
+            verifiedFromServer,
+            teamItem,
+            athletelist,
+            coachlist,
+            officiallist,
+            members,
+            organizedUpcomingEvents,
+            organizedOngoingEvents,
+            upcomingEvents,
+            archivedEvents,
+            orgLiveTournaments,
+            liveTournaments
+          }}>
+            <MyDashboard />
+          </DashBoardDataContext.Provider >
+        </div>
+
+        {arrowV && (
+          <div className="arrow">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        )}
 
 
-    </div>
+      </div>
+    </UIContext.Provider>
   )
 }
+
 
 const calculateCountdown = (startDate) => {
   const now = new Date();
@@ -224,7 +240,7 @@ export async function getServerSideProps(context) {
       month: '2-digit',
       day: '2-digit'
     }).format(date);
-}
+  }
 
   function formatDateToYYYYMMDD(date) {
     const d = new Date(date);

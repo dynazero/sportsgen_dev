@@ -112,10 +112,6 @@ const Create = ({ teamId, country }) => {
 
     };
 
-    // console.log('test', test);
-    console.log('test athlete');
-
-
     return (
         <>
         <div className="col-md-7 col-lg-8 mainForm">

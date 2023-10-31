@@ -44,7 +44,7 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
     const additionalData = [];
 
-    for (let i = initialData.length; i < 10; i++) {
+    for (let i = initialData.length; i < 3; i++) {
       additionalData.push({
         athleteId: generateRandomId(),
         athleteName: dummyNames[i % dummyNames.length],  // Cycle through dummy names
