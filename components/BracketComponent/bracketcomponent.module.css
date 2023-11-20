@@ -1,123 +1,9 @@
-.bracketWrapper {
-    padding: 5rem 8rem .5rem 2rem;
-    position: relative;
-    background-color: #212529;
-    width: auto;
-    height: 95%;
-    z-index: 50;
-    margin: auto;
-}
-
-.bracketWrapperFS {
-    top: 120px;
-    background-color: #212529;
-    padding: .5rem 4rem;
-    position: relative;
-    overflow: visible;
-    width: 90%;
-    height: 80%;
-    z-index: 60;
-    animation : table 2s forwards;
-}
-
-@keyframes table {
-    0%{
-        overflow: hidden;
-    }
-    25%{
-        overflow: hidden;
-    }
-    50%{
-        overflow: hidden;
-    }
-    75%{
-        overflow: hidden;
-    }
-    100%{
-        overflow: visible;
-    }
-    
-}
-
-.fsLink {
-    width: 115px;
-    position: absolute;
-    top: -26px;
-    right: 24px;
-    cursor: zoom-in;
-}
-
-.relativeDiv{
-    position: relative !important;
-}
-
-.hiddenBracketInfo{
-    width: 0%;
-    height: 20px;
-    position: absolute;
-    overflow: hidden;
-    display: none;
-}
-
-.bracketInfo {
-    top:20px;
-    left:40px;
-    width: 100%;
-    height: 20px;
-    position: absolute;
-    color:white;
-    padding:16px;
-    white-space: nowrap;
-    display: inline-flex;
-    animation: toDisplay 2s forwards;
-}
-
-.bracketInfo strong{
-    margin-left: 16px;
-    padding-top: 8px;
-}
-
-@keyframes toDisplay {
-    0% {
-        width:0%;
-        height: 0px;
-        padding:0px;
-        overflow: hidden;
-    }
-    25% {
-        width: 0%;
-        height: 0px;
-        padding:0px;
-        overflow: hidden;
-    }
-    50% {
-        width: 0%;
-        height: 0px;
-        padding:0px;
-        overflow: hidden;
-    }
-    75% {
-        width: 0%;
-        height: 0px;
-        padding:0px;
-        overflow: hidden;
-    }
-    100% {
-        width: 100%;
-        height: 20px;
-        padding:16px;
-    }
-
-}
-
 .bracketContainer {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding-top: .5rem;
     background-color: #212529;
-    min-height: 60dvh;
-    overflow: overlay;
+    min-height: 57dvh;
+    border-radius: 16px;
+    margin-top: 16px;
+    padding-top:16px;
 }
 
 
@@ -127,12 +13,12 @@
     z-index: 20 !important;
     left: 6%;
     width: 88dvw;
-    min-width: 1140px;
-    height: 84dvh;
-    min-height: 844px;
+    /* min-width: 1140px; */
+    min-height: 682px;
     position: absolute;
     animation: maximize 2s forwards;
     border-radius: 16px;
+    overflow: overlay;
 }
 
 @keyframes maximize {
@@ -157,18 +43,174 @@
     }
 }
 
+.bracketWrapper {
+    position: relative;
+    min-width: 1080px;
+    min-height: 540px;
+    /* z-index: 50; */
+    margin: auto;
+}
 
+.bracketWrapperFS {
+    top: 120px;
+    /* background-color: orange; */
+    padding: .5rem .1rem;
+    position: relative;
+    overflow: visible;
+    width: 100%;
+    height: 80%;
+    z-index: 60;
+    animation: table 2s forwards;
+}
+
+@keyframes table {
+    0% {
+        overflow: hidden;
+    }
+
+    25% {
+        overflow: hidden;
+    }
+
+    50% {
+        overflow: hidden;
+    }
+
+    75% {
+        overflow: hidden;
+    }
+
+    100% {
+        overflow: visible;
+    }
+
+}
+
+
+.relativeDiv {
+    position: relative !important;
+}
+
+.hiddenBracketInfo {
+    width: 0%;
+    height: 20px;
+    position: absolute;
+    overflow: hidden;
+    display: none;
+}
+
+.bracketInfo {
+    top: 20px;
+    left: 60px;
+    width: 50% !important;
+    height: 40px;
+    position: absolute;
+    color: white;
+    padding: 16px;
+    white-space: nowrap;
+    display: inline-flex;
+    animation: toDisplay 2s forwards;
+}
+
+.bracketInfo strong {
+    margin-left: 16px;
+    padding-top: 8px;
+}
+
+@keyframes toDisplay {
+    0% {
+        width: 0%;
+        height: 0px;
+        padding: 0px;
+        overflow: hidden;
+    }
+
+    25% {
+        width: 0%;
+        height: 0px;
+        padding: 0px;
+        overflow: hidden;
+    }
+
+    50% {
+        width: 0%;
+        height: 0px;
+        padding: 0px;
+        overflow: hidden;
+    }
+
+    75% {
+        width: 0%;
+        height: 0px;
+        padding: 0px;
+        overflow: hidden;
+    }
+
+    100% {
+        width: 100%;
+        height: 40px;
+        /* padding: 16px; */
+    }
+
+}
+
+/* .fsLink {
+    width: 54px;
+    position: absolute;
+    top:-33px;
+    right: 3%;
+    cursor: zoom-in;
+    color: #ff1f06;
+    z-index: 30;
+}
+
+.fsLink:hover{
+    color:#2592ff;
+}
+
+.fsLinkHidden {
+    z-index: 0;
+    display: none;
+} */
 
 .minimizeLink {
-    color: white;
-    width: 115px;
+    color: #2592ff;
+    width: 50px;
     position: absolute;
-    right: 24px;
-    bottom: 24px;
+    right: 2%;
+    top: -15%;
     cursor: zoom-out;
     opacity: 80%;
 }
 
+.minimizeLink:hover{
+    color: #ff1f06;
+}
+
 .hidemnmLink {
     display: none;
+}
+
+@media (max-width: 1398px) {
+    .bracketContainer{
+        min-height: 54dvh;
+    }
+
+}
+
+@media (max-width: 991.98px) {
+    .bracketContainer {
+        min-height: 48dvh;
+    }
+
+    .bracketWrapper{
+        min-height: 456px;
+    }
+
+    .bracketContainerFS {
+        top: 10% !important;
+        height: 88dvh !important;
+        width: 88dvw !important;
+    }
+
 }

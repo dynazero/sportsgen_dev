@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import Loading from './loading'
 import dynamic from 'next/dynamic';
 import axios from 'axios';
@@ -44,7 +44,7 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
     const additionalData = [];
 
-    for (let i = initialData.length; i < 3; i++) {
+    for (let i = initialData.length; i < 10; i++) {
       additionalData.push({
         athleteId: generateRandomId(),
         athleteName: dummyNames[i % dummyNames.length],  // Cycle through dummy names
@@ -86,16 +86,17 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
       eventName: 'Cadet Kata Male',
       status: 'checkout',
       tournamentId: '"6527bcedab91debff7c923e1"'
-    }, {
-      athleteId: '64ecb4e922f48136e549ec7d',
-      athleteName: 'Pacquiao, Manny',
-      categoryKey: 1,
-      country: 'PH',
-      eventKey: 1,
-      eventName: 'Cadet Kata Male',
-      status: 'checkout',
-      tournamentId: '"6527bcedab91debff7c923e1"'
-    }
+    },
+    //  {
+    //   athleteId: '64ecb4e922f48136e549ec7d',
+    //   athleteName: 'Pacquiao, Manny',
+    //   categoryKey: 1,
+    //   country: 'PH',
+    //   eventKey: 1,
+    //   eventName: 'Cadet Kata Male',
+    //   status: 'checkout',
+    //   tournamentId: '"6527bcedab91debff7c923e1"'
+    // }
   ]);
 
 
@@ -116,11 +117,10 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
   const [tournamentInfo, setTournamentInfo] = useState({
     tournamentId: tournamentData._id,
+    tournamentEventId: tournamentData.eventId,
     eventName: tournamentData.eventName,
     title: selectedCategory.title,
   })
-
-
 
   const handleCategoryChange = (event) => {
     setCategory(event);
@@ -243,8 +243,8 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   // console.log('bracketList', bracketList);
 
   return (
-    <div className={`wrapperForm caret ${styles.wrapperFormStyle}`}>
-      <div className='headerForm'>
+    <div className={`caret ${styles.wrapperFormStyle}`}>
+      <div className={`${styles.tournamentHeaderForm}`}>
         <h2 className="mb-3">Tournament</h2>
       </div>
       <div className={`${styles.containerform}`}>
@@ -253,32 +253,54 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
             <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} playersCount={playersList.length} participantsCount={bracketList.length} />
             <div className={`container ${styles.tabContainer}`}>
               <div className={`row ${styles.posRel}`}>
-                <ul className="nav nav-tabs">
-                  <li className="nav-item">
-                    <Link className="nav-link active" aria-current="page" href="#">
-                      Bracket
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/standings/${tournamentData._id}/${category}`} tabIndex="-1">
-                      Standings
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/participants/${tournamentData._id}/${category}`} tabIndex="-1" aria-disabled="true">
-                      Participants
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/logs/${tournamentData._id}/${category}`} tabIndex="-1">Log</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href={`/tournament/admin/settings/${tournamentData._id}/${category}`} tabIndex="-1" aria-disabled="true">
-                      Settings
-                    </Link>
-                  </li>
-                </ul>
+                <div class="d-flex justify-content-between bd-highlight">
+                  <div class="bd-highlight">
+                    <ul className="nav nav-tabs">
+                      <li className="nav-item">
+                        <Link className="nav-link active" aria-current="page" href="#">
+                          Bracket
+                        </Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link" href={`/tournament/admin/standings/${tournamentData._id}/${category}`} tabIndex="-1">
+                          Standings
+                        </Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link" href={`/tournament/admin/participants/${tournamentData._id}/${category}`} tabIndex="-1" aria-disabled="true">
+                          Participants
+                        </Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link" href={`/tournament/admin/logs/${tournamentData._id}/${category}`} tabIndex="-1">Log</Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link className="nav-link" href={`/tournament/admin/settings/${tournamentData._id}/${category}`} tabIndex="-1" aria-disabled="true">
+                          Settings
+                        </Link>
+                      </li>
 
+                    </ul>
+                  </div>
+                  <div class={`bd-highlight d-flex align-center ${styles.flexBtns}`} >
+                    <button type="button align-"
+                      className={`btn btn-danger`}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-stop-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                        <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z"></path>
+                      </svg>
+                      End Tournament
+                    </button>
+                    <p className={`${!bracketFS ? styles.fsLink : styles.fsLinkHidden} ${styles.flexMax}`}
+                      onClick={handleFullScreen}
+                    >
+                      Max <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-fullscreen" viewBox="0 0 16 16">
+                        <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"></path>
+                      </svg>
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 

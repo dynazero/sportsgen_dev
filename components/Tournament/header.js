@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import ReactCountryFlag from 'react-country-flag';
 
@@ -25,7 +25,7 @@ const Header = ({ tournamentData, changeCategory, category, playersCount, partic
                         <div className='col-md-12'>
                             <div className='row'>
                                 <div className='col-lg-4 col-md-12 col-sm-12'>
-                                    <p className={`card-text mb-2 text-nowrap`}>{tournamentData?.address}, {tournamentData?.city}</p>
+                                    <p className={`card-text mb-2`}>{tournamentData?.address}, {tournamentData?.city}</p>
                                 </div>
                                 <div className='col-lg-4 col-md-12 col-sm-12'>
                                     <div className={`mb-2 text-muted text-nowrap`}>{tournamentData?.eventStartDate}</div>

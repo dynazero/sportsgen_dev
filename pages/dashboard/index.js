@@ -1,10 +1,10 @@
-import React, { useState, useEffect, createContext, useContext, Suspense } from 'react'
+import { useState, useEffect, createContext } from 'react'
 import dynamic from 'next/dynamic';
 import { useVerified } from '../../context/verifiedContext';
 import axios from 'axios'
 import { DateTime } from 'luxon';
 // import { useRouter } from 'next/router';
-import { signIn, signOut, useSession, getSession } from "next-auth/react"
+import { getSession } from "next-auth/react"
 import Sidebar from '../../components/Sidebar'
 import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
@@ -349,16 +349,13 @@ export async function getServerSideProps(context) {
     const tournamentLogo = event.eventLogo;
     const tournamentFlag = event.flag;
     const tournamentStatus = event.status;
-    const tournamentStartTime = event.startTime;
-
-
+    
     return {
       tournamentId,
       tournamentTitle,
       tournamentLogo,
       tournamentFlag,
       tournamentStatus,
-      tournamentStartTime
     }
   })
 

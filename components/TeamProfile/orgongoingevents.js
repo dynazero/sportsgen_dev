@@ -1,4 +1,3 @@
-import React from 'react'
 import Image from 'next/image'
 import styles from './org.module.css'
 import { Tooltip as ReactTooltip } from 'react-tooltip';

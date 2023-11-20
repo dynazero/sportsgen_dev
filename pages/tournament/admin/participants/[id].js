@@ -1,13 +1,9 @@
-import React from 'react'
 import axios from 'axios';
-import styles from '../../tournament.module.css'
 import { getSession } from "next-auth/react"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../../api/auth/[...nextauth]'
-import Link from 'next/link'
-import Header from '../../../../components/Tournament/header'
 
-function Participants({ id, tournamentData }) {
+function Participants({ id }) {
   return (
     <div>Loading...</div>
    )

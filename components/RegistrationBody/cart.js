@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import CartListPagination from '../Pagination/cartRegistrationList'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import styles from './button.module.css'
-
-
 
 
 const Cart = ({ eventId, getTeamId, cartEvents, paymentInfo, athleteFill, cartUpdate }) => {

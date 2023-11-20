@@ -23,11 +23,12 @@ const initializeSocket = (server) => {
     socket.on('disconnect', () => console.log('Socket disconnected:', socket.id));
   });
 
-  const logUpdate = async (tournamentId, categoryKey, logAccount, message) => {
+  const logUpdate = async (tournamentId, tournamentEventId, categoryKey, logAccount, message) => {
 
     try {
           const newLog = new Log({
             tournamentId,
+            tournamentEventId,
             categoryKey,
             logAccount,
             message,
@@ -89,7 +90,7 @@ const initializeSocket = (server) => {
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
   };
 
-  const handleUpdateWinner = async (io, socket, { tournamentId, categoryKey, logAccount, matchKey, matchWinner, role }) => {
+  const handleUpdateWinner = async (io, socket, { tournamentId, tournamentEventId, categoryKey, logAccount, matchKey, matchWinner, matchLoser, role }) => {
     // console.log('Current Data', tournamentSocketId, matchKey, matchWinner, role)
     // console.log('Current Participants', matchDetails[tournamentSocketId][matchKey].participant1, matchDetails[tournamentSocketId][matchKey].participant2)
 
@@ -111,30 +112,33 @@ const initializeSocket = (server) => {
     }
 
     matchDetails[tournamentSocketId][matchKey].winner = matchWinner;
+    matchDetails[tournamentSocketId][matchKey].loser = matchLoser;
     matchDetails[tournamentSocketId][matchKey].status = 'closed';
-    await logUpdate(tournamentId, categoryKey, logAccount, message);
+    await logUpdate(tournamentId, tournamentEventId, categoryKey, logAccount, message);
 
 
     // Emit the updated match details to all clients in the tournament room
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);
   };
 
-  const handleUpdateScore = async (io, socket, { tournamentId, categoryKey, logAccount, matchKey, matchScores, role }) => {
+  const handleUpdateScore = async (io, socket, { tournamentId, tournamentEventId, categoryKey, logAccount, matchKey, matchScores, role }) => {
     // console.log('Received update-score:', tournamentSocketId, matchKey, matchScores, role)
     // console.log('Current Scores', matchDetails[tournamentSocketId][matchKey].score)
 
     let tournamentSocketId = tournamentId+categoryKey;
     let match = matchKey.replace(/match(\w+)/g, 'Match ' + '$1');
 
-    let message = 'Updated '+match+' ('+matchScores.player1+'-'+matchScores.player2+')'
+    let message = 'Updated Score '+match+' ('+matchScores.player1+'-'+matchScores.player2+')'
 
     if (role !== 'admin') {
       console.log(`Client is not an admin, skipping score update.`);
       return;
     }
 
+// console.log('categoryKey', categoryKey);
+
     matchDetails[tournamentSocketId][matchKey].score = matchScores;
-    await logUpdate(tournamentId, categoryKey, logAccount, message);
+    await logUpdate(tournamentId, tournamentEventId, categoryKey, logAccount, message);
 
     // Emit the updated match details to all clients in the tournament room
     io.to(tournamentSocketId).emit('match-details', matchDetails[tournamentSocketId]);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import axios from 'axios';
 import styles from '../../tournament.module.css'
 import { getSession } from "next-auth/react"

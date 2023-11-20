@@ -12,16 +12,16 @@ const LogComponent = ({ logData, categorykey, categorySet }) => {
   // console.log('logData', logData);
 
   return (
-    <div className={`d-flex justify-content-center ${styles.logContainer}`}>
-      <table>
+    <div className={`${styles.logContainer}`}>
+      <table className={`${styles.tableContainer}`}>
         <tbody>
           {categorySet.map(category => {
             if (category.key === selectedCategory) {
               return (
                 <React.Fragment key={category.key}>
                   {logData[category.key].map((log, index) => (
-                  <tr key={'log'+index} className='align-baseline'>
-                      <td className='text-nowrap' >
+                  <tr key={'log'+index}  className={`${styles.trContainer}`}>
+                      <td className={`text-nowrap `} >
                         <p>
                         <small className={`${styles.date}`}>
                           {log.formattedDate} 
@@ -33,7 +33,7 @@ const LogComponent = ({ logData, categorykey, categorySet }) => {
                         </small>
                         </p>
                       </td>
-                      <td className='text-nowrap' >
+                      <td className={`text-nowrap `} >
                         <p className={`${styles.logText}`}>{log.message} <small className={`${styles.logAuthor}`}>{log.logAccount}</small></p>
                       </td>
                   </tr>

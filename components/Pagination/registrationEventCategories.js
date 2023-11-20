@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import{ useState } from 'react';
 import styles from './rec.module.css'
 
 const EventCategoriesComponent = ({ events }) => {

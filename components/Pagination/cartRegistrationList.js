@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './clp.module.css'; // Adjust the path according to your file structure
 
 

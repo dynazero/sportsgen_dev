@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './setd.module.css'
 
 const SetD = ({ categorykey, categorySet }) => {

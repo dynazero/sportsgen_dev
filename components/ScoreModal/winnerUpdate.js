@@ -1,4 +1,3 @@
-import React, { Suspense } from 'react'
 import dynamic from 'next/dynamic';
 
 const WinnerDefault = dynamic(() => import('./winnerDefault'), { loading: () => <p>Loading...</p> });

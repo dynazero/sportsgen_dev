@@ -1,12 +1,11 @@
 .bracketWrapper {
-    padding: .5rem 4rem;
     position: relative;
     background-color: #212529;
     width: 100%;
     z-index: 10;
     margin: auto;
-    padding: 8px;
     height: 527px;
+    min-height: 448px;
     border-radius: 16px;
     overflow: overlay;
 }
@@ -27,6 +26,23 @@
 
 @media (max-width: 991.98px) {
     .bracketWrapper {
-        height: 443px;
+        height: 43dvh;
+        padding: .3rem 3rem;
     }
 }
+
+@media (max-width: 767.98px) { 
+    .bracketWrapper {
+        height: 42dvh;
+        padding: .2rem 2rem;
+    } 
+}
+
+@media (max-width: 575.98px) { 
+
+    .bracketWrapper {
+        height: 30dvh;
+        padding: .1rem 2rem;
+    }
+
+ }

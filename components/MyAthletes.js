@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import AthletesProfile from './AthletesProfile';
 
 export default function MyAthletes({ onPageChange }) {

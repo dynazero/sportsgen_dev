@@ -1,7 +1,5 @@
-import React from 'react'
 import Image from 'next/image'
 import logo from '../../public/bullsolo.png'
-// '../public/bullsolo.png'
 
 
 export default function error() {

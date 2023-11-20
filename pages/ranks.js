@@ -1,6 +1,5 @@
-import { MotionConfig, motion } from 'framer-motion';
-import React, { useState,useRef, useEffect } from 'react'
-import ReactDOM from "react-dom";
+import { motion } from 'framer-motion';
+import { useState,useRef, useEffect } from 'react'
 import images from '../public/images/images.js';
 
 export default function ranks() {

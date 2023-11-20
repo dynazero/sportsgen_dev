@@ -1,14 +1,39 @@
+.rowWidth {
+    width: 100%;
+    padding: .5rem 4rem;
+}
+
+.rowMinWidth{
+    min-width: 1180px;
+}
+
 .table {
     border-bottom-width: 0px !important;
     background-color: #212529;
-    width: 950px;
+    min-width: 580px; 
+    width: 100%;
     padding: 0px 50px;
     top: 80px;
-    width: 108%;
-    position: absolute;
+    position: relative;
 }
 
 .table> :not(caption)>*>* {
+    border-bottom-width: 0px !important;
+    padding: 0rem 0rem;
+}
+
+.repTable {
+    border-bottom-width: 0px !important;
+    background-color: #212529;
+    min-width: 580px; 
+    width: 100%;
+    padding: 0px 50px;
+    top: 100px;
+    position: relative;
+    height: 225px;
+}
+
+.repTable> :not(caption)>*>* {
     border-bottom-width: 0px !important;
     padding: 0rem 0rem;
 }
@@ -20,15 +45,18 @@
     white-space: nowrap;
 }
 
-.rowWidth {
-    width: 100%;
-}
 
 .headerChamp{
     padding-left: 26px !important;
     position: relative;
     top: -38px;
     left: 28px;
+}
+
+.headerSecondplace {
+    position: relative;
+    top: -38px;
+    left: 60px;
 }
 
 .champion {
@@ -43,9 +71,25 @@
     top: 129px;
 }
 
+.secondplace {
+    position: relative;
+    top: 8px;
+    white-space: nowrap;
+    left: 36px !important;
+}
+
+.repgrandFinals {
+    position: relative;
+    top: 0px;
+}
+
+.repsemis {
+    position: relative;
+    top: 47px;
+}
+
 .participants {
     margin-left: 8px;
-    position: relative;
     white-space: nowrap;
     overflow: hidden;
 }
@@ -160,4 +204,39 @@
 
 .botBracketOverflow{
     overflow: visible;
+}
+
+.repbracketToptoBot{
+    overflow: visible;
+    width: 108px; 
+}
+
+.showSVG{
+    overflow: visible;
+}
+
+.repechageFirstMatch{
+    top:-59px;
+    position: relative;
+}
+
+.repechageBracketFirstMatch{
+    top:-59px;
+    position: relative;
+}
+
+.repechageSecondMatch{
+    top:-77px;
+    position: relative;
+}
+
+.repechageBracketSecondMatch{
+    position: relative;
+    top: -77px;
+}
+
+@media (max-width: 1672px) {
+    .rowWidth {
+        margin-right: 80px;
+    }
 }

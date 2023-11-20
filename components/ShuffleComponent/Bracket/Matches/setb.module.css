@@ -1,14 +1,39 @@
+.rowWidth {
+    width: 100%;
+    padding: .5rem 4rem;
+}
+
+.rowMinWidth{
+    min-width: 1180px;
+}
+
 .table {
     border-bottom-width: 0px !important;
     background-color: #212529;
-    width: 950px;
+    min-width: 580px; 
+    width: 100%;
     padding: 0px 50px;
     top: 80px;
-    width: 108%;
-    position: absolute;
+    position: relative;
 }
 
 .table> :not(caption)>*>* {
+    border-bottom-width: 0px !important;
+    padding: 0rem 0rem;
+}
+
+.repTable {
+    border-bottom-width: 0px !important;
+    background-color: #212529;
+    min-width: 580px; 
+    width: 100%;
+    padding: 0px 50px;
+    top: 100px;
+    position: relative;
+    height: 225px;
+}
+
+.repTable> :not(caption)>*>* {
     border-bottom-width: 0px !important;
     padding: 0rem 0rem;
 }
@@ -20,15 +45,20 @@
     white-space: nowrap;
 }
 
-.rowWidth {
-    width: 100%;
-}
-
 .headerChamp{
     padding-left: 26px !important;
     position: relative;
     top: -38px;
     left: 28px;
+}
+
+.headerSecondplace {
+    padding-left: 26px !important;
+    position: relative;
+    top: -38px;
+    left: 38px;
+    padding-right: 80px;
+    text-wrap: nowrap;
 }
 
 .champion {
@@ -38,14 +68,31 @@
     right: -32px !important;
 }
 
+.secondplace {
+    position: relative;
+    top: 8px;
+    white-space: nowrap;
+    left: 41px !important;
+}
+
 .grandFinals {
     position: relative;
     top: 74px;
 }
 
+
+.repgrandFinals {
+    position: relative;
+    top: 0px;
+}
+
+.repsemis {
+    position: relative;
+    top: 64px;
+}
+
 .participants {
     margin-left: 8px;
-    position: relative;
     white-space: nowrap;
     overflow: hidden;
 }
@@ -139,4 +186,19 @@
 .bracketToptoBot{
     overflow: visible;
     width: 108px; 
+}
+
+.repbracketToptoBot{
+    overflow: visible;
+    width: 108px; 
+}
+
+.showSVG{
+    overflow: visible;
+}
+
+@media (max-width: 1672px) {
+    .rowWidth {
+        margin-right: 80px;
+    }
 }

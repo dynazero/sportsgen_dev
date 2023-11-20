@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
 import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router';
-import { motion } from 'framer-motion';
 import { toast } from "react-toastify";
 
 const Create = ({ teamId, country }) => {

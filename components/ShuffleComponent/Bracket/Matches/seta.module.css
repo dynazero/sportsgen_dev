@@ -1,14 +1,39 @@
+.rowWidth {
+    width: 100%;
+    padding: .5rem 4rem;
+}
+
+.rowMinWidth{
+    min-width: 1180px;
+}
+
 .table {
     border-bottom-width: 0px !important;
     background-color: #212529;
-    width: 950px;
+    min-width: 580px; 
+    width: 100%;
     padding: 0px 50px;
     top: 80px;
-    width: 108%;
-    position: absolute;
+    position: relative;
 }
 
 .table> :not(caption)>*>* {
+    border-bottom-width: 0px !important;
+    padding: 0rem 0rem;
+}
+
+.repTable {
+    border-bottom-width: 0px !important;
+    background-color: #212529;
+    min-width: 580px; 
+    width: 100%;
+    padding: 0px 50px;
+    top: 85px;
+    position: relative;
+    height: 225px;
+}
+
+.repTable> :not(caption)>*>* {
     border-bottom-width: 0px !important;
     padding: 0rem 0rem;
 }
@@ -20,10 +45,6 @@
     white-space: nowrap;
 }
 
-.rowWidth {
-    width: 100%;
-}
-
 .headerChamp {
     padding-left: 26px !important;
     position: relative;
@@ -31,11 +52,24 @@
     left: 28px;
 }
 
+.headerSecondplace {
+    padding-left: 26px !important;
+    position: relative;
+    top: -38px;
+    left: 38px;
+}
+
 .champion {
     position: relative;
-    top: 56px;
+    top: 55px;
     white-space: nowrap;
     right: -32px !important;
+}
+.secondplace {
+    position: relative;
+    top: 8px;
+    white-space: nowrap;
+    left: 41px !important;
 }
 
 .grandFinals {
@@ -43,9 +77,18 @@
     top: 45px;
 }
 
+.repgrandFinals {
+    position: relative;
+    top: 0px;
+}
+
+.repsemis {
+    position: relative;
+    top: 46px;
+}
+
 .participants {
     margin-left: 8px;
-    position: relative;
     white-space: nowrap;
     overflow: hidden;
 }
@@ -57,7 +100,7 @@
     top: -2px;
     text-align: left;
     min-width: 140px;
-    background-color: #298bff94;
+    background-color: #dc3545;
     z-index: 10;
 }
 
@@ -68,7 +111,7 @@
     top: 2px;
     text-align: left;
     min-width: 140px;
-    background-color: #dc3545;
+    background-color: #298bff94;
     z-index: 10;
 }
 
@@ -96,6 +139,10 @@
 .matchBelowBracket {
     position: relative;
     top: -29px;
+}
+
+.showSVG{
+    overflow: visible;
 }
 
 .standByText {
@@ -128,4 +175,15 @@
 .bracketToptoBot{
     overflow: visible;
     width: 108px; 
+}
+
+.repbracketToptoBot{
+    overflow: visible;
+    width: 108px; 
+}
+
+@media (max-width: 1672px) {
+    .rowWidth {
+        margin-right: 197px;
+    }
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Datepicker } from '@adibfirman/react-datepicker'
 
 export default function signup() {

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import { useRef } from 'react'
 
 const Card = ({ paymentInfo }) => {
 
@@ -62,4 +62,4 @@ const Card = ({ paymentInfo }) => {
   )
 }
 
-export default Card
+export default Card;

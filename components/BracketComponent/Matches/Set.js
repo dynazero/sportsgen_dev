@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 
 const componentImports = {
   6: lazy(() => import('./seta')),

@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './seta.module.css'
 
 const SetA = ({ categorykey, categorySet, participantsCount, bracketList }) => {

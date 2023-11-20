@@ -1,9 +1,7 @@
-import React from 'react'
 import styles from './winnerConfirm.module.css'
 
 const WinnerConfirm = ({ pendingUpdate, matchCurrentDetail, matchKey }) => {
     // onChangeWinner
-
     return (
         <>
             <div className={`${styles.modalBG}`}>

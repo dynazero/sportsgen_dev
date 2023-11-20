@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Cart from './cart'
 import { toast } from 'react-toastify'
 import PaymentMethods from '../PaymentMethods'

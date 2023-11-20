@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { InputGroup } from 'react-bootstrap';
 import styles from './CustomDatePicker.module.css';

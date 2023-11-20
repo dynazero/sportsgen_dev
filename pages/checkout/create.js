@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
 import { authOptions } from '../api/auth/[...nextauth]'
 import { getServerSession } from "next-auth/next"
 import { useSession } from "next-auth/react"
 import { useRouter } from 'next/router';
-import { MotionConfig, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import InputDropdownRow from '../../components/inputDropdownRow';
-import CustomDatePicker from '../../components/CustomDatePicker';
 import CustomDateRangePicker from '../../components/CustomDateRangePicker';
 import { toast } from "react-toastify";
 

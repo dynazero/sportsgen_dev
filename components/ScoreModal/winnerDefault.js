@@ -1,5 +1,3 @@
-import React from 'react'
-import { toast } from "react-toastify";
 
 
 const WinnerDefault = ({ pendingUpdate, setPendingUpdate, matchKey }) => {
@@ -7,29 +5,33 @@ const WinnerDefault = ({ pendingUpdate, setPendingUpdate, matchKey }) => {
     const onChangeWinnerSub = (e, matchKey) => {
         const value = e.target.value;
         // console.log('called', value);
-
+    
         if(value === 'default'){
             setPendingUpdate((prevDetails) => ({
                 ...prevDetails,
                 [`match${matchKey}`]: {
                     ...prevDetails[`match${matchKey}`],
-                    winner: null
+                    winner: null,
+                    loser: null
                 }
             }));
-
+    
             return null;
         }
-
-        if(value !== 'default'){
-            setPendingUpdate((prevDetails) => ({
-                ...prevDetails,
-                [`match${matchKey}`]: {
-                    ...prevDetails[`match${matchKey}`],
-                    winner: value
-                }
-            }));
-        }
+    
+        const currentMatch = pendingUpdate[`match${matchKey}`];
+        const loser = value === currentMatch.participant1 ? currentMatch.participant2 : currentMatch.participant1;
+    
+        setPendingUpdate((prevDetails) => ({
+            ...prevDetails,
+            [`match${matchKey}`]: {
+                ...prevDetails[`match${matchKey}`],
+                winner: value,
+                loser: loser
+            }
+        }));
     }
+    
 
     return (
         <select

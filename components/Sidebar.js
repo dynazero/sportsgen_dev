@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react'
+import { useState, useContext, useRef } from 'react'
 import { signIn, signOut, useSession } from "next-auth/react"
 import SidebarMenu from 'react-bootstrap-sidebar-menu';
 import { motion } from 'framer-motion'

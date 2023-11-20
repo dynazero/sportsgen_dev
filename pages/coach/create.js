@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link'
 import axios from 'axios';
 import { authOptions } from '../api/auth/[...nextauth]'

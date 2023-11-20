@@ -1,10 +1,7 @@
 import Link from 'next/link'
-import { MotionConfig, motion } from 'framer-motion';
-import React, { useState, useRef, useEffect } from 'react'
-import ReactDOM from "react-dom";
+import { motion } from 'framer-motion';
 import images from '../../public/events/images.js'
 import Image from 'next/image'
-import { Component } from "react";
 import { Datepicker } from '@adibfirman/react-datepicker'
 
 

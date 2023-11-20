@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { DashBoardDataContext } from '../../pages/dashboard/index'
 import axios from 'axios';
 import Link from 'next/link'

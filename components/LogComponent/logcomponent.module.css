@@ -1,6 +1,15 @@
+.trContainer{
+    height: 24px;
+}
+
 .logContainer{
-    height:61dvh;
+    height:53dvh;
+    min-height: 521px;
     overflow: overlay;
+}
+
+.tableContainer{
+    margin: 8px auto;
 }
 
 .logText{

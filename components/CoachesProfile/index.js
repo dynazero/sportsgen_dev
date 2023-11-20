@@ -1,10 +1,6 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import Link from 'next/link'
+import { useState, useEffect, useContext, useRef } from 'react';
 import { DashBoardDataContext } from '../../pages/dashboard/index'
-import axios from 'axios';
 import { useSession, getSession } from "next-auth/react"
-import { motion } from 'framer-motion';
-import Image from 'next/image'
 import Create from './create';
 
 export default function CoachesProfile() {

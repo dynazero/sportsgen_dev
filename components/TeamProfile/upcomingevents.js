@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './org.module.css'
 
 export default function UpComingEvents({ upcomingEvents, liveTournaments }) {

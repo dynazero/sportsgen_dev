@@ -3,7 +3,7 @@ import axios from 'axios';
 import { signIn, useSession } from "next-auth/react"
 import EventCategoriesComponent from '../../components/Pagination/registrationEventCategories'
 import { MotionConfig, motion } from 'framer-motion';
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import navbarstyle from '../../styles/Menu.module.css'
 import styles from './events.module.css'
 import RegistrationBody from '../../components/RegistrationBody/'
