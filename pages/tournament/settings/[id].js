@@ -1,6 +1,6 @@
 import styles from '../tournament.module.css'
 import Link from 'next/link'
-import Header from '../../../../components/Tournament/header'
+import Header from '../../components/Tournament/header'
 
 function Settings() {
   return (

@@ -19,7 +19,9 @@ jobs:
           yarn-version: 1.x
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: |
+          yarn install --frozen-lockfile
+          npx browserslist@latest --update-db
 
       - name: Build
         run: yarn build
