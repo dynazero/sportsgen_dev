@@ -25,7 +25,6 @@ const BracketComponent = ({ categorykey, categorySet, bracketList  }) => {
     setBracketFS(false)
   }
 
-
   return (
     <>
       <div className={` ${styles.bracketWrapper}`}>

@@ -1,8 +1,9 @@
-import { lazy, Suspense, useState, useEffect } from 'react';
+import { lazy, Suspense, useState, useEffect, createContext } from 'react';
 import Loading from './loading'
 import dynamic from 'next/dynamic';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import BracketContextProvider from '../../../../../context/bracketContext';
 import styles from '../../../tournament.module.css'
 import { toast } from "react-toastify";
 import { getSession } from "next-auth/react"
@@ -10,6 +11,9 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from '../../../../api/auth/[...nextauth]'
 import Link from 'next/link'
 import Header from '../../../../../components/Tournament/header'
+
+export const ShuffleContext = createContext();
+export const BracketUIContext = createContext();
 
 const ShuffleComponent = dynamic(() => import('../../../../../components/ShuffleComponent'), { loading: () => <p>Loading...</p> });
 const BracketComponent = dynamic(() => import('../../../../../components/BracketComponent'), { loading: () => <p>Loading...</p> });
@@ -19,9 +23,9 @@ const bracketImports = {
   1: BracketComponent
 };
 
-function Bracket({ id, categorykey, tournamentData, participantsData }) {
+function Bracket({ id, email, categorykey, tournamentData, participantsData }) {
   const router = useRouter();
-
+  
   const bracketListDemo = (initialData => {
     const dummyNames = [
       'Smith, John', 'Doe, Jane', 'White, Walter', 'Black, Joe', 'Green, Mary',
@@ -99,6 +103,7 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
     // }
   ]);
 
+  // console.log('participantsData', participantsData);
 
   const [category, setCategory] = useState(categorykey);
   const [categorySet, setCategorySet] = useState(tournamentData.categorySet)
@@ -111,12 +116,14 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   const [playersList, setPlayersList] = useState(
     participantsData.filter(participant => participant.eventKey === selectedCategory.key)
   );
-  const [bracketList, setBracketList] = useState(bracketListDemo);
+  const [bracketList, setBracketList] = useState(participantsData);
 
   const BracketHandler = bracketImports[selectedCategory.start];
 
   const [tournamentInfo, setTournamentInfo] = useState({
     tournamentId: tournamentData._id,
+    categoryKey: categorykey,
+    logAccount: email,
     tournamentEventId: tournamentData.eventId,
     eventName: tournamentData.eventName,
     title: selectedCategory.title,
@@ -175,6 +182,9 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
   const filteredParticipants = bracketList.filter(participant => parseInt(participant.eventKey) === selectedCategory.key);
 
+
+  const [tournamentStatus, setTournamentStatus] = useState('open')
+
   const genProps = {
     categorykey: categorykey,
     categorySet: categorySet
@@ -190,11 +200,15 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   const bracketProps = {
     ...genProps,
     tournamentInfo: tournamentInfo,
+    participants: filteredParticipants,
+    participantsCount: filteredParticipants.length
+  }
+
+  const bracketUIProps = {
+    ...genProps,
     handleFullScreen: () => handleFullScreen(),
     setBracketFS: setBracketFS,
     bracketFS: bracketFS,
-    participants: filteredParticipants,
-
   }
 
   const startTournament = async () => {
@@ -241,6 +255,9 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
   }
 
   // console.log('bracketList', bracketList);
+  // console.log('selectedCategory', selectedCategory);
+// console.log('tournamentStatus', tournamentStatus);
+console.log('tournamentData.categorySet', tournamentData.categorySet);
 
   return (
     <div className={`caret ${styles.wrapperFormStyle}`}>
@@ -253,8 +270,8 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
             <Header tournamentData={tournamentData} changeCategory={handleCategoryChange} category={category} playersCount={playersList.length} participantsCount={bracketList.length} />
             <div className={`container ${styles.tabContainer}`}>
               <div className={`row ${styles.posRel}`}>
-                <div class="d-flex justify-content-between bd-highlight">
-                  <div class="bd-highlight">
+                <div className="d-flex justify-content-between bd-highlight">
+                  <div className="me-auto bd-highlight">
                     <ul className="nav nav-tabs">
                       <li className="nav-item">
                         <Link className="nav-link active" aria-current="page" href="#">
@@ -282,17 +299,17 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
 
                     </ul>
                   </div>
-                  <div class={`bd-highlight d-flex align-center ${styles.flexBtns}`} >
-                    <button type="button align-"
-                      className={`btn btn-danger`}
+                  <div className={`ms-auto`} >
+                    {/* <button type="button align-"
+                      className={`btn btn-danger  ${tournamentStatus == 'closed' ? (!bracketFS ? styles.endBtn : styles.endBtnFS) : styles.xEndBtn} `}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-stop-circle" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
                         <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z"></path>
                       </svg>
                       End Tournament
-                    </button>
-                    <p className={`${!bracketFS ? styles.fsLink : styles.fsLinkHidden} ${styles.flexMax}`}
+                    </button> */}
+                    <p className={`text-nowrap ${!bracketFS ? styles.fsLink : styles.fsLinkHidden} ${styles.flexMax}`}
                       onClick={handleFullScreen}
                     >
                       Max <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-fullscreen" viewBox="0 0 16 16">
@@ -305,10 +322,17 @@ function Bracket({ id, categorykey, tournamentData, participantsData }) {
             </div>
 
           </div>
-          {selectedCategory.start === 0 ?
-            <BracketHandler {...shuffleProps} /> :
-            <BracketHandler {...bracketProps} />
-          }
+          <BracketUIContext.Provider value={{ ...bracketUIProps }}>
+            {selectedCategory.start === 0 ?
+              <ShuffleContext.Provider value={{ ...shuffleProps }}>
+                <BracketHandler />
+              </ShuffleContext.Provider>
+              :
+              <BracketContextProvider value={{ ...bracketProps, setTournamentStatus }}>
+                <BracketHandler />
+              </BracketContextProvider>
+            }
+          </BracketUIContext.Provider>
         </div>
       </div>
     </div >

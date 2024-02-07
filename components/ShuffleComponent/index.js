@@ -1,9 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styles from './shuffle.module.css'
 import BracketComponent from './Bracket';
+import { ShuffleContext } from '../../pages/tournament/admin/bracket/[id]/[categorykey].js';
 
 
-const ShuffleComponent = ({ categorykey, categorySet, bracketList, startTournament, shuffle }) => {
+const ShuffleComponent = () => {
+
+    let {
+        categorykey,
+        categorySet,
+        bracketList,
+        startTournament,
+        shuffle
+  } = useContext(ShuffleContext);
+  
 
     const [selectedCategory, setSelectedCategory] = useState(parseInt(categorykey))
 
@@ -11,11 +21,13 @@ const ShuffleComponent = ({ categorykey, categorySet, bracketList, startTourname
         setSelectedCategory(parseInt(categorykey))
     }, [categorykey])
 
+    console.log('categorySet', categorySet );
+    
 
     return (
         <>
             <div className={`${styles.shuffleComponentWrapper}`}>
-                {categorySet.map(category => {
+                {categorySet?.map(category => {
                     const filteredParticipants = bracketList.filter(participant => category.key === parseInt(participant.eventKey));
                     if (category.key === selectedCategory) {
                         return (

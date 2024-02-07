@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './participantscomponent.module.css'
 import Image from 'next/image'
 
@@ -12,6 +12,7 @@ const ParticipantsComponent = ({ participantsData, categorykey, categorySet }) =
     setSelectedCategory(parseInt(categorykey))
   }, [categorykey])
 
+  console.log('participantsData', participantsData);
 
   return (
     <>
@@ -48,8 +49,8 @@ const ParticipantsComponent = ({ participantsData, categorykey, categorySet }) =
                             <td>
                               <Image src={participant.imageURL} alt='athlete picture' width={25} height={25} priority />
                             </td>
-                            <td className={`${styles.athlete}`}>{participant.athlete}</td>
-                            <td className={`text-nowrap ${styles.event}`}>{participant.event}</td>
+                            <td className={`${styles.athlete}`}>{participant.athleteName}</td>
+                            <td className={`text-nowrap ${styles.event}`}>{participant.eventName}</td>
                           </tr>
 
                         ))

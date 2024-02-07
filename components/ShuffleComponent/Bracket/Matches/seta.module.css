@@ -28,7 +28,7 @@
     min-width: 580px; 
     width: 100%;
     padding: 0px 50px;
-    top: 85px;
+    top: 100px;
     position: relative;
     height: 225px;
 }
@@ -45,7 +45,7 @@
     white-space: nowrap;
 }
 
-.headerChamp {
+.headerChamp{
     padding-left: 26px !important;
     position: relative;
     top: -38px;
@@ -57,14 +57,17 @@
     position: relative;
     top: -38px;
     left: 38px;
+    padding-right: 80px;
+    text-wrap: nowrap;
 }
 
 .champion {
     position: relative;
-    top: 55px;
+    top: 80px;
     white-space: nowrap;
     right: -32px !important;
 }
+
 .secondplace {
     position: relative;
     top: 8px;
@@ -74,8 +77,9 @@
 
 .grandFinals {
     position: relative;
-    top: 45px;
+    top: 74px;
 }
+
 
 .repgrandFinals {
     position: relative;
@@ -84,7 +88,7 @@
 
 .repsemis {
     position: relative;
-    top: 46px;
+    top: 64px;
 }
 
 .participants {
@@ -100,7 +104,7 @@
     top: -2px;
     text-align: left;
     min-width: 140px;
-    background-color: #dc3545;
+    background-color: #298bff94;
     z-index: 10;
 }
 
@@ -111,7 +115,7 @@
     top: 2px;
     text-align: left;
     min-width: 140px;
-    background-color: #298bff94;
+    background-color: #dc3545;
     z-index: 10;
 }
 
@@ -130,6 +134,17 @@
     margin-bottom: 0rem !important;
 }
 
+
+.matchE {
+    position: relative;
+    top: 45px;
+}
+
+.matchtoF {
+    position: relative;
+    z-index: 3;
+}
+
 .matchBelowLine {
     /* position: relative; */
     /* top: -29px; */
@@ -139,10 +154,6 @@
 .matchBelowBracket {
     position: relative;
     top: -29px;
-}
-
-.showSVG{
-    overflow: visible;
 }
 
 .standByText {
@@ -182,8 +193,12 @@
     width: 108px; 
 }
 
+.showSVG{
+    overflow: visible;
+}
+
 @media (max-width: 1672px) {
     .rowWidth {
-        margin-right: 197px;
+        margin-right: 80px;
     }
 }

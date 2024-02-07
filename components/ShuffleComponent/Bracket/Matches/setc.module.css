@@ -3,14 +3,14 @@
     padding: .5rem 4rem;
 }
 
-.rowMinWidth{
-    min-width: 1180px;
+.rowMinWidth {
+    min-width: 1359px;
 }
 
 .table {
     border-bottom-width: 0px !important;
     background-color: #212529;
-    min-width: 580px; 
+    min-width: 580px;
     width: 100%;
     padding: 0px 50px;
     top: 80px;
@@ -25,7 +25,7 @@
 .repTable {
     border-bottom-width: 0px !important;
     background-color: #212529;
-    min-width: 580px; 
+    min-width: 580px;
     width: 100%;
     padding: 0px 50px;
     top: 100px;
@@ -45,8 +45,7 @@
     white-space: nowrap;
 }
 
-
-.headerChamp{
+.headerChamp {
     padding-left: 26px !important;
     position: relative;
     top: -38px;
@@ -61,14 +60,13 @@
 
 .champion {
     position: relative;
-    top: 137px;
-    white-space: nowrap;
-    right: -32px !important;
+    top: 56px;
+    left: 24px;
 }
 
 .grandFinals {
     position: relative;
-    top: 129px;
+    top: 44px;
 }
 
 .secondplace {
@@ -85,7 +83,7 @@
 
 .repsemis {
     position: relative;
-    top: 47px;
+    top: 92px;
 }
 
 .participants {
@@ -101,7 +99,7 @@
     top: -2px;
     text-align: left;
     min-width: 140px;
-    background-color: #298bff94;
+    background-color: #dc3545;
     z-index: 10;
 }
 
@@ -112,7 +110,7 @@
     top: 2px;
     text-align: left;
     min-width: 140px;
-    background-color: #dc3545;
+    background-color: #298bff94;
     z-index: 10;
 }
 
@@ -131,13 +129,14 @@
     margin-bottom: 0rem !important;
 }
 
-.matchE {
-    position: relative;
-    top: 46px;
-}
 .matchF {
     position: relative;
-    top: 118px;
+    top: -54px;
+}
+
+.matchG {
+    position: relative;
+    top: 52px;
 }
 
 .matchtoF {
@@ -145,10 +144,10 @@
     z-index: 3;
 }
 
-.matchtoG {
+.matchtoH {
     position: relative;
     z-index: 4;
-    top:56px;
+    top: -30px;
 }
 
 .matchBelowLine {
@@ -170,7 +169,7 @@
 
 .matchBelowBracketB {
     position: relative;
-    top: 16px;
+    top: -32px;
     z-index: 3;
 }
 
@@ -197,46 +196,79 @@
     border-color: #e9ecef94;
 }
 
-.bracketToptoBot{
-    overflow: visible;
-    width: 108px; 
+.straightLine {
+    width: 108px;
 }
 
-.botBracketOverflow{
+.bracketToptoBot {
     overflow: visible;
+    width: 108px;
 }
 
-.repbracketToptoBot{
-    overflow: visible;
-    width: 108px; 
-}
-
-.showSVG{
+.botBracketOverflow {
     overflow: visible;
 }
 
-.repechageFirstMatch{
-    top:-59px;
+.repbracketToptoBot {
+    overflow: visible;
+    width: 108px;
+    position: relative;
+    top: 48px;
+}
+
+.showSVG {
+    overflow: visible;
+}
+
+.repechageFirstMatch {
+    top: -59px;
     position: relative;
 }
 
-.repechageBracketFirstMatch{
-    top:-59px;
+.repechageBracketFirstMatch {
+    top: -59px;
     position: relative;
 }
 
-.repechageSecondMatch{
-    top:-77px;
+.repechageSecondMatch {
+    top: -77px;
     position: relative;
 }
 
-.repechageBracketSecondMatch{
+.repechageBracketSecondMatch {
     position: relative;
     top: -77px;
 }
 
+.repBeforeSemis1 {
+    position: relative;
+    top: 47px;
+}
+
+.repBeforeSemis2 {
+    position: relative;
+    top: -57px;
+}
+
+.repBracketBeforeSemis2 {
+    position: relative;
+    top: -82px;
+}
+
+.repsemisBracket {
+    position: relative;
+    top: 26px;
+}
+
+
 @media (max-width: 1672px) {
     .rowWidth {
         margin-right: 80px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .rowWidth {
+        padding: .5rem 0rem;
     }
 }

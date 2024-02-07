@@ -12,7 +12,7 @@
     width: 100%;
 }
 
-.headerChamp{
+.headerChamp {
     padding-left: 26px !important;
 }
 
@@ -23,31 +23,11 @@
 
 .grandFinals {
     position: relative;
-    top: 44px;
+    top: 45px;
 }
 
 .participants {
     margin-left: 24px;
-}
-
-.matchF {
-    position: relative;
-    top: -54px;
-}
-.matchG {
-    position: relative;
-    top: 47px;
-}
-
-.matchtoF {
-    position: relative;
-    z-index: 3;
-}
-
-.matchtoH {
-    position: relative;
-    z-index: 4;
-    top:-30px;
 }
 
 .matchBelowLine {
@@ -59,18 +39,6 @@
 .matchBelowBracket {
     position: relative;
     top: -29px;
-}
-
-.matchBelowBracketA {
-    position: relative;
-    top: -29px;
-    z-index: 3;
-}
-
-.matchBelowBracketB {
-    position: relative;
-    top: -32px;
-    z-index: 3;
 }
 
 .standByText {

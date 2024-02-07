@@ -73,7 +73,7 @@ const Header = ({ tournamentData, changeCategory, category, playersCount, partic
 
             <div className="col-lg-3 col-md-6 col-sm-6">
                 <div className={`card-body d-flex flex-column align-items-end`}>
-                    <Image src={tournamentData?.eventLogo} alt='event logo' width={80} height={80} priority />
+                    <Image src={tournamentData?.eventLogo} alt='event logo' width={80} height={80} placeholder="blur" blurDataURL={tournamentData?.eventLogo} />
                     <strong className="d-inline-block mb-2 text-primary text-nowrap">Organized by:</strong>
                     <h5 className="mb-0">
                         <span className="text-dark" href="#">{tournamentData?.organizer}</span>

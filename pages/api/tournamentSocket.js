@@ -135,7 +135,6 @@ const initializeSocket = (server) => {
       return;
     }
 
-// console.log('categoryKey', categoryKey);
 
     matchDetails[tournamentSocketId][matchKey].score = matchScores;
     await logUpdate(tournamentId, tournamentEventId, categoryKey, logAccount, message);

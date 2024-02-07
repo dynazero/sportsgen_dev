@@ -4,11 +4,11 @@ const componentImports = {
   3: lazy(() => import('./setalpha')),
   4: lazy(() => import('./setbravo')),
   5: lazy(() => import('./setcharlie')),
-  6: lazy(() => import('./seta')),
-  7: lazy(() => import('./setb')),
-  8: lazy(() => import('./setc')),
-  9: lazy(() => import('./setd')),
-  10: lazy(() => import('./sete')),
+  6: lazy(() => import('./setdelta')),
+  7: lazy(() => import('./seta')),
+  8: lazy(() => import('./setb')),
+  9: lazy(() => import('./setc')),
+  10: lazy(() => import('./setd')),
   // Continue with the rest of your components
 };
 

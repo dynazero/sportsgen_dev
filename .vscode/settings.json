@@ -1,0 +1,5 @@
+{
+    "chatgpt.lang": "en",
+    "chatgpt.model": "gpt-3.5-turbo-0613",
+    "chatgpt.proxy": "0.0.0.0:3000"
+}

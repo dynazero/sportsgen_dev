@@ -45,6 +45,22 @@
     transform: scale(1.2, 1.2);
 }
 
+.endBtn {
+    position: absolute;
+    top: -14%;
+    right: 9%;
+}
+
+.endBtnFS {
+    position: absolute;
+    right: 20px;
+    top: -80px;
+}
+
+.xEndBtn {
+    display: none;
+}
+
 .posRel {
     position: relative;
 }

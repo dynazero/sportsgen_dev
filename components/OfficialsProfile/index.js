@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { DashBoardDataContext } from '../../pages/dashboard/index'
 import { useSession, getSession } from "next-auth/react"
 import Create from './create';
@@ -23,7 +23,7 @@ export default function OfficialsProfile() {
     teamItem?.length === 0 ? setTeam() : setTeam(teamItem?.[0]?._id);
     officials?.length === 0 ? setOlist(false) : setOlist(true);
   }, [teamItem, officials]);
-  
+
 
   return (
     <div className='container'>
@@ -43,8 +43,6 @@ export default function OfficialsProfile() {
               </div>
               <Create teamId={team} />
             </div>
-
-
           </div>
         </div>
         {/* Profile List */}
@@ -61,37 +59,29 @@ export default function OfficialsProfile() {
               </thead>
               <tbody>
 
-                {!olist &&
-                  (
+
+                {!olist ? (
                     <tr>
                       <td></td>
-                      <td>No Official Registered</td>
+                      <td>No Official Test</td>
                       <td></td>
                     </tr>
-                  )
-                }
-
-                {olist && officials.map((item, i) => (
-                  <tr key={item._id}>
-                    <th scope="row" className='paddingList'>{item.sequence}</th>
-                    <td className='paddingList'>{item.lname}</td>
-                    <td className='paddingList'>{item.fname}</td>
-                    {/* <td>
-                      <Image src={item.imageURL} alt='athlete picture' width={50} height={50} priority />
-                    </td> */}
-                  </tr>
-                ))}
-
-
+                  ) : 
+                  officials.map((item, i) => (
+                    <tr key={item._id}>
+                      <th scope="row" className='paddingList'>{item.sequence}</th>
+                      <td className='paddingList'>{item.lname}</td>
+                      <td className='paddingList'>{item.fname}</td>
+                      {/* <td>
+                        <Image src={item.imageURL} alt='athlete picture' width={50} height={50} priority />
+                      </td> */}
+                    </tr>
+                  ))}
               </tbody>
             </table>
-
-
           </div>
-
         </div>
       </div>
-
     </div>
   )
 }

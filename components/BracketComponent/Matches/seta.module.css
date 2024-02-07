@@ -12,22 +12,32 @@
     width: 100%;
 }
 
-.headerChamp {
+.headerChamp{
     padding-left: 26px !important;
 }
 
 .champion {
     position: relative;
-    top: 56px;
+    top: 85px;
 }
 
 .grandFinals {
     position: relative;
-    top: 45px;
+    top: 74px;
 }
 
 .participants {
     margin-left: 24px;
+}
+
+.matchE {
+    position: relative;
+    top: 45px;
+}
+
+.matchtoF {
+    position: relative;
+    z-index: 3;
 }
 
 .matchBelowLine {

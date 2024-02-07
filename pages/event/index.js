@@ -113,7 +113,7 @@ export default function events({ eventItem, tournamentItem }) {
           };
         });
         setTournamentList(tournamentItem.map((tournament) => {
-          const checkout = checkouts.find((item) => item.tournament.eventId === tournament.eventId);
+          const checkout = checkouts.find((item) => item?.tournament?.eventId === tournament.eventId);
           if (checkout) {
             return {
               ...tournament,

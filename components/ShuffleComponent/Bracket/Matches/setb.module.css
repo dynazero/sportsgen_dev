@@ -45,6 +45,7 @@
     white-space: nowrap;
 }
 
+
 .headerChamp{
     padding-left: 26px !important;
     position: relative;
@@ -53,33 +54,29 @@
 }
 
 .headerSecondplace {
-    padding-left: 26px !important;
     position: relative;
     top: -38px;
-    left: 38px;
-    padding-right: 80px;
-    text-wrap: nowrap;
+    left: 60px;
 }
 
 .champion {
     position: relative;
-    top: 80px;
+    top: 137px;
     white-space: nowrap;
     right: -32px !important;
+}
+
+.grandFinals {
+    position: relative;
+    top: 129px;
 }
 
 .secondplace {
     position: relative;
     top: 8px;
     white-space: nowrap;
-    left: 41px !important;
+    left: 36px !important;
 }
-
-.grandFinals {
-    position: relative;
-    top: 74px;
-}
-
 
 .repgrandFinals {
     position: relative;
@@ -88,7 +85,7 @@
 
 .repsemis {
     position: relative;
-    top: 64px;
+    top: 47px;
 }
 
 .participants {
@@ -134,15 +131,24 @@
     margin-bottom: 0rem !important;
 }
 
-
 .matchE {
     position: relative;
-    top: 45px;
+    top: 46px;
+}
+.matchF {
+    position: relative;
+    top: 118px;
 }
 
 .matchtoF {
     position: relative;
     z-index: 3;
+}
+
+.matchtoG {
+    position: relative;
+    z-index: 4;
+    top:56px;
 }
 
 .matchBelowLine {
@@ -154,6 +160,18 @@
 .matchBelowBracket {
     position: relative;
     top: -29px;
+}
+
+.matchBelowBracketA {
+    position: relative;
+    top: -29px;
+    z-index: 3;
+}
+
+.matchBelowBracketB {
+    position: relative;
+    top: 16px;
+    z-index: 3;
 }
 
 .standByText {
@@ -179,13 +197,13 @@
     border-color: #e9ecef94;
 }
 
-.straightLine{
-    width: 108px;
-}
-
 .bracketToptoBot{
     overflow: visible;
     width: 108px; 
+}
+
+.botBracketOverflow{
+    overflow: visible;
 }
 
 .repbracketToptoBot{
@@ -195,6 +213,26 @@
 
 .showSVG{
     overflow: visible;
+}
+
+.repechageFirstMatch{
+    top:-59px;
+    position: relative;
+}
+
+.repechageBracketFirstMatch{
+    top:-59px;
+    position: relative;
+}
+
+.repechageSecondMatch{
+    top:-77px;
+    position: relative;
+}
+
+.repechageBracketSecondMatch{
+    position: relative;
+    top: -77px;
 }
 
 @media (max-width: 1672px) {
