@@ -54,7 +54,7 @@ export const authOptions = {
         return baseUrl;
       }
     },
-    debug: NEXT_PUBLIC_APP_ENV === "production",
+    debug: NEXT_PUBLIC_APP_ENV === "dev",
   }
 }
 export default NextAuth(authOptions)
