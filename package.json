@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NEXT_PUBLIC_APP_ENV=dev next dev",
+    "dev": "cross-env NEXT_PUBLIC_APP_ENV=production next dev",
     "test": "cross-env NEXT_PUBLIC_APP_ENV=test npx next dev -H 0.0.0.0",
     "build:digitalOcean": "yarn install --production=false && rimraf dist && yarn build && yarn install --production --frozen-lockfile",
     "build": "next build",
