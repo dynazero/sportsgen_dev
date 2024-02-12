@@ -1,9 +1,9 @@
 import { Datepicker } from '@adibfirman/react-datepicker'
 
-export default function signup({ getLaterEventsEndPoint }) {
+export default function signup({ res }) {
   return (
     <div>
-      {getLaterEventsEndPoint}
+      {res}
     </div>
   )
 }
@@ -31,9 +31,12 @@ export async function getServerSideProps(context) {
   const apiUrl = NEXT_PUBLIC_API_URL;
   const getLaterEventsEndPoint = "/api/getLaterEvents"
 
+  const res = await fetchData(`${apiUrl}${getLaterEventsEndPoint}`);
+
+
   return {
     props: {
-      getLaterEventsEndPoint,
+      res,
     }
   };
 }
