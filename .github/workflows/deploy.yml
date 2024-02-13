@@ -29,6 +29,7 @@ jobs:
           GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
           GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          NEXT_PUBLIC_APP_ENV: ${{ secrets.NEXT_PUBLIC_APP_ENV }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           SPACES_ACCESS_KEY: ${{ secrets.SPACES_ACCESS_KEY }}
@@ -65,6 +66,7 @@ jobs:
             echo "GOOGLE_ID=${{ secrets.GOOGLE_ID }}" >> .env
             echo "GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}" >> .env
             echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
+            echo "NEXT_PUBLIC_APP_ENV=${{ secrets.NEXT_PUBLIC_APP_ENV }}" >> .env
             echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
             echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
             echo "SPACES_ACCESS_KEY=${{ secrets.SPACES_ACCESS_KEY }}" >> .env
