@@ -32,46 +32,49 @@ export default function OrgOngoingEvents({
           <div className="tab-pane fade show active" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab">
           {(!organizedOngoingEvents && !orgLiveTournaments  || !organizedOngoingEvents.length && !orgLiveTournaments.length) && <div>No Ongoing Events</div>}
            
-            {orgLiveTournaments &&
-              orgLiveTournaments.map((item, i) => (
-                <Link href={`/tournament/admin/${item.tournamentId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`} aria-current="true">
-                  <div className="d-flex w-100 justify-content-between">
-                    <Image src={item.tournamentLogo} alt='event logo' width={40} height={40} priority />
-                    <h5
-                      className={`mb-1 ${styles.noWrapEllipsis}`}
-                      data-tooltip-id="myTooltip"
-                      data-tooltip-content={item.tournamentTitle}
-                    >{item.tournamentTitle}</h5>
-                    <small style={{ whiteSpace: 'nowrap' }}>{item.tournamentStatus}</small>
-                  </div>
-                  <div>
-                    {/* <small>Event Settings  »</small> */}
-                  </div>
-                  {/* <p className="mb-1">Live</p> */}
-                </Link>
-              ))}
-
-            {organizedOngoingEvents &&
-              organizedOngoingEvents.map((item, i) => (
-
-
-                <Link href={`/tournament/create/${item.eventId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`} aria-current="true">
-                  <div className="d-flex w-100 justify-content-between">
-                    <Image src={item.logoURL} alt='event logo' width={40} height={40} priority />
-                    <h5
-                      className={`mb-1 ${styles.noWrapEllipsis}`}
-                      data-tooltip-id="myTooltip"
-                      data-tooltip-content={item.eventTitle}
-                    >{item.eventTitle}</h5>
-                    <small style={{ whiteSpace: 'nowrap' }}>{item.eventStatus}</small>
-                  </div>
-                  <div>
-                    {/* <small>Event Settings  »</small> */}
-                  </div>
-                  {/* <p className="mb-1">Live</p> */}
-                </Link>
-              ))}
-
+           {!orgLiveTournaments ? (
+            <div>No Live Tournaments</div>
+           ):
+           orgLiveTournaments.map((item, i) => (
+            <Link href={`/tournament/admin/${item.tournamentId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`} aria-current="true">
+              <div className="d-flex w-100 justify-content-between">
+                <Image src={item.tournamentLogo} alt='event logo' width={40} height={40} priority />
+                <h5
+                  className={`mb-1 ${styles.noWrapEllipsis}`}
+                  data-tooltip-id="myTooltip"
+                  data-tooltip-content={item.tournamentTitle}
+                >{item.tournamentTitle}</h5>
+                <small style={{ whiteSpace: 'nowrap' }}>{item.tournamentStatus}</small>
+              </div>
+              <div>
+                {/* <small>Event Settings  »</small> */}
+              </div>
+              {/* <p className="mb-1">Live</p> */}
+            </Link>
+          ))}
+            
+            {!organizedOngoingEvents ? (
+            <div>No Organized Events</div>
+            ):
+            organizedOngoingEvents.map((item, i) => (
+              <Link href={`/tournament/create/${item.eventId}`} key={i} className={`list-group-item list-group-item-action ${styles.perList}`} aria-current="true">
+                <div className="d-flex w-100 justify-content-between">
+                  <Image src={item.logoURL} alt='event logo' width={40} height={40} priority />
+                  <h5
+                    className={`mb-1 ${styles.noWrapEllipsis}`}
+                    data-tooltip-id="myTooltip"
+                    data-tooltip-content={item.eventTitle}
+                  >{item.eventTitle}</h5>
+                  <small style={{ whiteSpace: 'nowrap' }}>{item.eventStatus}</small>
+                </div>
+                <div>
+                  {/* <small>Event Settings  »</small> */}
+                </div>
+                {/* <p className="mb-1">Live</p> */}
+              </Link>
+            ))
+            }
+            
           </div>
           <div className="tab-pane fade" id="pills-posted" role="tabpanel" aria-labelledby="pills-posted-tab">
             {(!organizedUpcomingEvents || !organizedUpcomingEvents.length) && <div>No Posted Events</div>}
