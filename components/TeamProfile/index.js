@@ -9,7 +9,7 @@ import styles from './teamprofile.module.css'
 import ReactCountryFlag from 'react-country-flag';
 import Create from './create'
 import Members from './members'
-import OrgOngoingEvents from './orgongoingevents';
+// import OrgOngoingEvents from './orgongoingevents';
 import UpComingEvents from './upcomingevents';
 
 export default function TeamProfile() {
@@ -22,7 +22,7 @@ export default function TeamProfile() {
         organizedOngoingEvents,
         upcomingEvents,
         archivedEvents,
-        orgLiveTournaments,
+        // orgLiveTournaments,
         liveTournaments
     } = useContext(DashBoardDataContext);
 
@@ -139,12 +139,12 @@ export default function TeamProfile() {
                         </div>
                         <div className={`col-3 p-3 mb-4 bg-light rounded-3 caret ${styles.botStyles} ${styles.overflowControl}`}>
                             <div className={`panelDark rounded-3 ${styles.heightWrapperOrg}`}>
-                                <OrgOngoingEvents
+                                {/* <OrgOngoingEvents
                                     organizedUpcomingEvents={organizedUpcomingEvents}
                                     organizedOngoingEvents={organizedOngoingEvents}
                                     archivedEvents={archivedEvents}
                                     orgLiveTournaments={orgLiveTournaments}
-                                />
+                                /> */}
                             </div>
 
                         </div>
