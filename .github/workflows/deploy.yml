@@ -19,7 +19,7 @@ jobs:
 
       - name: Set up Yarn
         run: |
-              npm install -g yarn@1.22.19
+           npm install -g yarn@1.22.22
       
       - name: Install dependencies
         run: |
