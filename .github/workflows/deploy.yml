@@ -65,6 +65,7 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
             nvm install 16
             nvm use 16
+            npm install -g yarn@1.22.22  # Install the correct version of yarn
             cd /var/www/nextjs
             echo "GOOGLE_ID=${{ secrets.GOOGLE_ID }}" >> .env
             echo "GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }}" >> .env
