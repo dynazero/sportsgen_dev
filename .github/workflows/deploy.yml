@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          yarn install --frozen-lockfile
+          yarn add express@^1.22.19 --frozen-lockfile
           npx browserslist@latest --update-db
 
       - name: Build
