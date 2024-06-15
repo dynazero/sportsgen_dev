@@ -75,6 +75,6 @@
   "license": "ISC",
   "engines": {
     "node": "16.x",
-    "yarn":"1.22.19"
+    "yarn": "1.22.22"
   }
 }

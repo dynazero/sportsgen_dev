@@ -17,10 +17,14 @@ jobs:
         with:
           node-version: 16.16.0
 
+      - name: Set up Yarn
+        run: |
+              npm install -g yarn@1.22.19
+      
       - name: Install dependencies
         run: |
-          yarn add express@^1.22.19 --frozen-lockfile
-          npx browserslist@latest --update-db
+            yarn add express@^1.22.19 --frozen-lockfile
+            npx browserslist@latest --update-db
 
       - name: Build
         run: yarn build
